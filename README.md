@@ -5,6 +5,31 @@ Triangle AI Hackathon · Robotics track · **Live: https://parkshark-blond.verce
 
 ![ParkShark dashboard](docs/screenshot.png)
 
+## Main page (real data only)
+
+The main page (`index.html`) shows a full-screen map of parking within 1.5 km of the Wilkinson Building:
+- Each lot, deck, street and sensor-pilot group appears as a pin showing how many spaces are free, colored by availability.
+- Clicking a pin opens a panel with an SVG drawing of that place's real stall layout. The drawing shows stalls, ADA/EV spaces, entrances, and the roof level for decks.
+- The panel also lists sourced facts: Duke name, capacity and its basis, permit zones, visitor rate, hours, ADA/EV, posted signs and source links.
+- Badges say whether each number is **counted**, **estimated** or **measured**.
+- Anything without a source shows **"Not published"**. We never guess prices, spaces or names.
+
+| Layer | Source | Priority |
+| --- | --- | --- |
+| Facility names, rates, permits, published capacities, on-street rules, Lewis St traced bays | Anne's Duke atlas (`structured-map`: Duke Parking & Transportation, Duke Campus Maps, Durham orthophotos) | 1st: official |
+| Lot outlines, mapped stalls, capacity tags, `building:levels` | OpenStreetMap (ODbL) | 2nd |
+| Estimated stalls, deck roof grid | Our grid model inside the real OSM outline | labeled *estimated* |
+| Free spaces | Live sensors (Supabase) when reporting, else Jacob's Tier 3 model (`tier3-ai-estimate`) with its confidence level | *measured* / *estimated* |
+| Posted signs | City of Durham parking-sign inventory | as published |
+
+A Duke facility is joined to an OSM polygon only when the Duke point lies inside that polygon. A capacity Duke publishes for a permit zone covering several facilities is shown as a zone note, not as one lot's capacity.
+
+Rebuild the data with `python3 scripts/build_data.py && python3 scripts/build_main.py`. This writes `data/main.json` and `data/layouts.json`.
+
+**Map:** Google Maps JS when `GOOGLE_MAPS_KEY` is set on the server. The browser gets it from `/api/config`; restrict the key to your site's referrers. Without the key the page falls back to OpenStreetMap tiles. Google is display only and nothing from Google goes into the inventory. "Use my location" stays in the browser.
+
+The previous analyst dashboard is still available at `classic.html`.
+
 ## Inspiration
 Around Duke's West and Science campus, drivers circle lots looking for a free stall. A full lot next to the building usually loses to an emptier lot five minutes' walk away, but nobody can see that from the car. Map apps show a "P" pin with no stalls, no prices, no game-day rules and no curb parking. Circling wastes time and fuel and clogs Research Dr and Science Dr at peak hours.
 
