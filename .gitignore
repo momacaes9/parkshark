@@ -147,3 +147,10 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# ParkShark
+config.js
+.env
+.DS_Store
+node_modules
+__pycache__/
