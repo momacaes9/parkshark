@@ -110,3 +110,5 @@ select { font: inherit; font-size: 12.5px; padding: 5px 6px; border-radius: 7px;
 /* Tier 3 sensored spot group labels */
 .leaflet-tooltip.t3-tip { background: #0f172a; color: #f8fafc; border: 1px solid #334155; font-weight: 600; font-size: 12px; padding: 2px 6px; }
 .leaflet-tooltip.t3-tip::before { border-top-color: #334155; }
+/* Nearby lots without sensors (low confidence) */
+.leaflet-tooltip.t3-tip.nb-tip { background: rgba(15,23,42,.85); color: #cbd5e1; border: 1px dashed #64748b; font-weight: 500; font-size: 11px; }
