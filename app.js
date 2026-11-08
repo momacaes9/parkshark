@@ -568,7 +568,7 @@
     const el = document.createElement("div"); el.className = "msg " + cls; el.innerHTML = html;
     $("chat-log").appendChild(el); $("chat-log").scrollTop = $("chat-log").scrollHeight; return el;
   }
-  const fmtAnswer = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/^\s*[-•]\s+/gm, "• ").replace(/\n/g, "<br>");
+  const fmtAnswer = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/^\s*[-•*]\s+/gm, "• ").replace(/\n/g, "<br>");
   async function askConcierge(text) {
     if (chat.busy || !text.trim()) return;
     chat.busy = true; $("chat-send").disabled = true;
