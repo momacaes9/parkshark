@@ -1,0 +1,7 @@
+lot,capacity,anchor,lat,lon,roads,note
+Science (Physics) Lot,52,Levine Science Research Center,36.004497,-78.94168,Science Dr (1),"Science Dr station sits at the south end of Science Dr, about 1 km from the lot."
+Public Policy Lot,85,Sanford School of Public Policy,35.999405,-78.943927,Science Dr (0.5); Towerview Rd (0.5),Duke expects construction parking impacts here through fall 2027 (lost space count unknown).
+Trent Lot,80,Trent Hall,36.007078,-78.93358,Trent Dr (0.5); Erwin Rd (0.5),"Entrance is on Flowers Dr, which has no count. Nearest counts are Trent Dr and Erwin Rd."
+IM Lot,27,Intramural Building,35.996621,-78.940027,Towerview Rd (1),"Next to Cameron Indoor and Wallace Wade, so game days hit it hardest."
+Bryan Research Garage,163,Bryan Research Building,,,Research Dr (0.5); Erwin Rd (0.5),"Added Nov 7 2026 for the live sensor test. Capacity VERIFIED (parking.duke.edu, 'Bryan Research Building on Research Drive'). Coordinates not looked up yet. Which Erwin Rd station feeds it is an ASSUMPTION."
+Research Drive Garage Reserved,239,Research Drive Garage,,,Research Dr (0.5); Erwin Rd (0.5),"Added Nov 7 2026 for the live sensor test. Capacity VERIFIED (parking.duke.edu, 'Corner of Erwin Road and Research Drive'). Coordinates not looked up yet. Which Erwin Rd station feeds it is an ASSUMPTION."

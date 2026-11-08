@@ -1,0 +1,1777 @@
+[
+ {
+  "date": "2026-11-07",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-08",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-09",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-10",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-11",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-12",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-13",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs SIU Edwardsville"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-14",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-15",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2026-11-16",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-17",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Illinois"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-18",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-19",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2026-11-20",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Football vs Clemson"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-21",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-22",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-23",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-24",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-25",
+  "day_type": "weekday",
+  "no_class": "Thanksgiving recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-26",
+  "day_type": "weekday",
+  "no_class": "Thanksgiving recess",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-27",
+  "day_type": "weekday",
+  "no_class": "Thanksgiving recess",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-28",
+  "day_type": "saturday",
+  "no_class": "Thanksgiving recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-29",
+  "day_type": "sunday",
+  "no_class": "Thanksgiving recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-11-30",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-01",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-02",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-03",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2026-12-04",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Harvard"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-05",
+  "day_type": "saturday",
+  "no_class": "Undergraduate reading period",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-06",
+  "day_type": "sunday",
+  "no_class": "Undergraduate reading period",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2026-12-07",
+  "day_type": "weekday",
+  "no_class": "Undergraduate reading period",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-08",
+  "day_type": "weekday",
+  "no_class": "Undergraduate reading period",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-09",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": "Fall final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-10",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": "Fall final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-11",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": "Fall final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-12",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": "Fall final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-13",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": "Fall final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-14",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": "Fall final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-15",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Campbell"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-16",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-17",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Grambling State"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-18",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-19",
+  "day_type": "saturday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-20",
+  "day_type": "sunday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-21",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-22",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-23",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-24",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-25",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-26",
+  "day_type": "saturday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-27",
+  "day_type": "sunday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-28",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2026-12-29",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-30",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2026-12-31",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-01",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-02",
+  "day_type": "saturday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs California"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-03",
+  "day_type": "sunday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-04",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-05",
+  "day_type": "weekday",
+  "no_class": "Winter break",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-06",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-07",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-08",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-09",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Pitt"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-10",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-11",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-12",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-13",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Stanford"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-14",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2027-01-15",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-16",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-17",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2027-01-18",
+  "day_type": "weekday",
+  "no_class": "Martin Luther King Jr. Day",
+  "exams": null,
+  "holiday": true,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-19",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-20",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-21",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-22",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-23",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Notre Dame"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-24",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2027-01-25",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-26",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-27",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-28",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-29",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-30",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-01-31",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-01",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Miami"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-02",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-03",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-04",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-05",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-06",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-07",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2027-02-08",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-09",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-10",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-11",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-12",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-13",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs North Carolina"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-14",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2027-02-15",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-16",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Florida State"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-17",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-18",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2027-02-19",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-20",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-21",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-22",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-23",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-24",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-25",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-26",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-27",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs NC State"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-02-28",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": [
+   "Women's basketball home game (time not read)"
+  ]
+ },
+ {
+  "date": "2027-03-01",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Men's basketball vs Virginia"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-02",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-03",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-04",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-05",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-06",
+  "day_type": "saturday",
+  "no_class": "Spring recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-07",
+  "day_type": "sunday",
+  "no_class": "Spring recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-08",
+  "day_type": "weekday",
+  "no_class": "Spring recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-09",
+  "day_type": "weekday",
+  "no_class": "Spring recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-10",
+  "day_type": "weekday",
+  "no_class": "Spring recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-11",
+  "day_type": "weekday",
+  "no_class": "Spring recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-12",
+  "day_type": "weekday",
+  "no_class": "Spring recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-13",
+  "day_type": "saturday",
+  "no_class": "Spring recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-14",
+  "day_type": "sunday",
+  "no_class": "Spring recess",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-15",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-16",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-17",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-18",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-19",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-20",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-21",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-22",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-23",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-24",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-25",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-26",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-27",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-28",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-29",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-30",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-03-31",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-01",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-02",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-03",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-04",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-05",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-06",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-07",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-08",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-09",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-10",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-11",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-12",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-13",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-14",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-15",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-16",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-17",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-18",
+  "day_type": "sunday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-19",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-20",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-21",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-22",
+  "day_type": "weekday",
+  "no_class": "Undergraduate reading period",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-23",
+  "day_type": "weekday",
+  "no_class": "Undergraduate reading period",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-24",
+  "day_type": "saturday",
+  "no_class": "Undergraduate reading period",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-25",
+  "day_type": "sunday",
+  "no_class": "Undergraduate reading period",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-26",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": "Spring final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-27",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": "Spring final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-28",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": "Spring final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-29",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": "Spring final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-04-30",
+  "day_type": "weekday",
+  "no_class": null,
+  "exams": "Spring final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-01",
+  "day_type": "saturday",
+  "no_class": null,
+  "exams": "Spring final exams",
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-02",
+  "day_type": "sunday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-03",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-04",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-05",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-06",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-07",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-08",
+  "day_type": "saturday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-09",
+  "day_type": "sunday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [
+   "Commencement (Wallace Wade)"
+  ],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-10",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-11",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-12",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-13",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-14",
+  "day_type": "weekday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-15",
+  "day_type": "saturday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ },
+ {
+  "date": "2027-05-16",
+  "day_type": "sunday",
+  "no_class": "After final exams",
+  "exams": null,
+  "holiday": false,
+  "events": [],
+  "untimed_events": []
+ }
+]
