@@ -55,6 +55,8 @@
   // ------------------------------------------------------------------ state
   const state = {
     lots: new Map(),          // id -> {props, feature, layer, spots:[], occ, free}
+    curbs: new Map(),         // id -> {props, layer, spots:[], occ}
+    curbCV: {},               // curb segment id -> CV verification result
     spots: new Map(),         // id -> {props, layer, center:[lon,lat], taken, big}
     rowIndex: new Map(),      // "lot|row|pos" -> spot id
     streets: [], chargers: [],
@@ -97,6 +99,17 @@
   function setOrigin(lat, lon) { state.origin = { name: "Custom start", lat, lon }; renderAgent(); }
 
   // ------------------------------------------------------------------ data
+  function curbLineStyle(p) {
+    const obs = p.confidence === "observed parking";
+    return { color: obs ? "#22c55e" : "#f59e0b", weight: obs ? 4 : 3, opacity: 0.9, dashArray: obs ? null : "5,6" };
+  }
+  function curbPopup(p) {
+    return `<b>${esc(p.name || "Unnamed road")} · ${esc(p.side)} curb</b><br>` +
+      `${p.length_m} m · ~${p.est_spaces} parallel spaces (6.1 m)<br>Confidence: <b>${esc(p.confidence)}</b>` +
+      (p.observed_cars != null ? `<br>Cars detected in NC OneMap ortho${p.cv_date ? " (" + esc(p.cv_date) + ")" : ""}: <b>${p.observed_cars}</b>` : "") +
+      (p.cv_image ? `<br><img src="${esc(p.cv_image)}" style="width:220px;margin-top:4px;border-radius:4px" alt="detections">` : "") +
+      `<br><small>Generated from OSM road geometry; no parking signage data. Verify before parking.</small>`;
+  }
   function lotName(p) {
     if (p.duke_name) return (p.duke_match === "osm_name" ? "" : "≈ ") + p.duke_name;
     if (p.name) return p.name;
@@ -111,6 +124,7 @@
     const spotLayer = L.layerGroup().addTo(map);
     const streetLayer = L.layerGroup().addTo(map);
     const chargerLayer = L.layerGroup().addTo(map);
+    const curbLayer = L.layerGroup().addTo(map);       // candidate curb segments + their spaces
 
     for (const f of fc.features) {
       const p = f.properties;
@@ -128,6 +142,17 @@
     }
     for (const f of fc.features) {
       const p = f.properties;
+      if (p.kind !== "curb") continue;
+      const cv = state.curbCV[p.id];
+      if (cv) Object.assign(p, { confidence: cv.observed ? "observed parking" : "candidate - checked, no cars seen",
+                                 observed_cars: cv.cars, cv_image: cv.image, cv_date: cv.imagery_date });
+      const layer = L.polyline(f.geometry.coordinates.map((c) => [c[1], c[0]]), curbLineStyle(p));
+      layer.bindPopup(() => curbPopup(p));
+      layer.addTo(curbLayer);
+      state.curbs.set(p.id, { props: p, layer, spots: [], occ: 0 });
+    }
+    for (const f of fc.features) {
+      const p = f.properties;
       if (p.kind === "space") {
         let layer, center;
         if (f.geometry.type === "Point") {
@@ -138,10 +163,11 @@
           layer = L.polygon(f.geometry.coordinates[0].map((c) => [c[1], c[0]]), { renderer: spotRenderer, weight: 1 });
         }
         layer.on("click", (e) => { e.originalEvent._spotHit = true; L.DomEvent.stopPropagation(e); selectSpot(p.id); });
-        layer.addTo(spotLayer);
+        layer.addTo(p.curb ? curbLayer : spotLayer);
         const s = { props: p, layer, center, taken: false, big: false };
         state.spots.set(p.id, s);
         if (p.lot && state.lots.has(p.lot)) state.lots.get(p.lot).spots.push(s);
+        if (p.curb && state.curbs.has(p.curb)) state.curbs.get(p.curb).spots.push(s);
         if (p.row != null && p.pos != null) state.rowIndex.set(`${p.lot}|${p.row}|${p.pos}`, p.id);
       } else if (p.kind === "street") {
         const layer = L.polyline(f.geometry.coordinates.map((c) => [c[1], c[0]]), { color: COLORS.street, weight: 7, opacity: 0.85 });
@@ -159,8 +185,11 @@
       }
     }
     // spots only make sense when zoomed in; hide below z15 to keep the overview readable
-    const toggleSpots = () => { if (map.getZoom() >= 15) spotLayer.addTo(map); else spotLayer.remove(); };
-    map.on("zoomend", toggleSpots); toggleSpots();
+    const toggleSpots = () => {
+      if (map.getZoom() >= 15) spotLayer.addTo(map); else spotLayer.remove();
+      if (map.getZoom() >= 16 && $("show-curbs").checked) curbLayer.addTo(map); else curbLayer.remove();
+    };
+    map.on("zoomend", toggleSpots); $("show-curbs").onchange = toggleSpots; toggleSpots();
   }
 
   // ------------------------------------------------------------------ draw missing lots (Leaflet.draw)
@@ -277,7 +306,11 @@
       });
       lot.free = Math.max(0, Math.round((p.capacity || 0) * (1 - occ)));
     }
-    for (const s of state.spots.values()) if (!s.props.lot) s.taken = hash01(s.props.id + bucket) < 0.7;
+    for (const s of state.spots.values()) if (!s.props.lot && !s.props.curb) s.taken = hash01(s.props.id + bucket) < 0.7;
+    for (const c of state.curbs.values()) {          // curb occupancy only meaningful once observed
+      c.occ = clamp(priorOcc({ id: c.props.id, dist_to_wilkinson_m: c.props.dist_to_wilkinson_m }, d) * 1.05, 0.02, 0.99);
+      c.spots.forEach((s) => { s.taken = hash01(s.props.id + bucket) < c.occ; s.big = s.taken && hash01("veh" + s.props.id) > 0.72; });
+    }
     styleSpots();
     $("occ-source").textContent = state.occSource;
     $("updated").textContent = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + (params.has("hour") ? " (simulated)" : "");
@@ -287,6 +320,11 @@
 
   function spotStyle(s) {
     const p = s.props;
+    if (p.curb) {
+      const c = state.curbs.get(p.curb);
+      if (!c || c.props.confidence !== "observed parking")
+        return { color: "#f59e0b", weight: 1, dashArray: "3,3", fillColor: "#f59e0b", fillOpacity: 0.12, opacity: 0.8 };
+    }
     const special = p.ada ? COLORS.ada : p.ev ? COLORS.ev : null;
     const fill = s.taken ? COLORS.taken : (special || COLORS.open);
     return {
@@ -347,7 +385,8 @@
     let cap = 0, free = 0, ada = 0, ev = 0;
     for (const l of state.lots.values()) { cap += l.props.capacity || 0; free += l.free; ada += l.props.ada; ev += l.props.ev; }
     $("totals").innerHTML = [["Lots", state.lots.size], ["Capacity", cap.toLocaleString()], ["Free now", free.toLocaleString()],
-      ["Stalls drawn", state.spots.size.toLocaleString()], ["ADA", ada], ["EV", ev + state.chargers.length]]
+      ["Stalls drawn", [...state.spots.values()].filter((x) => !x.props.curb).length.toLocaleString()], ["ADA", ada], ["EV", ev + state.chargers.length], ["Curb candidates", [...state.curbs.values()].reduce((a, c) => a + c.props.est_spaces, 0).toLocaleString()],
+      ["Curb observed", [...state.curbs.values()].filter((c) => c.props.confidence === "observed parking").reduce((a, c) => a + c.props.est_spaces, 0)]]
       .map(([k, v]) => `<div><b>${v}</b><small>${k}</small></div>`).join("");
   }
   function lotTags(p) {
@@ -453,7 +492,11 @@
     try { await loadScript("config.js"); } catch (e) { console.info("No config.js found, using defaults (copy config.example.js)."); }
     CFG = Object.assign({}, DEFAULTS, window.PARKSHARK_CONFIG || {});
     initMap();
-    const fc = await (await fetch("data/parking.geojson")).json();
+    const [fc, cv] = await Promise.all([
+      fetch("data/parking.geojson").then((r) => r.json()),
+      fetch("data/curb_cv.json").then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
+    ]);
+    state.curbCV = (cv && cv.segments) || {};
     buildLayers(fc);
     initDraw();
     $("filter").oninput = renderLots;
