@@ -207,3 +207,58 @@ table.info tr + tr { border-top: 1px solid var(--border); }
   #chat-open { bottom: calc(40vh + 12px); right: 12px; }
   #chat { right: 16px; left: 16px; width: auto; height: 72vh; }
 }
+
+/* Guided demo: keeps fixture data separate from the normal dashboard. */
+#demo-start { background: #173e38; border-color: #173e38; color: #fff; white-space: nowrap; }
+#demo-start:disabled { opacity: .55; cursor: wait; }
+.demo-mode #app { grid-template-columns: 430px 1fr; }
+.demo-mode #searchWrap, .demo-mode #chips, .demo-mode #locate,
+.demo-mode #chat-open, .demo-mode #chat, .demo-mode #pay-modal,
+.demo-mode #more, .demo-mode #destReset, .demo-mode #sheetHandle { display: none !important; }
+.demo-mode #results { background: var(--bg); }
+.demo-mode #occBasis { padding: 14px 20px 0; border: 0; }
+.demo-badge { display: inline-block; color: #794600; background: #fff0cd; border: 1px solid #e7c883; border-radius: 5px; padding: 4px 7px; font-size: 10px; font-weight: 800; letter-spacing: .07em; }
+.demo-context { display: block; margin-top: 9px; font-size: 13px; color: var(--text2); }
+.demo-story { padding: 16px 20px 24px; }
+.demo-progress { display: flex; align-items: center; gap: 5px; margin-bottom: 12px; }
+.demo-progress span { width: 28px; height: 4px; background: var(--border2); border-radius: 9px; }
+.demo-progress span.done { background: var(--orange); }
+.demo-progress small { margin-left: auto; color: var(--text2); }
+.demo-story h1 { font-size: 31px; line-height: 1.05; letter-spacing: -.025em; margin: 0 0 12px; font-weight: 700; max-width: 330px; }
+.demo-lead { font-size: 15px; line-height: 1.45; color: var(--text2); margin: 0 0 16px; }
+.demo-actions { display: flex; gap: 8px; align-items: stretch; }
+.demo-actions .btn { flex: 1; font-size: 14px; padding: 11px 10px; }
+.demo-actions .ghost { font-size: 12px; white-space: nowrap; }
+.demo-restart { display: block; margin: 7px 0 15px; padding: 4px 0; border: 0; background: none; color: var(--text2); font-size: 12px; text-decoration: underline; }
+.demo-prompt { font-size: 12px; color: var(--text2); margin: 8px 0 15px; }
+.demo-options { display: grid; gap: 10px; }
+.demo-card { padding: 12px; border-radius: 12px; border: 1px solid var(--border2); background: var(--bg2); }
+.demo-card.recommended { border: 2px solid var(--orange); padding: 11px; }
+.demo-card.full { border-style: dashed; }
+.demo-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--text2); }
+.demo-card-top > b { color: var(--text); font-size: 19px; white-space: nowrap; }
+.demo-card-top small { font-size: 10px; font-weight: 500; }
+.demo-card.recommended .demo-card-top > span { color: var(--orange); font-weight: 700; }
+.demo-lot { background: none; border: 0; padding: 4px 0 8px; text-align: left; font-weight: 700; font-size: 16px; }
+.demo-facts { display: flex; gap: 20px; color: var(--text2); font-size: 13px; }
+.demo-facts b { color: var(--text); }
+.demo-evidence { font-size: 10px; line-height: 1.4; color: var(--text2); margin-top: 8px; }
+.demo-disclosure { font-size: 11px; line-height: 1.45; color: var(--text2); margin: 13px 0 0; }
+.demo-event { background: var(--badge-est); color: var(--badge-est-t); border-radius: 8px; padding: 10px; margin: 0 0 12px; font-size: 12px; }
+.demo-mode #map.z-lo .pin:not(.big):not(.sel):not(.dest) span { display: inline; }
+.demo-mode #legend { max-width: calc(100% - 24px); }
+.demo-mode button:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+@media (max-width: 760px) {
+  .demo-mode #app { grid-template-columns: 1fr; }
+  .demo-mode #results { height: 62dvh; height: 62vh; }
+  .demo-mode #mapWrap { margin-bottom: 62vh; min-height: 0; }
+  .demo-mode #mapNote { font-size: 10px; max-width: 230px; padding: 4px; }
+  .demo-mode #destRow { padding: 10px 16px; }
+  .demo-mode #occBasis { padding: 10px 16px 0; }
+  .demo-story { padding: 12px 16px 20px; }
+  .demo-story h1 { font-size: 27px; max-width: none; }
+  .demo-mode #clock { display: block; }
+  .demo-mode #brand { font-size: 17px; }
+  .demo-mode #topRight { gap: 5px; }
+  .demo-mode #demo-start { padding: 5px 9px; }
+}

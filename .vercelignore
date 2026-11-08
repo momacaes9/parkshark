@@ -12,3 +12,5 @@ dist
 tier3_model
 source-data
 data/elevation_cache.json
+
+tests

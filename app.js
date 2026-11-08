@@ -19,9 +19,110 @@
     live: { lot: {}, spot: {}, rows: 0 }, showAll: false,
   };
 
+  // ---------------------------------------------------------------- guided presentation (isolated, browser-only simulation)
+  const demo = { active: false, step: 0, options: [], saved: null };
+  function demoOption(it) { return demo.active && demo.options.find((o) => o.id === it.id); }
+  function demoWinner() { return ParkSharkDemo.rank(demo.options, demo.step, walkMin)[0]; }
+  function renderDemo() {
+    const winner = demoWinner();
+    const copy = [
+      ["Park before you start circling.", "You’re visiting Wilkinson at 9:30 a.m. for two hours. No Duke permit. Let’s compare three visitor options."],
+      ["One clear recommendation.", "Bryan Center is the closest of these three options with spaces available in this scenario. Compare the cost and walk below."],
+      ["Full lot? A backup is ready.", "A simulated sensor update fills Bryan Center. Garage IV’s visitor area becomes the closest available option in this scenario."],
+      ["Less circling. More certainty.", "One destination, three visitor options, and a recommendation that changes with availability. Real sensors can replace the simulated update when connected."],
+    ][demo.step];
+    $("occBasis").innerHTML = '<span class="demo-badge">DEMO · SIMULATED OCCUPANCY</span><span class="demo-context">Tuesday · 9:30–11:30 a.m. · No permit</span>';
+    const cards = demo.options.map((o) => {
+      const free = ParkSharkDemo.available(o, demo.step), best = demo.step > 0 && o.id === winner.id;
+      return `<article class="demo-card${best ? " recommended" : ""}${free === 0 ? " full" : ""}">
+        <div class="demo-card-top"><span>${best ? "★ Recommended" : free === 0 ? "Full in this scenario" : "Visitor option"}</span><b>${free} <small>simulated free</small></b></div>
+        <button class="demo-lot" type="button" data-demo-lot="${esc(o.id)}" aria-label="Show ${esc(o.label)} on map">${esc(o.label)} ↗</button>
+        <div class="demo-facts"><span><b>$${o.total.toFixed(2)}</b> / 2 hours*</span><span><b>~${Math.max(1, Math.round(walkMin(o.item)))}</b> min walk†</span></div>
+        <div class="demo-evidence">${esc(o.capacityEvidence)} · <a href="${esc(o.item.visitorRate.source)}" target="_blank" rel="noopener">Published $${o.rate.toFixed(2)}/h rate</a></div>
+      </article>`;
+    }).join("");
+    $("list").innerHTML = `<section class="demo-story" aria-label="Guided parking demo">
+      <div class="demo-progress" aria-label="Step ${demo.step + 1} of 4">${[0,1,2,3].map((n) => `<span class="${n <= demo.step ? "done" : ""}"></span>`).join("")}<small>${demo.step + 1} / 4</small></div>
+      <div aria-live="polite" aria-atomic="true"><h1>${copy[0]}</h1><p class="demo-lead">${copy[1]}</p></div>
+      ${demo.step >= 2 ? '<div class="demo-event"><span aria-hidden="true">↻</span> Simulated sensor event: Bryan Center 12 → 0 free. Recommendation updated.</div>' : ''}
+      <div class="demo-actions"><button type="button" class="btn" id="demo-next">${["Find my parking →", "Simulate lot filling up →", "See the takeaway →", "Replay demo ↺"][demo.step]}</button><button type="button" class="ghost" id="demo-exit">Exit demo</button></div>
+      ${demo.step > 0 ? '<button type="button" class="demo-restart" id="demo-restart">↺ Restart scenario</button>' : '<p class="demo-prompt">A guided, repeatable 60-second walkthrough.</p>'}
+      <div class="demo-options">${cards}</div>
+      <p class="demo-disclosure">Availability is scripted for this demo, not a live reading or a model forecast. Garage counts refer only to visitor areas. Names, capacities and rates use the project’s sourced data snapshot.</p>
+      <p class="demo-disclosure">*Base parking cost; transaction fees may apply. †Approximate straight-line walking estimate, not a routed journey. Check current signs, hours and visitor restrictions.</p>
+    </section>`;
+    $("demo-next").onclick = () => advanceDemo(demo.step === 3 ? 0 : demo.step + 1);
+    $("demo-exit").onclick = stopDemo;
+    if ($("demo-restart")) $("demo-restart").onclick = () => advanceDemo(0);
+    document.querySelectorAll("[data-demo-lot]").forEach((b) => b.onclick = () => select(b.dataset.demoLot, true));
+  }
+  function advanceDemo(step) {
+    demo.step = step;
+    S.selected = step > 0 ? demoWinner().id : null;
+    mapOutline(S.selected ? S.byId.get(S.selected).ring : null);
+    renderDemo(); refreshPins();
+    $("results").scrollTop = 0;
+    $("demo-next").focus({ preventScroll: true });
+  }
+  function startDemo() {
+    if (demo.active) return;
+    try { demo.options = ParkSharkDemo.create(S.items); }
+    catch (e) { $("mapNote").hidden = false; $("mapNote").textContent = e.message; return; }
+    const c = M.map.getCenter();
+    demo.saved = { dest: S.dest, filters: S.filters, selected: S.selected,
+      center: { lat: typeof c.lat === "function" ? c.lat() : c.lat, lon: typeof c.lng === "function" ? c.lng() : c.lng },
+      zoom: mapZoom(), title: $("destTitle").textContent, sub: $("destSub").textContent,
+      resetHidden: $("destReset").hidden, legend: $("legend").innerHTML, scroll: $("results").scrollTop };
+    demo.active = true; demo.step = 0;
+    S.dest = { ...S.home }; S.filters = new Set(); S.selected = null;
+    $("detail").hidden = true; $("suggest").hidden = true;
+    document.body.classList.add("demo-mode");
+    $("demo-start").textContent = "Exit demo";
+    $("demo-start").setAttribute("aria-pressed", "true");
+    $("destTitle").textContent = "Your visit to Wilkinson";
+    $("destSub").textContent = "3 visitor options · a guided parking story";
+    $("legend").innerHTML = '<div class="lg-title">DEMO · SIMULATED OCCUPANCY</div><div>Three visitor options · scripted availability</div><div class="lg-foot">No live sensor readings or reservations</div>';
+    mapOutline(null); drawMap(); mapPan(S.home.lat + 0.0008, S.home.lon - 0.002, 16);
+    requestAnimationFrame(() => {
+      if (!demo.active) return;
+      const points = [...demo.options.map((o) => o.item), S.home];
+      if (M.kind === "leaflet") {
+        M.map.invalidateSize();
+        M.map.fitBounds(points.map((p) => [p.lat, p.lon]), { padding: [45, 40], maxZoom: 16 });
+      } else {
+        const bounds = new google.maps.LatLngBounds();
+        points.forEach((p) => bounds.extend({ lat: p.lat, lng: p.lon }));
+        M.map.fitBounds(bounds, 65);
+      }
+    });
+    renderDemo(); tick(); $("results").scrollTop = 0;
+    $("demo-next").focus({ preventScroll: true });
+  }
+  function stopDemo() {
+    if (!demo.active) return;
+    const saved = demo.saved;
+    demo.active = false; S.dest = saved.dest; S.filters = saved.filters; S.selected = saved.selected;
+    document.body.classList.remove("demo-mode");
+    $("demo-start").textContent = "▶ Try demo";
+    $("demo-start").setAttribute("aria-pressed", "false");
+    $("destTitle").textContent = saved.title; $("destSub").textContent = saved.sub;
+    $("destReset").hidden = saved.resetHidden; $("legend").innerHTML = saved.legend;
+    mapOutline(null); drawMap(); renderList(); tick();
+    requestAnimationFrame(() => {
+      if (demo.active) return;
+      if (M.kind === "leaflet") M.map.invalidateSize();
+      mapPan(saved.center.lat, saved.center.lon, saved.zoom);
+    });
+    if (S.selected) renderDetail(S.byId.get(S.selected));
+    $("results").scrollTop = saved.scroll;
+    $("demo-start").focus({ preventScroll: true });
+    const url = new URL(location.href); url.searchParams.delete("demo"); history.replaceState(null, "", url);
+  }
+
   // ---------------------------------------------------------------- time (real now; ?date=YYYY-MM-DD&hour=H for demos)
   const qs = new URLSearchParams(location.search);
   function now() {
+    if (demo.active) return new Date(2026, 10, 10, 9, 30);
     const d = new Date();
     if (qs.get("date")) { const [y, m, dd] = qs.get("date").split("-").map(Number); d.setFullYear(y, m - 1, dd); }
     if (qs.get("hour")) d.setHours(+qs.get("hour"), 0, 0, 0);
@@ -85,6 +186,13 @@
     return pr && { ...pr, conf: "very_low" };
   }
   function stat(it, d = now()) {
+    const option = demoOption(it);
+    if (option) {
+      const free = ParkSharkDemo.available(option, demo.step), cap = option.visitorCapacity, ratio = free / cap;
+      return { free, cap, ratio, freeLo: free, freeHi: free, tier: "simulated",
+        o: { basis: "Scripted demo availability; not a live sensor or forecast" },
+        color: free === 0 ? "var(--avail-lo)" : "var(--avail-hi)" };
+    }
     const cap = it.capacity && it.capacity.value;
     const o = occFor(it, d);
     if (!cap || !o) return { cap: cap || null, o, free: null, color: "var(--avail-unk)", tier: o && o.measured ? "measured" : "estimated" };
@@ -96,7 +204,7 @@
       tier: o.measured ? "measured" : "estimated",
     };
   }
-  const freeText = (st) => (st.free == null ? "?" : (st.tier === "measured" ? "" : "~") + st.free);
+  const freeText = (st) => (st.free == null ? "?" : (st.tier === "measured" || st.tier === "simulated" ? "" : "~") + st.free);
 
   async function fetchLive() {
     const { supabaseUrl: u, supabaseAnonKey: k } = S.cfg;
@@ -232,7 +340,8 @@
 
   function pinHTML(it, st) {
     const cls = ["pin", it.kind === "street" || it.kind === "pilot" ? "street" : "", (it.capacity.value || 0) >= 300 ? "big" : "", S.selected === it.id ? "sel" : "", passes(it) ? "" : "dim"].join(" ");
-    const label = it.name || it.kind === "street" ? `<span>${esc(shortName(it))}</span>` : (it.kind === "deck" ? "<span>Deck</span>" : "");
+    const option = demoOption(it);
+    const label = option ? `<span>${esc(option.label)}</span>` : it.name || it.kind === "street" ? `<span>${esc(shortName(it))}</span>` : (it.kind === "deck" ? "<span>Deck</span>" : "");
     const live = st.tier === "measured" ? " 📡" : "";
     return `<div class="${cls}" style="--c:${st.color}"><b>${esc(freeText(st))}</b>${label}${live}</div>`;
   }
@@ -241,6 +350,7 @@
     M.pins.clear(); M.lines.forEach((f) => f()); M.lines = []; M.extra.forEach((f) => f()); M.extra = [];
     const d = now();
     for (const it of S.items) {
+      if (demo.active && !demoOption(it)) continue;
       if (it.lines) for (const ln of it.lines) mapAddLine(ln, getComputedStyle(document.documentElement).getPropertyValue("--street").trim() || "#4285f4", () => select(it.id, false));
       M.pins.set(it.id, mapAddPin(it, pinHTML(it, stat(it, d)), () => select(it.id, false)));
     }
@@ -263,6 +373,7 @@
     $("map").classList.toggle("z-lo", z < 17);
     for (const it of S.items) {
       const h = M.pins.get(it.id); if (!h) continue;
+      if (demo.active) { h.show(!!demoOption(it)); continue; }
       const small = !listable(it);
       const big = (it.capacity.value || 0) >= 30 || it.kind === "street" || it.kind === "pilot";
       h.show(S.selected === it.id || (z >= 18 ? true : z >= 17 ? !small : z >= 15 ? !small && big : !!it.name && (it.capacity.value || 0) >= 300));
@@ -271,6 +382,7 @@
 
   // ---------------------------------------------------------------- results list
   function renderList() {
+    if (demo.active) { renderDemo(); return; }
     const list = ranked();
     const n = S.showAll ? list.length : Math.min(list.length, 40);
     const d = now();
@@ -398,7 +510,7 @@
     if (pan) mapPan(it.lat, it.lon, Math.max(mapZoom(), 17));
     mapOutline(it.ring);
     refreshPins(); renderList();
-    renderDetail(it);
+    if (!demo.active) renderDetail(it);
   }
   function closeDetail() { S.selected = null; $("detail").hidden = true; mapOutline(null); refreshPins(); renderList(); }
 
@@ -695,8 +807,12 @@
     $("pay-modal").onclick = (e) => { if (e.target === $("pay-modal")) $("pay-modal").hidden = true; };
     $("pay-sim").onclick = () => confirmPay("simulated demo payment");
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("detail").hidden) closeDetail(); });
+    $("demo-start").disabled = false;
+    $("demo-start").onclick = () => demo.active ? stopDemo() : startDemo();
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && demo.active) stopDemo(); });
+    if (qs.get("demo") === "1") startDemo();
     // Real time: refresh estimates every minute, live sensors too.
-    setInterval(async () => { await fetchLive(); refreshPins(); renderList(); if (S.selected) renderDetail(S.byId.get(S.selected)); }, 60000);
+    setInterval(async () => { if (demo.active) return; await fetchLive(); if (demo.active) return; refreshPins(); renderList(); if (S.selected) renderDetail(S.byId.get(S.selected)); }, 60000);
     window.parkshark = S;
   }
   boot().catch((e) => { console.error(e); document.body.insertAdjacentHTML("beforeend", `<div class="modal"><div class="modal-box">ParkShark failed to load: ${esc(e.message)}</div></div>`); });
