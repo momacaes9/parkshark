@@ -1,0 +1,32 @@
+{
+  "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+  "imageryYear": 2025,
+  "lots": {
+    "way/1065904267": {
+      "scope": "Readable part of the north row",
+      "detail": "Estimated between visible dividers in the north row. Worn and obscured markings elsewhere were left out.",
+      "imagery": {"tileSize": 256, "zoom": 20, "mosaicOriginTile": [294398, 411741]},
+      "stripeEndpointsPixels": [
+        [[231, 132], [224, 173]],
+        [[253, 136], [247, 181]],
+        [[275, 140], [269, 185]]
+      ]
+    },
+    "way/594764289": {
+      "scope": "Western part of one surface row",
+      "detail": "Estimated from repeated markings in the western part of the row. Several divider ends are interpolated around parked cars. The shadowed eastern part and row ends were left out.",
+      "imagery": {"tileSize": 256, "zoom": 20, "mosaicOriginTile": [294403, 411726]},
+      "stripeEndpointsPixels": [
+        [[136, 245], [128, 290]],
+        [[158, 249], [150, 294]],
+        [[180, 253], [172, 298]],
+        [[202, 257], [194, 302]],
+        [[225, 261], [217, 306]],
+        [[248, 265], [240, 310]],
+        [[270, 269], [262, 314]],
+        [[292, 273], [284, 318]],
+        [[314, 277], [306, 322]]
+      ]
+    }
+  }
+}

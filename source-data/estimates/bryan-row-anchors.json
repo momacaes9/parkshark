@@ -1,0 +1,74 @@
+{
+  "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+  "source_year": 2025,
+  "z": 20,
+  "tile_origin_x": 294353,
+  "tile_origin_y": 411752,
+  "tile_size": 256,
+  "mosaic_size": [
+    1024,
+    1024
+  ],
+  "rotated_mosaic_size": [
+    1450,
+    1450
+  ],
+  "row": {
+    "id": "bryan-northeast-row-2025",
+    "estimated_count": 30,
+    "rotated_u_start": 108.0,
+    "rotated_u_end": 791.0,
+    "rotated_v_back_start": 690.0,
+    "rotated_v_back_end": 667.0,
+    "rotated_v_front_start": 736.0,
+    "rotated_v_front_end": 713.0,
+    "rotation_degrees_ccw": 45,
+    "basis": "Visible pavement row, intermittent divider paint, and aligned parked vehicles",
+    "exclusions": [
+      "Terminal crosshatched/access area",
+      "Opposite tree-obscured row",
+      "Drive aisle",
+      "Circular turnaround"
+    ]
+  },
+  "row_original_pixel_corners": [
+    [
+      100.46385334942929,
+      50.96637866637096
+    ],
+    [
+      599.6812408671319,
+      517.6568542494924
+    ],
+    [
+      567.1543289325507,
+      550.1837661840736
+    ],
+    [
+      67.93694141484809,
+      83.49329060095215
+    ]
+  ],
+  "row_lonlat_corners": [
+    [
+      -78.94178268690703,
+      36.002396259931295
+    ],
+    [
+      -78.94111318421842,
+      36.00188992556891
+    ],
+    [
+      -78.94115680620665,
+      36.00185463547699
+    ],
+    [
+      -78.94182630889524,
+      36.00236097006598
+    ]
+  ],
+  "estimated_bay_count": 30,
+  "total_lot_capacity": null,
+  "quality": "Medium positional confidence from georeferenced imagery; low count confidence because vehicles obscure individual divider lines",
+  "layout_status": "Partial row trace, not exact or surveyed"
+}
