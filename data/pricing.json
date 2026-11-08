@@ -1,0 +1,55 @@
+{
+  "retrieved": "2026-11-07",
+  "currency": "USD",
+  "sources": {
+    "visitor": "https://parking.duke.edu/visitor-parking",
+    "daily_permits": "https://parking.duke.edu/parking-permits/occasional-parking-options/duke-blue-spot/",
+    "annual_permits": "https://parking.duke.edu/parking-permits/garages-lots-fees/",
+    "football": "https://parking.duke.edu/visitor-parking/athletic-event-parking/football-parking",
+    "mens_basketball": "https://parking.duke.edu/visitor-parking/athletic-event-parking/mens-basketball-parking/",
+    "durham_city": "https://www.discoverdurham.com/resources/parking-in-durham-what-to-know-before-you-go"
+  },
+  "visitor_hourly": [
+    {"name": "Parking Garage 4 (Bryan Center)", "match": {"osm_name": "Bryan Center Parking Garage"}, "per_hour": 2.0, "payment": "pay station", "clearance_ft": 9.0, "notes": "Free Sundays 8 am-1 pm in the surface lot only"},
+    {"name": "Science Drive Garage", "match": {"osm_name": "Science Drive Garage"}, "per_hour": 2.0, "payment": "pay station", "clearance_ft": 8.17},
+    {"name": "Science Drive Visitor Lot", "match": {"osm_name": "Science Drive Visitor's Parking Lot"}, "per_hour": 2.0, "payment": "meters (cash/card) or Blue Spot"},
+    {"name": "Nasher Art Museum Lot", "match": {"osm_name": "Nasher Museum Parking Lot"}, "per_hour": 2.0, "payment": "Blue Spot only"},
+    {"name": "Parking Garage 1", "match": {"duke_name": "Parking Garage I (PG1)"}, "per_hour": 2.0, "payment": "pay station or Pay-on-Phone", "clearance_ft": 8.83, "notes": "Enter from Trent Dr"},
+    {"name": "Parking Garage 2", "match": {"duke_name": "Parking Garage II (PG2)"}, "per_hour": 2.0, "payment": "pay station or Pay-on-Phone", "clearance_ft": 7.08, "notes": "Enter from Erwin Rd or Elba St"},
+    {"name": "Research Drive Garage", "match": {"duke_name": "Research Drive Garage"}, "per_hour": 2.0, "payment": "pay station", "clearance_ft": 9.0, "notes": "Enter from Erwin Rd onto Eye Care Dr"}
+  ],
+  "visitor_spaces_note": "Duke also sells $2.00/hour Blue Spot visitor spaces at Circuit Drive (8), Flowers Drive (3), Fuqua (2) and elsewhere; their exact stalls are not mapped.",
+  "daily_permits_affiliates_only": [
+    {"name": "Card Lot", "match": {"duke_name": "Card Gym Lot"}, "per_day": 13},
+    {"name": "Circuit Lot", "match": {"duke_name": "Circuit Lot"}, "per_day": 10},
+    {"name": "Hock Garage", "match": {"duke_name": "Hock Plaza Garage"}, "per_day": 10},
+    {"name": "PGIV Permit Section (Bryan Center Garage)", "match": {"osm_name": "Bryan Center Parking Garage"}, "per_day": 13},
+    {"name": "Whitford Lot", "match": {"duke_name": "Whitford"}, "per_day": 13},
+    {"name": "Lenox Baker", "match": {"duke_name": "Lenox Baker Lot"}, "per_day": 10}
+  ],
+  "default_rules": {
+    "duke_permit_lot": "Permit required (gated or enforced). Visitors: use a visitor garage/lot. Faculty/staff/students may buy a daily permit where offered.",
+    "unnamed_campus_lot": "Assumed Duke permit lot (most campus lots are permit-only). Check signage.",
+    "curb_candidate": "Unknown: no signage data in OSM. Many campus curbs are permit, service or loading zones.",
+    "max_fine_note": "Unauthorized vehicles in gated lots are subject to ticketing and towing (parking.duke.edu/parking-regulations)."
+  },
+  "events": {
+    "football": {
+      "general_public_free": ["Circuit Lot", "Chemistry Lot", "Jogging Trail Lot", "Research Drive Garage"],
+      "rv_oversized_per_game": 70,
+      "lots_open_hours_before": 3,
+      "notes": "Most West Campus lots reserved for football parking; Blue Zone & Iron Duke lots must be vacated by permit holders on weekend game days. Shuttles from H Lot and GC Lot every 15-20 min. Accessible parking: Blue Zone B-7 and B-4 (Wannamaker Dr)."
+    },
+    "mens-basketball": {
+      "general_public_per_car": 25,
+      "general_public_lots": ["Circuit Lot", "Jogging Trail Lot"],
+      "reserved_hours_before": 3,
+      "notes": "Circuit Lots free for Circuit and Chemistry permit owners, $25 for everyone else (cash or advance). Jogging Trail Lot $25 advance only. Iron Duke checkpoints from 2 h before tip-off. ADA: Science Drive Garage level 4, $25 advance."
+    }
+  },
+  "nearby_non_duke": [
+    {"name": "Ninth Street public lot (City of Durham area)", "per_hour": null,
+     "notes": "Paid lot near Ninth St; current rate not published online. Check signage / ParkMobile zone.",
+     "source": "https://www.dukechronicle.com/article/2014/08/ninth-street-affected-various-commercial-changes"}
+  ]
+}

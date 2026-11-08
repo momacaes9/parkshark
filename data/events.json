@@ -1,0 +1,438 @@
+{
+ "generated": "2026-11-08T02:30:42Z",
+ "sources": [
+  "https://goduke.com/sports/football/schedule/text",
+  "https://goduke.com/sports/mens-basketball/schedule/text"
+ ],
+ "rules_source": [
+  "https://parking.duke.edu/visitor-parking/athletic-event-parking/football-parking",
+  "https://parking.duke.edu/visitor-parking/athletic-event-parking/mens-basketball-parking/"
+ ],
+ "events": [
+  {
+   "sport": "football",
+   "date": "2026-09-05",
+   "time": "17:00",
+   "time_text": "5 p.m.",
+   "opponent": "Tulane",
+   "venue": "Wallace Wade Stadium",
+   "venue_ll": [
+    35.99541,
+    -78.94203
+   ],
+   "before_h": 4,
+   "after_h": 4,
+   "radius_m": 1200,
+   "boost": 0.9,
+   "result": "W 17-3"
+  },
+  {
+   "sport": "football",
+   "date": "2026-09-19",
+   "time": "16:00",
+   "time_text": "4 p.m.",
+   "opponent": "Stanford",
+   "venue": "Wallace Wade Stadium",
+   "venue_ll": [
+    35.99541,
+    -78.94203
+   ],
+   "before_h": 4,
+   "after_h": 4,
+   "radius_m": 1200,
+   "boost": 0.9,
+   "result": "W 35-7"
+  },
+  {
+   "sport": "football",
+   "date": "2026-09-26",
+   "time": "15:30",
+   "time_text": "3:30 p.m.",
+   "opponent": "William & Mary",
+   "venue": "Wallace Wade Stadium",
+   "venue_ll": [
+    35.99541,
+    -78.94203
+   ],
+   "before_h": 4,
+   "after_h": 4,
+   "radius_m": 1200,
+   "boost": 0.9,
+   "result": "W 62-7"
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-10-03",
+   "time": "19:00",
+   "time_text": "7 p.m.",
+   "opponent": "Countdown to Craziness",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": "N -"
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-10-08",
+   "time": "19:00",
+   "time_text": "7 p.m.",
+   "opponent": "Belmont",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": "W 102-62"
+  },
+  {
+   "sport": "football",
+   "date": "2026-10-17",
+   "time": "15:30",
+   "time_text": "3:30 p.m.",
+   "opponent": "North Carolina",
+   "venue": "Wallace Wade Stadium",
+   "venue_ll": [
+    35.99541,
+    -78.94203
+   ],
+   "before_h": 4,
+   "after_h": 4,
+   "radius_m": 1200,
+   "boost": 0.9,
+   "result": "L 20-24"
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-10-20",
+   "time": "19:00",
+   "time_text": "7 p.m.",
+   "opponent": "#8 Tennessee",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": "W 103-64"
+  },
+  {
+   "sport": "football",
+   "date": "2026-10-31",
+   "time": "12:00",
+   "time_text": "12 p.m.",
+   "opponent": "Boston College",
+   "venue": "Wallace Wade Stadium",
+   "venue_ll": [
+    35.99541,
+    -78.94203
+   ],
+   "before_h": 4,
+   "after_h": 4,
+   "radius_m": 1200,
+   "boost": 0.9,
+   "result": "W 47-2"
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-11-02",
+   "time": "18:30",
+   "time_text": "6:30 p.m.",
+   "opponent": "Army West Point",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": "W 84-50"
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-11-05",
+   "time": "20:00",
+   "time_text": "8 p.m.",
+   "opponent": "Coastal Carolina",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": "W 113-52"
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-11-13",
+   "time": "20:00",
+   "time_text": "8 p.m.",
+   "opponent": "SIU Edwardsville",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-11-17",
+   "time": "19:00",
+   "time_text": "7 p.m.",
+   "opponent": "Illinois",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "football",
+   "date": "2026-11-20",
+   "time": "19:30",
+   "time_text": "7:30 p.m.",
+   "opponent": "Clemson",
+   "venue": "Wallace Wade Stadium",
+   "venue_ll": [
+    35.99541,
+    -78.94203
+   ],
+   "before_h": 4,
+   "after_h": 4,
+   "radius_m": 1200,
+   "boost": 0.9,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-12-04",
+   "time": "19:00",
+   "time_text": "7 p.m.",
+   "opponent": "Harvard",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-12-15",
+   "time": "19:00",
+   "time_text": "7 p.m.",
+   "opponent": "Campbell",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2026-12-17",
+   "time": "20:00",
+   "time_text": "8 p.m.",
+   "opponent": "Grambling State",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2027-01-02",
+   "time": "14:15",
+   "time_text": "2:15 p.m.",
+   "opponent": "California",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2027-01-09",
+   "time": "14:00",
+   "time_text": "2 p.m.",
+   "opponent": "Pitt",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2027-01-13",
+   "time": "21:00",
+   "time_text": "9 p.m.",
+   "opponent": "Stanford",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2027-01-23",
+   "time": "14:15",
+   "time_text": "2:15 p.m.",
+   "opponent": "Notre Dame",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2027-02-01",
+   "time": "19:00",
+   "time_text": "7 p.m.",
+   "opponent": "Miami",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2027-02-13",
+   "time": "17:30",
+   "time_text": "5:30 p.m.",
+   "opponent": "North Carolina",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2027-02-16",
+   "time": "19:00",
+   "time_text": "7 p.m.",
+   "opponent": "Florida State",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2027-02-27",
+   "time": "12:00",
+   "time_text": "12 p.m.",
+   "opponent": "NC State",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  },
+  {
+   "sport": "mens-basketball",
+   "date": "2027-03-01",
+   "time": "19:00",
+   "time_text": "7 p.m.",
+   "opponent": "Virginia",
+   "venue": "Cameron Indoor Stadium",
+   "venue_ll": [
+    35.99734,
+    -78.94234
+   ],
+   "before_h": 3,
+   "after_h": 3,
+   "radius_m": 900,
+   "boost": 0.75,
+   "result": null
+  }
+ ]
+}

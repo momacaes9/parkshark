@@ -772,13 +772,18 @@ def match_duke(lots, road_named):
     def est_cap(l):
         return to_int(l["tags"].get("capacity")) or max(1, l["area"] / 28)
 
+    for d in table:   # 0) explicit OSM id chosen by a human (see osm_id_note)
+        if d.get("osm_id"):
+            for l in lots:
+                if l["id"] == d["osm_id"]:
+                    out[l["id"]] = dict(d, match="manual")
     for d in table:   # 1) exact OSM name
         if d.get("osm_name"):
             for l in lots:
                 if l["tags"].get("name") == d["osm_name"]:
                     out[l["id"]] = dict(d, match="osm_name")
     for d in table:   # 2) proximity
-        if d.get("osm_name") and any(v["name"] == d["name"] for v in out.values()):
+        if any(v["name"] == d["name"] for v in out.values()):
             continue
         if d.get("anchor"):
             ax, ay = to_xy(d["anchor"][1], d["anchor"][0])
@@ -795,7 +800,8 @@ def match_duke(lots, road_named):
         else:
             continue
         maxd = d.get("max_dist", 200)
-        cands = [l for l in lots if l["id"] not in out and l["source"] != "manual" and lot_type(l) == d["type"]]
+        cands = [l for l in lots if l["id"] not in out and l["source"] != "manual" and lot_type(l) == d["type"]
+                 and not l["tags"].get("name")]          # never rename a lot OSM already names
         cands = [(dist(l), l) for l in cands if math.hypot(*centroid(l["outers"][0])) < 4000]
         cands = [(dd, l) for dd, l in cands if dd <= maxd]
         if d.get("zone"):
@@ -839,6 +845,11 @@ def main():
             print(f" {label:<42}{s[k]:>8}")
     print("=" * 52)
     print("Data (c) OpenStreetMap contributors, ODbL.")
+    try:
+        import add_elevation
+        add_elevation.main()
+    except Exception as e:  # noqa: BLE001 - elevation is optional
+        print("  (elevation skipped:", e, ")")
 
 
 if __name__ == "__main__":

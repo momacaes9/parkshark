@@ -30,24 +30,63 @@
     <p class="sub">Real parking around Wilkinson Building · 534 Research Dr</p>
   </header>
 
+  <section id="event-banner" class="card banner" hidden></section>
+
   <section id="status" class="card">
     <div class="row"><span>Occupancy source</span><b id="occ-source">…</b></div>
     <div class="row"><span>Weather</span><b id="weather">…</b></div>
     <div class="row"><span>Updated</span><b id="updated">…</b></div>
+    <div class="row"><span>Next home game</span><b id="next-event">…</b></div>
     <div class="totals" id="totals"></div>
+  </section>
+
+  <section id="profile" class="card">
+    <h2>Driver profile</h2>
+    <div class="grid2">
+      <label>I am a
+        <select id="role">
+          <option value="visitor">Visitor</option>
+          <option value="affiliate">Duke student/staff (no permit)</option>
+          <option value="permit">Duke permit holder</option>
+        </select></label>
+      <label>Staying
+        <select id="hours">
+          <option value="1">1 hour</option><option value="2" selected>2 hours</option><option value="4">4 hours</option><option value="8">All day (8 h)</option>
+        </select></label>
+      <label>Vehicle
+        <select id="vehicle">
+          <option value="compact">Compact</option><option value="standard" selected>Standard</option><option value="large">Large SUV / truck</option>
+        </select></label>
+      <label>My time is worth
+        <select id="vot">
+          <option value="10">$10/h</option><option value="20" selected>$20/h</option><option value="40">$40/h</option>
+        </select></label>
+    </div>
+    <label class="chk"><input type="checkbox" id="wheelchair"> ♿ Wheelchair accessible (ADA stalls, shortest walk)</label>
+    <label class="chk"><input type="checkbox" id="senior"> 👵 Senior mode (short walk, fewest slopes)</label>
+    <label class="chk"><input type="checkbox" id="evneed"> ⚡ I need EV charging</label>
+    <p class="hint" id="profile-note" style="margin:4px 0 0"></p>
   </section>
 
   <section id="agent" class="card">
     <h2>Time-to-park agent</h2>
-    <p class="hint">Ranks lots by drive + search + walk to <b id="dest-name">Wilkinson</b>.
+    <p class="hint">Ranks options by drive + search + walk to <b id="dest-name">Wilkinson</b>, plus price.
       Right-click the map to move the start point.</p>
-    <label class="chk"><input type="checkbox" id="permit"> I have a Duke permit (include restricted lots)</label>
-    <ol id="ranking"></ol>
+    <div class="seg" id="sort">
+      <button type="button" data-sort="value" class="on">Best value</button>
+      <button type="button" data-sort="time">Fastest</button>
+      <button type="button" data-sort="cost">Cheapest</button>
+    </div>
+    <div class="tablewrap"><table id="compare">
+      <thead><tr><th>#</th><th>Option</th><th>Time</th><th>Cost</th></tr></thead><tbody></tbody>
+    </table></div>
+    <p class="hint" id="compare-note"></p>
   </section>
 
   <section id="spot" class="card" hidden>
     <h2>Spot score <span id="spot-score" class="score"></span></h2>
     <div id="spot-meta" class="hint"></div>
+    <div id="spot-price" class="hint"></div>
     <ul id="spot-reasons"></ul>
   </section>
 

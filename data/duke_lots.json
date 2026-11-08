@@ -117,7 +117,9 @@
    "monthly": 110.5,
    "location": "Trent Drive",
    "anchor_road": "Trent Drive",
-   "max_dist": 150
+   "max_dist": 150,
+   "osm_id": "w27331486",
+   "osm_id_note": "OSM \"Duke Circle Parking Deck\", entered from Trent Dr"
   },
   {
    "name": "Parking Garage II (PG2)",
@@ -129,7 +131,9 @@
    "monthly": 110.5,
    "location": "Erwin Rd / Fulton St / Elba St across from Duke Hospital",
    "anchor_road": "Elba Street",
-   "max_dist": 200
+   "max_dist": 200,
+   "osm_id": "w27129551",
+   "osm_id_note": "Garage at Erwin Rd / Fulton St / Elba St across from Duke Hospital"
   },
   {
    "name": "Hock Plaza Garage",

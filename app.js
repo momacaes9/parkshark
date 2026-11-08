@@ -57,6 +57,7 @@
     lots: new Map(),          // id -> {props, feature, layer, spots:[], occ, free}
     curbs: new Map(),         // id -> {props, layer, spots:[], occ}
     curbCV: {},               // curb segment id -> CV verification result
+    pricing: null, events: [], activeEvent: null, destElev: null, sortBy: "value",
     spots: new Map(),         // id -> {props, layer, center:[lon,lat], taken, big}
     rowIndex: new Map(),      // "lot|row|pos" -> spot id
     streets: [], chargers: [],
@@ -111,8 +112,8 @@
       `<br><small>Generated from OSM road geometry; no signage data. A car seen in one aerial photo may be a drop-off, not legal parking. Check the signs.</small>`;
   }
   function lotName(p) {
-    if (p.duke_name) return (p.duke_match === "osm_name" ? "" : "≈ ") + p.duke_name;
     if (p.name) return p.name;
+    if (p.duke_name) return (p.duke_match === "osm_name" ? "" : "≈ ") + p.duke_name;
     if (p.ref) return "Lot " + p.ref;
     const kind = p.garage ? "Parking garage" : p.source === "parking_aisle" ? "Unmapped lot (from aisles)" :
       p.source === "manual" ? "Manual lot" : (p.parking === "rooftop" ? "Rooftop lot" : "Surface lot");
@@ -248,6 +249,7 @@
   // ------------------------------------------------------------------ occupancy
   function nowDate() {
     const d = new Date();
+    if (params.has("date")) { const [y, m, dd] = params.get("date").split("-").map(Number); d.setFullYear(y, m - 1, dd); }
     if (params.has("hour")) d.setHours(+params.get("hour"), 0, 0, 0);
     return d;
   }
@@ -264,6 +266,52 @@
     const closeness = Math.exp(-(p.dist_to_wilkinson_m || 800) / 700);       // closer lots fill first
     const jitter = (hash01(p.id) - 0.5) * 0.12;
     return clamp(base * (0.82 + 0.25 * closeness) + jitter, 0.02, 0.99);
+  }
+
+  // ------------------------------------------------------------------ events (goduke.com home games)
+  function eventWindow(e) {
+    if (!e.time) return null;
+    const [y, m, d] = e.date.split("-").map(Number), [hh, mm] = e.time.split(":").map(Number);
+    const start = new Date(y, m - 1, d, hh, mm);
+    return { start, from: new Date(start - e.before_h * 3600e3), to: new Date(+start + e.after_h * 3600e3) };
+  }
+  function findActiveEvent(d) {
+    const today = d.toDateString();
+    let active = null, next = null;
+    for (const e of state.events) {
+      const w = eventWindow(e);
+      const day = new Date(e.date + "T12:00:00");
+      if (w && d >= w.from && d <= w.to) active = { e, w, live: true };
+      else if (!active && day.toDateString() === today) active = { e, w, live: false };
+      if (!next && day >= new Date(d.toDateString())) next = e;
+    }
+    return { active, next };
+  }
+  function eventBoost(p, occ) {
+    const a = state.activeEvent;
+    if (!a || !a.live) return occ;
+    const [vlat, vlon] = a.e.venue_ll;
+    const dist = distM(p.center[1], p.center[0], vlat, vlon);
+    if (dist > a.e.radius_m) return occ;
+    return clamp(occ + (1 - occ) * a.e.boost * Math.sqrt(1 - dist / a.e.radius_m), 0, 0.995);
+  }
+  function renderEvent(d) {
+    const { active, next } = findActiveEvent(d);
+    state.activeEvent = active;
+    const sportIcon = (e) => (e.sport === "football" ? "🏈" : "🏀");
+    const fmt = (e) => `${new Date(e.date + "T12:00:00").toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" })} ${e.time_text}`;
+    $("next-event").textContent = next ? `${sportIcon(next)} ${next.opponent} · ${fmt(next)}` : "none scheduled";
+    const b = $("event-banner");
+    if (!active) { b.hidden = true; return; }
+    const e = active.e, rules = (state.pricing && state.pricing.events[e.sport]) || {};
+    const fill = active.w ? new Date(active.w.from).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "early";
+    b.hidden = false;
+    b.innerHTML = `${sportIcon(e)} <b>Game day: Duke vs ${esc(e.opponent)}</b>, ${esc(e.time_text)} at ${esc(e.venue)}.<br>` +
+      (active.live ? "Event traffic is ON: lots near the venue are predicted near full." : `Lots near ${esc(e.venue)} are predicted to fill from ${fill}.`) +
+      (e.sport === "football"
+        ? ` General public parking is free at ${esc((rules.general_public_free || []).join(", "))}. Blue Zone permit holders must move their cars.`
+        : ` General public lots (${esc((rules.general_public_lots || []).join(", "))}) cost $${rules.general_public_per_car || 25}.`) +
+      ` <a href="${esc(e.sport === "football" ? state.pricing.sources.football : state.pricing.sources.mens_basketball)}" target="_blank" rel="noopener" style="color:#fde68a">Duke rules</a>`;
   }
 
   async function fetchLive() {
@@ -288,14 +336,15 @@
 
   async function updateOccupancy() {
     const live = await fetchLive();
-    state.occSource = live ? "Supabase live sensors" : "Time-of-day prior";
     const d = nowDate(), bucket = Math.floor(d.getTime() / (5 * 60 * 1000));
+    renderEvent(d);
+    state.occSource = (live ? "Supabase live sensors" : "Time-of-day prior") + (state.activeEvent && state.activeEvent.live ? " + game-day boost" : "");
     for (const lot of state.lots.values()) {
       const p = lot.props;
       let occ = state.liveLot[p.id];
       const liveSpots = lot.spots.filter((s) => s.props.id in state.liveSpot);
       if (occ == null && liveSpots.length) occ = liveSpots.filter((s) => state.liveSpot[s.props.id]).length / liveSpots.length;
-      if (occ == null) occ = priorOcc(p, d);
+      if (occ == null) occ = eventBoost(p, priorOcc(p, d));
       lot.occ = occ;
       // mark exactly round(occ * n) spots as taken, chosen by a stable per-5-min shuffle
       const order = lot.spots.slice().sort((a, b) => hash01(a.props.id + bucket) - hash01(b.props.id + bucket));
@@ -308,12 +357,13 @@
     }
     for (const s of state.spots.values()) if (!s.props.lot && !s.props.curb) s.taken = hash01(s.props.id + bucket) < 0.7;
     for (const c of state.curbs.values()) {          // curb occupancy only meaningful once observed
-      c.occ = clamp(priorOcc({ id: c.props.id, dist_to_wilkinson_m: c.props.dist_to_wilkinson_m }, d) * 1.05, 0.02, 0.99);
+      c.occ = eventBoost(c.props, clamp(priorOcc({ id: c.props.id, dist_to_wilkinson_m: c.props.dist_to_wilkinson_m }, d) * 1.05, 0.02, 0.99));
       c.spots.forEach((s) => { s.taken = hash01(s.props.id + bucket) < c.occ; s.big = s.taken && hash01("veh" + s.props.id) > 0.72; });
     }
     styleSpots();
     $("occ-source").textContent = state.occSource;
-    $("updated").textContent = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + (params.has("hour") ? " (simulated)" : "");
+    $("updated").textContent = (params.has("date") ? d.toLocaleDateString([], { month: "short", day: "numeric" }) + " " : "") +
+      d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + (params.has("hour") || params.has("date") ? " (simulated)" : "");
     renderTotals(); renderLots(); renderAgent();
     if (state.selectedSpot) selectSpot(state.selectedSpot, true);
   }
@@ -353,31 +403,102 @@
     $("weather").textContent = w.label;
   }
 
-  // ------------------------------------------------------------------ agent
-  function rankLots() {
-    const o = state.origin, D = CFG.DESTINATION, permit = $("permit").checked;
-    const out = [];
-    for (const lot of state.lots.values()) {
-      const p = lot.props;
-      if (!p.capacity || lot.free < 1) continue;
-      const restricted = ["private", "no", "permit", "customers"].includes(p.access);
-      if (restricted && !permit) continue;
-      const [lat, lon] = [p.center[1], p.center[0]];
-      const drive = distM(o.lat, o.lon, lat, lon) * 1.4 / 400 + (p.garage ? 1.5 : 0.5);     // 24 km/h campus + park
-      const search = Math.min(15, 1 / Math.max(0.0001, 1 - lot.occ));
-      const walk = distM(lat, lon, D.lat, D.lon) * 1.3 / 80;                                 // 80 m/min walking
-      out.push({ lot, drive, search, walk, total: drive + search + walk });
-    }
-    return out.sort((a, b) => a.total - b.total);
+  // ------------------------------------------------------------------ driver profile + pricing
+  function profile() {
+    return { role: $("role").value, hours: +$("hours").value, vehicle: $("vehicle").value, vot: +$("vot").value,
+             wheelchair: $("wheelchair").checked, senior: $("senior").checked, ev: $("evneed").checked };
   }
+  function matchRule(rules, p) {
+    return (rules || []).find((r) => (r.match.osm_name && r.match.osm_name === p.name) ||
+                                     (r.match.duke_name && r.match.duke_name === p.duke_name));
+  }
+  function isVisitorFacility(p) { return !!matchRule(state.pricing && state.pricing.visitor_hourly, p); }
+  // Price for parking in a lot (or curb segment) for this profile. cost=null means unknown.
+  function priceFor(p, prof) {
+    const P = state.pricing, d = nowDate();
+    if (!P) return { ok: true, cost: null, label: "price unknown" };
+    if (p.kind === "curb") return { ok: true, cost: null, label: "unknown, check signs", note: P.default_rules.curb_candidate };
+    const ev = state.activeEvent && state.activeEvent.live ? state.activeEvent.e : null;
+    const dn = (p.duke_name || p.name || "").replace(/^Parking Garage IV.*/, "PG4");
+    if (ev && ev.sport === "football") {
+      const free = P.events.football.general_public_free.some((n) => dn.startsWith(n.replace(" Lot", "")) || dn === n);
+      if (free) return { ok: true, cost: 0, label: "free (game day)", note: "Football general public parking" };
+      const near = distM(p.center[1], p.center[0], ev.venue_ll[0], ev.venue_ll[1]) < ev.radius_m;
+      if (near && prof.role !== "permit") return { ok: false, label: "reserved for football", note: P.events.football.notes };
+    }
+    if (ev && ev.sport === "mens-basketball" && P.events["mens-basketball"].general_public_lots.some((n) => dn.startsWith(n.replace(" Lot", ""))))
+      return { ok: true, cost: P.events["mens-basketball"].general_public_per_car, label: "$25 game day", note: P.events["mens-basketball"].notes };
+    const vis = matchRule(P.visitor_hourly, p);
+    if (vis) {
+      const sundayFree = /Sundays 8 am/.test(vis.notes || "") && d.getDay() === 0 && d.getHours() >= 8 && d.getHours() < 13 && !p.garage;
+      if (prof.vehicle === "large" && vis.clearance_ft && vis.clearance_ft < 7.5)
+        return { ok: false, label: `clearance ${vis.clearance_ft.toFixed(1)} ft`, note: "Too low for a large SUV/truck with roof load" };
+      return { ok: true, cost: sundayFree ? 0 : vis.per_hour * prof.hours, label: sundayFree ? "free (Sun AM)" : `$${vis.per_hour.toFixed(2)}/h`,
+               note: `${vis.name} · ${vis.payment}${vis.notes ? " · " + vis.notes : ""}` };
+    }
+    if (prof.role === "permit") return { ok: true, cost: 0, label: "your permit", note: "If your permit zone covers this lot" };
+    if (prof.role === "affiliate") {
+      const day = matchRule(P.daily_permits_affiliates_only, p);
+      if (day) return { ok: true, cost: day.per_day, label: `$${day.per_day}/day pass`, note: `Blue Spot daily permit: ${day.name}` };
+    }
+    return { ok: false, label: p.duke_name ? "Duke permit lot" : "permit (assumed)",
+             note: p.duke_name ? P.default_rules.duke_permit_lot : P.default_rules.unnamed_campus_lot };
+  }
+  function climbM(elev) {
+    return state.destElev != null && elev != null ? Math.max(0, state.destElev - elev) : 0;
+  }
+
+  // ------------------------------------------------------------------ agent
+  function rankOptions() {
+    const o = state.origin, D = CFG.DESTINATION, prof = profile();
+    const out = [];
+    const hasEV = [...state.lots.values()].some((l) => l.props.ev > 0);
+    const consider = (kind, item, p, free, occ) => {
+      if (free < 1) return;
+      if (prof.wheelchair && kind === "lot" && !(p.ada > 0) && !p.garage) return;   // garages: ADA spaces required by law
+      if (prof.wheelchair && kind === "curb") return;
+      if (prof.ev && hasEV && !(p.ev > 0)) return;
+      const price = priceFor(p, prof);
+      if (!price.ok) return;
+      const [lat, lon] = [p.center[1], p.center[0]];
+      const drive = distM(o.lat, o.lon, lat, lon) * 1.4 / 400 + (p.garage ? 1.5 : 0.5);
+      const search = Math.min(15, 1 / Math.max(0.0001, 1 - occ));
+      const speed = prof.wheelchair || prof.senior ? 55 : 80;                  // m/min
+      const climb = climbM(p.elev_m);
+      const walk = distM(lat, lon, D.lat, D.lon) * 1.3 / speed + (prof.senior || prof.wheelchair ? climb * 0.15 : 0);
+      const total = drive + search + walk;
+      const cost = price.cost == null ? 5 : price.cost;       // unknown legality: ~10% x $50 ticket risk
+      out.push({ kind, item, p, drive, search, walk, total, price, climb, value: cost + total * prof.vot / 60 });
+    };
+    for (const lot of state.lots.values()) if (lot.props.capacity) consider("lot", lot, lot.props, lot.free, lot.occ);
+    for (const c of state.curbs.values())
+      if (c.props.confidence === "observed parking") consider("curb", c, c.props, Math.round(c.props.est_spaces * (1 - c.occ)), c.occ);
+    const key = { value: (r) => r.value, time: (r) => r.total, cost: (r) => (r.price.cost == null ? 999 : r.price.cost) + r.total / 1000 }[state.sortBy];
+    return { list: out.sort((a, b) => key(a) - key(b)), hasEV, prof };
+  }
+  function optionName(r) { return r.kind === "curb" ? `Curb: ${r.p.name || "street"} (${r.p.side})` : lotName(r.p); }
   function renderAgent() {
-    const ranked = rankLots().slice(0, 5);
+    const { list, hasEV, prof } = rankOptions();
     $("dest-name").textContent = CFG.DESTINATION.name;
-    $("ranking").innerHTML = ranked.map((r) => `
-      <li data-id="${esc(r.lot.props.id)}"><span class="nm">${esc(lotName(r.lot.props))}</span> — <span class="tt">${r.total.toFixed(1)} min</span>
-        <div class="bd">🚗 ${r.drive.toFixed(1)} + 🔎 ${r.search.toFixed(1)} + 🚶 ${r.walk.toFixed(1)} · ${r.lot.free} free (${Math.round(r.lot.occ * 100)}% full)</div></li>`).join("")
-      || "<li>No lots with free spaces right now.</li>";
-    $("ranking").querySelectorAll("li[data-id]").forEach((li) => li.onclick = () => selectLot(li.dataset.id, true));
+    const rows = list.slice(0, 8);
+    $("compare").querySelector("tbody").innerHTML = rows.map((r, i) => `
+      <tr data-kind="${r.kind}" data-id="${esc(r.p.id)}"><td>${i + 1}</td>
+        <td>${esc(optionName(r))}<div class="sm">🚗 ${r.drive.toFixed(1)} + 🔎 ${r.search.toFixed(1)} + 🚶 ${r.walk.toFixed(1)} min${r.climb >= 3 && (prof.senior || prof.wheelchair) ? ` · ⛰ ${Math.round(r.climb)} m up` : ""}</div></td>
+        <td class="tt">${r.total.toFixed(1)} min</td>
+        <td class="cost" title="${esc(r.price.note || "")}">${r.price.cost == null ? "?" : r.price.cost === 0 ? "$0" : "$" + r.price.cost.toFixed(2)}<div class="sm">${esc(r.price.label)}</div></td></tr>`).join("")
+      || `<tr><td colspan="4">No option fits this profile right now.</td></tr>`;
+    $("compare").querySelectorAll("tr[data-id]").forEach((tr) => tr.onclick = () => {
+      if (tr.dataset.kind === "lot") selectLot(tr.dataset.id, true);
+      else { const c = state.curbs.get(tr.dataset.id); map.fitBounds(c.layer.getBounds(), { maxZoom: 19 }); c.layer.openPopup(); }
+    });
+    const notes = [];
+    if (list.slice(0, 8).some((r) => r.kind === "curb")) notes.push("Curb options: price/legality unknown, ranked with a $5 ticket-risk premium.");
+    if (prof.role === "visitor") notes.push("Visitors can only use Duke visitor garages/lots ($2/h) unless it's game day; most campus lots are permit-only.");
+    if (prof.ev && !hasEV) notes.push("⚡ No EV charging is mapped in OpenStreetMap near Wilkinson, so the EV filter can't narrow anything yet.");
+    if (prof.wheelchair) notes.push("♿ Only lots with ADA stalls are shown. Accessible entrances aren't mapped in OSM, so walks are measured to the building centre.");
+    if (prof.senior) notes.push("👵 Walk speed 55 m/min, plus 9 s per metre of climb (Copernicus DEM).");
+    $("compare-note").textContent = notes.join(" ");
+    $("profile-note").textContent = prof.vehicle === "large" ? "Large vehicle: avoids garages under 7.5 ft clearance (PG2 is 7'1\")." : "";
   }
 
   // ------------------------------------------------------------------ sidebar
@@ -395,6 +516,8 @@
     if (p.access) t.push(`<span class="tag ${["private", "no", "permit"].includes(p.access) ? "lock" : ""}">access: ${esc(p.access)}</span>`);
     if (p.fee) t.push(`<span class="tag">fee: ${esc(p.fee)}</span>`);
     if (p.operator) t.push(`<span class="tag">${esc(p.operator)}</span>`);
+    const pr = priceFor(p, profile());
+    t.push(`<span class="tag ${pr.ok ? "" : "lock"}">${pr.ok ? (pr.cost == null ? "?" : pr.cost === 0 ? "$0" : "$" + pr.cost.toFixed(2)) + " · " : ""}${esc(pr.label)}</span>`);
     if (p.ada) t.push(`<span class="tag">♿ ${p.ada}</span>`);
     if (p.ev) t.push(`<span class="tag">⚡ ${p.ev}</span>`);
     return t.join("");
@@ -423,6 +546,8 @@
     L.popup().setLatLng([p.center[1], p.center[0]]).setContent(
       `<b>${esc(lotName(p))}</b><br>${lot.free} of ${p.capacity} free (${Math.round(lot.occ * 100)}% full)<br>` +
       `Confidence: <b>${p.tier}</b>${p.capacity_tagged ? " (capacity tagged in OSM)" : ""}<br>` +
+      (() => { const pr = priceFor(p, profile()); return `Price: <b>${pr.ok ? (pr.cost == null ? "?" : "$" + pr.cost.toFixed(2)) : "n/a"}</b> · ${esc(pr.label)}<br>`; })() +
+      (p.duke_name ? `Duke: ${esc(p.duke_name)} (${p.duke_capacity} spaces, ${esc(p.duke_rate_tier || "")}${p.duke_match === "proximity" ? ", name matched by proximity" : ""})<br>` : "") +
       `${p.area_m2.toLocaleString()} m² · ${p.dist_to_wilkinson_m} m to Wilkinson<br>` +
       `<a href="https://www.openstreetmap.org/${{ w: "way", r: "relation" }[p.id[0]]}/${p.id.slice(1)}" target="_blank" rel="noopener">View on OSM</a>`
     ).openOn(map);
@@ -431,26 +556,44 @@
 
   // ------------------------------------------------------------------ spot score
   function scoreSpot(s) {
-    const p = s.props, w = state.weather, D = CFG.DESTINATION, reasons = [];
+    const p = s.props, w = state.weather, D = CFG.DESTINATION, reasons = [], prof = profile();
     let score = 100;
     const add = (delta, text) => { score += delta; reasons.push({ delta: Math.round(delta), text }); };
+    const size = { compact: 0.6, standard: 1, large: 1.5 }[prof.vehicle];
 
     // neighbors in the same row
     if (p.row != null) {
       for (const [side, dp] of [["left", -1], ["right", 1]]) {
         const nid = state.rowIndex.get(`${p.lot}|${p.row}|${p.pos + dp}`);
         const n = nid && state.spots.get(nid);
-        if (n && n.big) add(-12, `Large vehicle parked on the ${side}: tight door clearance`);
-        else if (n && n.taken) add(-4, `Car parked on the ${side}`);
+        if (n && n.big) add(-12 * size, `Large vehicle parked on the ${side}: tight door clearance`);
+        else if (n && n.taken) add(-4 * size, `Car parked on the ${side}`);
       }
-      if (p.row_len > 2 && p.pos > 0 && p.pos < p.row_len - 1) add(-8, "Middle of the row: neighbors on both sides");
-      else if (p.row_len > 1) add(+0, "End stall: one side open, easier doors");
+      if (!p.curb) {
+        if (p.row_len > 2 && p.pos > 0 && p.pos < p.row_len - 1) add(-8 * size, "Middle of the row: neighbors on both sides");
+        else if (p.row_len > 1) add(prof.vehicle === "large" ? 6 : 0, "End stall: one side open, easier doors");
+      }
     }
-    // walking distance to entrance
+    if (prof.vehicle === "compact") add(3, "Compact car: easy fit in a 2.74 m stall");
+    if (p.curb && prof.vehicle === "large") add(-10, "6.1 m parallel space is tight for a full-size truck");
+    if (p.curb) add(-6, "Parallel parking at the curb, next to moving traffic");
+    // walking distance (+ slope) to the destination
     const walkM = distM(s.center[1], s.center[0], D.lat, D.lon) * 1.3;
-    add(-Math.min(35, walkM / 20), `${Math.round(walkM)} m walk to ${D.name} (~${Math.max(1, Math.round(walkM / 80))} min)`);
-    // sun exposure in hot weather (interior stalls are farther from trees at the lot edge)
+    const walkW = prof.senior || prof.wheelchair ? 2 : 1;
+    add(-Math.min(35 * walkW, walkM / 20 * walkW), `${Math.round(walkM)} m walk to ${D.name} (~${Math.max(1, Math.round(walkM / (walkW > 1 ? 55 : 80)))} min)`);
     const lot = p.lot && state.lots.get(p.lot);
+    const curb = p.curb && state.curbs.get(p.curb);
+    const climb = climbM(lot ? lot.props.elev_m : curb ? curb.props.elev_m : null);
+    if ((prof.senior || prof.wheelchair) && climb >= 2) add(-Math.min(20, climb * 2), `Uphill walk: about ${Math.round(climb)} m of climb`);
+    // accessibility / EV
+    if (prof.wheelchair) {
+      if (p.ada) add(15, "ADA stall with access aisle");
+      else if (p.curb) add(-25, "Curb space: no access aisle or ramp guaranteed");
+      else add(-15, "Not an ADA stall: no access aisle");
+    } else if (p.ada) add(-60, "ADA stall: disability placard required");
+    if (p.ev) add(prof.ev ? 15 : -40, prof.ev ? "EV charger at this stall" : "EV charging stall: plug-in vehicles only");
+    else if (prof.ev) add(-10, "No charger at this stall");
+    // sun exposure in hot weather (interior stalls are farther from trees at the lot edge)
     if (w.tempF != null && w.tempF >= 80 && w.isDay && (w.cloud == null || w.cloud < 60)) {
       let exposure = 0.6;
       if (lot) {
@@ -461,13 +604,15 @@
       if (lot && lot.props.garage) exposure = 0.1;
       add(-15 * exposure * clamp((w.tempF - 75) / 20, 0.3, 1), `${Math.round(w.tempF)}°F and sunny: ${exposure > 0.6 ? "open asphalt, no shade" : "partly shaded near lot edge"}`);
     }
-    // rain: long walks hurt more
-    if (w.precip > 0) add(-Math.min(25, walkM / 25), `Raining: ${Math.round(walkM)} m in the rain`);
-    if (p.ada) reasons.push({ delta: 0, text: "♿ ADA stall: disability placard required" });
-    if (p.ev) reasons.push({ delta: 0, text: "⚡ EV charging stall: plug-in vehicles only" });
+    if (w.precip > 0) add(-Math.min(25, walkM / 25) * walkW, `Raining: ${Math.round(walkM)} m in the rain`);
+    // price
+    const price = priceFor(lot ? lot.props : curb ? curb.props : { kind: "curb" }, prof);
+    if (!price.ok) add(-30, `Not available to you: ${price.label}`);
+    else if (price.cost > 0) add(-Math.min(15, price.cost), `Costs $${price.cost.toFixed(2)} (${price.label})`);
     if (s.taken) { score = Math.min(score, 10); reasons.unshift({ delta: 0, text: "Occupied right now" }); }
-    if (p.estimated) reasons.push({ delta: 0, text: "Stall position estimated from lot outline (not individually mapped in OSM)" });
-    return { score: Math.round(clamp(score, 0, 100)), reasons };
+    if (p.curb) reasons.push({ delta: 0, text: curb && curb.props.confidence === "observed parking" ? "Curb parking seen in aerial imagery (CV)" : "Curb candidate: unverified, check signs" });
+    else if (p.estimated) reasons.push({ delta: 0, text: "Stall position estimated from lot outline/aisles (not individually mapped in OSM)" });
+    return { score: Math.round(clamp(score, 0, 100)), reasons, price };
   }
   function selectSpot(id, silent) {
     const prev = state.selectedSpot && state.spots.get(state.selectedSpot);
@@ -475,13 +620,14 @@
     if (prev) prev.layer.setStyle(spotStyle(prev));
     const s = state.spots.get(id); if (!s) return;
     s.layer.setStyle(spotStyle(s));
-    const { score, reasons } = scoreSpot(s);
+    const { score, reasons, price } = scoreSpot(s);
     const col = score >= 75 ? COLORS.open : score >= 50 ? "#f59e0b" : COLORS.taken;
     $("spot").hidden = false;
     $("spot-score").textContent = score;
     $("spot-score").style.background = col; $("spot-score").style.color = "#0b1220";
     const lot = s.props.lot && state.lots.get(s.props.lot);
     $("spot-meta").textContent = `${s.taken ? "Taken" : "Open"} · ${lot ? lotName(lot.props) : "curbside"} · spot ${id}`;
+    $("spot-price").textContent = `💲 ${price.ok ? (price.cost == null ? "Price unknown" : price.cost === 0 ? "Free for you" : "$" + price.cost.toFixed(2) + " for your stay") : "Not available"} · ${price.label}${price.note ? " · " + price.note : ""}`;
     $("spot-reasons").innerHTML = reasons.map((r) =>
       `<li class="${r.delta < 0 ? "neg" : r.delta > 0 ? "pos" : ""}">${r.delta ? (r.delta > 0 ? "+" : "") + r.delta + " · " : ""}${esc(r.text)}</li>`).join("");
     if (!silent) $("spot").scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -492,15 +638,24 @@
     try { await loadScript("config.js"); } catch (e) { console.info("No config.js found, using defaults (copy config.example.js)."); }
     CFG = Object.assign({}, DEFAULTS, window.PARKSHARK_CONFIG || {});
     initMap();
-    const [fc, cv] = await Promise.all([
+    const getJSON = (u) => fetch(u).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    const [fc, cv, pricing, events] = await Promise.all([
       fetch("data/parking.geojson").then((r) => r.json()),
-      fetch("data/curb_cv.json").then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
+      getJSON("data/curb_cv.json"), getJSON("data/pricing.json"), getJSON("data/events.json"),
     ]);
     state.curbCV = (cv && cv.segments) || {};
+    state.pricing = pricing; state.events = (events && events.events) || [];
+    state.destElev = fc.metadata.dest_elev_m;
     buildLayers(fc);
     initDraw();
     $("filter").oninput = renderLots;
-    $("permit").onchange = renderAgent;
+    const rerender = () => { renderAgent(); renderLots(); if (state.selectedSpot) selectSpot(state.selectedSpot, true); };
+    ["role", "hours", "vehicle", "vot", "wheelchair", "senior", "evneed"].forEach((id) => $(id).onchange = rerender);
+    $("sort").querySelectorAll("button").forEach((b) => b.onclick = () => {
+      state.sortBy = b.dataset.sort;
+      $("sort").querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b));
+      renderAgent();
+    });
     await updateWeather();
     await updateOccupancy();
     setInterval(updateOccupancy, 60 * 1000);
