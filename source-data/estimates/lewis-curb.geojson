@@ -1,0 +1,1224 @@
+{
+  "type": "FeatureCollection",
+  "name": "Lewis Street aerial curb-bay estimates",
+  "coverage": "Visible striped portions of the north curb only; partial, unverified layout.",
+  "estimatedBayCount": 22,
+  "publishedVisitorCount": 44,
+  "modeledBayExclusion": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -78.9315775,
+          36.00386305
+        ],
+        [
+          -78.9315775,
+          36.00379687
+        ],
+        [
+          -78.9302592,
+          36.00375456
+        ],
+        [
+          -78.9302592,
+          36.0038164
+        ],
+        [
+          -78.9315775,
+          36.00386305
+        ]
+      ]
+    ]
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-west-middle-01",
+      "bbox": [
+        -78.93121541,
+        36.00379362,
+        -78.93118456,
+        36.00384352
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93121138,
+              36.00384352
+            ],
+            [
+              -78.93121541,
+              36.0037947
+            ],
+            [
+              -78.9311859,
+              36.00379362
+            ],
+            [
+              -78.93118456,
+              36.00384244
+            ],
+            [
+              -78.93121138,
+              36.00384352
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · west-middle 01",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "west-middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-west-middle-02",
+      "bbox": [
+        -78.9311859,
+        36.00379253,
+        -78.93115506,
+        36.00384244
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93118456,
+              36.00384244
+            ],
+            [
+              -78.9311859,
+              36.00379362
+            ],
+            [
+              -78.93115506,
+              36.00379253
+            ],
+            [
+              -78.93115506,
+              36.0038419
+            ],
+            [
+              -78.93118456,
+              36.00384244
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · west-middle 02",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "west-middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-west-middle-03",
+      "bbox": [
+        -78.93115506,
+        36.00379145,
+        -78.93112689,
+        36.0038419
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93115506,
+              36.0038419
+            ],
+            [
+              -78.93115506,
+              36.00379253
+            ],
+            [
+              -78.93112823,
+              36.00379145
+            ],
+            [
+              -78.93112689,
+              36.00384135
+            ],
+            [
+              -78.93115506,
+              36.0038419
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · west-middle 03",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "west-middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-west-middle-04",
+      "bbox": [
+        -78.93112823,
+        36.00379091,
+        -78.93109739,
+        36.00384135
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93112689,
+              36.00384135
+            ],
+            [
+              -78.93112823,
+              36.00379145
+            ],
+            [
+              -78.93109873,
+              36.00379091
+            ],
+            [
+              -78.93109739,
+              36.00384081
+            ],
+            [
+              -78.93112689,
+              36.00384135
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · west-middle 04",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "west-middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-west-middle-05",
+      "bbox": [
+        -78.93109873,
+        36.00378928,
+        -78.93106788,
+        36.00384081
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93109739,
+              36.00384081
+            ],
+            [
+              -78.93109873,
+              36.00379091
+            ],
+            [
+              -78.93107057,
+              36.00378928
+            ],
+            [
+              -78.93106788,
+              36.00383973
+            ],
+            [
+              -78.93109739,
+              36.00384081
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · west-middle 05",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "west-middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-middle-01",
+      "bbox": [
+        -78.93086806,
+        36.0037806,
+        -78.93084124,
+        36.00383159
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93086806,
+              36.00383159
+            ],
+            [
+              -78.93086672,
+              36.00378277
+            ],
+            [
+              -78.93084124,
+              36.0037806
+            ],
+            [
+              -78.93084124,
+              36.00383051
+            ],
+            [
+              -78.93086806,
+              36.00383159
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · middle 01",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-middle-02",
+      "bbox": [
+        -78.93084124,
+        36.0037806,
+        -78.93080905,
+        36.00383051
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93084124,
+              36.00383051
+            ],
+            [
+              -78.93084124,
+              36.0037806
+            ],
+            [
+              -78.93081307,
+              36.0037806
+            ],
+            [
+              -78.93080905,
+              36.00382996
+            ],
+            [
+              -78.93084124,
+              36.00383051
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · middle 02",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-middle-03",
+      "bbox": [
+        -78.93081307,
+        36.0037806,
+        -78.93078357,
+        36.00382996
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93080905,
+              36.00382996
+            ],
+            [
+              -78.93081307,
+              36.0037806
+            ],
+            [
+              -78.93078357,
+              36.0037806
+            ],
+            [
+              -78.93078357,
+              36.00382834
+            ],
+            [
+              -78.93080905,
+              36.00382996
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · middle 03",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-middle-04",
+      "bbox": [
+        -78.93078357,
+        36.00377951,
+        -78.93075272,
+        36.00382834
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93078357,
+              36.00382834
+            ],
+            [
+              -78.93078357,
+              36.0037806
+            ],
+            [
+              -78.93075407,
+              36.00377951
+            ],
+            [
+              -78.93075272,
+              36.00382779
+            ],
+            [
+              -78.93078357,
+              36.00382834
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · middle 04",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-middle-05",
+      "bbox": [
+        -78.93075407,
+        36.00377789,
+        -78.93072456,
+        36.00382779
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93075272,
+              36.00382779
+            ],
+            [
+              -78.93075407,
+              36.00377951
+            ],
+            [
+              -78.9307259,
+              36.00377789
+            ],
+            [
+              -78.93072456,
+              36.00382671
+            ],
+            [
+              -78.93075272,
+              36.00382779
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · middle 05",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "middle",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-01",
+      "bbox": [
+        -78.93061057,
+        36.00377409,
+        -78.93057972,
+        36.00382291
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93060923,
+              36.00382291
+            ],
+            [
+              -78.93061057,
+              36.00377517
+            ],
+            [
+              -78.93058375,
+              36.00377409
+            ],
+            [
+              -78.93057972,
+              36.00382237
+            ],
+            [
+              -78.93060923,
+              36.00382291
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 01",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-02",
+      "bbox": [
+        -78.93058375,
+        36.003773,
+        -78.9305529,
+        36.00382237
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93057972,
+              36.00382237
+            ],
+            [
+              -78.93058375,
+              36.00377409
+            ],
+            [
+              -78.93055424,
+              36.003773
+            ],
+            [
+              -78.9305529,
+              36.00382183
+            ],
+            [
+              -78.93057972,
+              36.00382237
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 02",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-03",
+      "bbox": [
+        -78.93055424,
+        36.00377192,
+        -78.93052205,
+        36.00382183
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.9305529,
+              36.00382183
+            ],
+            [
+              -78.93055424,
+              36.003773
+            ],
+            [
+              -78.93052608,
+              36.00377192
+            ],
+            [
+              -78.93052205,
+              36.00382074
+            ],
+            [
+              -78.9305529,
+              36.00382183
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 03",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-04",
+      "bbox": [
+        -78.93052608,
+        36.00377083,
+        -78.93049523,
+        36.00382074
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93052205,
+              36.00382074
+            ],
+            [
+              -78.93052608,
+              36.00377192
+            ],
+            [
+              -78.93049657,
+              36.00377083
+            ],
+            [
+              -78.93049523,
+              36.0038202
+            ],
+            [
+              -78.93052205,
+              36.00382074
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 04",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-05",
+      "bbox": [
+        -78.93049657,
+        36.00376975,
+        -78.93046573,
+        36.0038202
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93049523,
+              36.0038202
+            ],
+            [
+              -78.93049657,
+              36.00377083
+            ],
+            [
+              -78.93046841,
+              36.00376975
+            ],
+            [
+              -78.93046573,
+              36.00381911
+            ],
+            [
+              -78.93049523,
+              36.0038202
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 05",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-06",
+      "bbox": [
+        -78.93046841,
+        36.00376866,
+        -78.93043891,
+        36.00381911
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93046573,
+              36.00381911
+            ],
+            [
+              -78.93046841,
+              36.00376975
+            ],
+            [
+              -78.93043891,
+              36.00376866
+            ],
+            [
+              -78.93043891,
+              36.00381803
+            ],
+            [
+              -78.93046573,
+              36.00381911
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 06",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-07",
+      "bbox": [
+        -78.93043891,
+        36.00376758,
+        -78.93040806,
+        36.00381803
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93043891,
+              36.00381803
+            ],
+            [
+              -78.93043891,
+              36.00376866
+            ],
+            [
+              -78.93041074,
+              36.00376758
+            ],
+            [
+              -78.93040806,
+              36.00381694
+            ],
+            [
+              -78.93043891,
+              36.00381803
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 07",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-08",
+      "bbox": [
+        -78.93041074,
+        36.0037665,
+        -78.93038124,
+        36.00381694
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93040806,
+              36.00381694
+            ],
+            [
+              -78.93041074,
+              36.00376758
+            ],
+            [
+              -78.93038124,
+              36.0037665
+            ],
+            [
+              -78.93038124,
+              36.00381586
+            ],
+            [
+              -78.93040806,
+              36.00381694
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 08",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-09",
+      "bbox": [
+        -78.93038124,
+        36.00376595,
+        -78.93035039,
+        36.00381586
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93038124,
+              36.00381586
+            ],
+            [
+              -78.93038124,
+              36.0037665
+            ],
+            [
+              -78.93035442,
+              36.00376595
+            ],
+            [
+              -78.93035039,
+              36.00381477
+            ],
+            [
+              -78.93038124,
+              36.00381586
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 09",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-10",
+      "bbox": [
+        -78.93035442,
+        36.00376541,
+        -78.93032357,
+        36.00381477
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93035039,
+              36.00381477
+            ],
+            [
+              -78.93035442,
+              36.00376595
+            ],
+            [
+              -78.93032357,
+              36.00376541
+            ],
+            [
+              -78.93032357,
+              36.00381369
+            ],
+            [
+              -78.93035039,
+              36.00381477
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 10",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-11",
+      "bbox": [
+        -78.93032357,
+        36.00376433,
+        -78.93029273,
+        36.00381369
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93032357,
+              36.00381369
+            ],
+            [
+              -78.93032357,
+              36.00376541
+            ],
+            [
+              -78.93029675,
+              36.00376433
+            ],
+            [
+              -78.93029273,
+              36.0038126
+            ],
+            [
+              -78.93032357,
+              36.00381369
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 11",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-lewis-2025-east-12",
+      "bbox": [
+        -78.93029675,
+        36.00376216,
+        -78.93026859,
+        36.0038126
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.93029273,
+              36.0038126
+            ],
+            [
+              -78.93029675,
+              36.00376433
+            ],
+            [
+              -78.93026859,
+              36.00376216
+            ],
+            [
+              -78.93026859,
+              36.00381152
+            ],
+            [
+              -78.93029273,
+              36.0038126
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "estimated-curb-bay",
+        "name": "Lewis Street · east 12",
+        "street": "Lewis Street",
+        "curbSide": "north (H Lot side)",
+        "orientation": "perpendicular",
+        "runId": "east",
+        "estimated": true,
+        "confidence": "medium",
+        "method": "Adjacent painted divider endpoints manually estimated from aerial imagery",
+        "imageryYear": 2025,
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "occupancy": null,
+        "accessibility": null,
+        "evCharging": null,
+        "legalDesignation": null
+      }
+    }
+  ]
+}

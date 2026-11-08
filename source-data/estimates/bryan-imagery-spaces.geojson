@@ -1,0 +1,1836 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-01",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94178190582056,
+              36.002395669209754
+            ],
+            [
+              -78.94176115123722,
+              36.002379972893245
+            ],
+            [
+              -78.94180477322543,
+              36.00234468302065
+            ],
+            [
+              -78.94182552780876,
+              36.00236037934418
+            ],
+            [
+              -78.94178190582056,
+              36.002395669209754
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-01",
+        "name": "Bryan Center estimated bay NE-01",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-02",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94175958906428,
+              36.00237879144993
+            ],
+            [
+              -78.94173883448093,
+              36.00236309513005
+            ],
+            [
+              -78.94178245646913,
+              36.00232780524991
+            ],
+            [
+              -78.94180321105249,
+              36.00234350157681
+            ],
+            [
+              -78.94175958906428,
+              36.00237879144993
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-02",
+        "name": "Bryan Center estimated bay NE-02",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-03",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.941737272308,
+              36.0023619136865
+            ],
+            [
+              -78.94171651772464,
+              36.00234621736325
+            ],
+            [
+              -78.94176013971284,
+              36.002310927475556
+            ],
+            [
+              -78.9417808942962,
+              36.00232662380581
+            ],
+            [
+              -78.941737272308,
+              36.0023619136865
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-03",
+        "name": "Bryan Center estimated bay NE-03",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-04",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94171495555169,
+              36.00234503591945
+            ],
+            [
+              -78.94169420096836,
+              36.00232933959285
+            ],
+            [
+              -78.94173782295657,
+              36.00229404969759
+            ],
+            [
+              -78.94175857753991,
+              36.002309746031216
+            ],
+            [
+              -78.94171495555169,
+              36.00234503591945
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-04",
+        "name": "Bryan Center estimated bay NE-04",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-05",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94169263879542,
+              36.002328158148785
+            ],
+            [
+              -78.94167188421206,
+              36.002312461818825
+            ],
+            [
+              -78.94171550620028,
+              36.00227717191601
+            ],
+            [
+              -78.94173626078363,
+              36.002292868252994
+            ],
+            [
+              -78.94169263879542,
+              36.002328158148785
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-05",
+        "name": "Bryan Center estimated bay NE-05",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-06",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94167032203913,
+              36.002311280374514
+            ],
+            [
+              -78.94164956745577,
+              36.0022955840412
+            ],
+            [
+              -78.941693189444,
+              36.00226029413083
+            ],
+            [
+              -78.94171394402733,
+              36.002275990471176
+            ],
+            [
+              -78.94167032203913,
+              36.002311280374514
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-06",
+        "name": "Bryan Center estimated bay NE-06",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-07",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94164800528284,
+              36.00229440259662
+            ],
+            [
+              -78.9416272506995,
+              36.00227870625995
+            ],
+            [
+              -78.9416708726877,
+              36.00224341634202
+            ],
+            [
+              -78.94169162727104,
+              36.002259112685735
+            ],
+            [
+              -78.94164800528284,
+              36.00229440259662
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-07",
+        "name": "Bryan Center estimated bay NE-07",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-08",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94162568852656,
+              36.00227752481512
+            ],
+            [
+              -78.94160493394321,
+              36.00226182847509
+            ],
+            [
+              -78.94164855593141,
+              36.0022265385496
+            ],
+            [
+              -78.94166931051477,
+              36.002242234896684
+            ],
+            [
+              -78.94162568852656,
+              36.00227752481512
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-08",
+        "name": "Bryan Center estimated bay NE-08",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-09",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94160337177028,
+              36.002260647030006
+            ],
+            [
+              -78.94158261718692,
+              36.00224495068661
+            ],
+            [
+              -78.94162623917512,
+              36.00220966075359
+            ],
+            [
+              -78.94164699375848,
+              36.00222535710401
+            ],
+            [
+              -78.94160337177028,
+              36.002260647030006
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-09",
+        "name": "Bryan Center estimated bay NE-09",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-10",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94158105501397,
+              36.00224376924128
+            ],
+            [
+              -78.94156030043064,
+              36.002228072894525
+            ],
+            [
+              -78.94160392241885,
+              36.00219278295395
+            ],
+            [
+              -78.9416246770022,
+              36.00220847930773
+            ],
+            [
+              -78.94158105501397,
+              36.00224376924128
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-10",
+        "name": "Bryan Center estimated bay NE-10",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-11",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.9415587382577,
+              36.002226891448956
+            ],
+            [
+              -78.94153798367434,
+              36.00221119509882
+            ],
+            [
+              -78.94158160566256,
+              36.00217590515071
+            ],
+            [
+              -78.94160236024591,
+              36.00219160150784
+            ],
+            [
+              -78.9415587382577,
+              36.002226891448956
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-11",
+        "name": "Bryan Center estimated bay NE-11",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-12",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94153642150141,
+              36.002210013653
+            ],
+            [
+              -78.94151566691806,
+              36.00219431729951
+            ],
+            [
+              -78.94155928890628,
+              36.002159027343836
+            ],
+            [
+              -78.94158004348961,
+              36.00217472370433
+            ],
+            [
+              -78.94153642150141,
+              36.002210013653
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-12",
+        "name": "Bryan Center estimated bay NE-12",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-13",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94151410474512,
+              36.00219313585344
+            ],
+            [
+              -78.94149335016178,
+              36.002177439496606
+            ],
+            [
+              -78.94153697214998,
+              36.00214214953337
+            ],
+            [
+              -78.94155772673332,
+              36.00215784589721
+            ],
+            [
+              -78.94151410474512,
+              36.00219313585344
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-13",
+        "name": "Bryan Center estimated bay NE-13",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-14",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94149178798884,
+              36.00217625805026
+            ],
+            [
+              -78.94147103340549,
+              36.00216056169007
+            ],
+            [
+              -78.94151465539369,
+              36.00212527171927
+            ],
+            [
+              -78.94153540997705,
+              36.0021409680865
+            ],
+            [
+              -78.94149178798884,
+              36.00217625805026
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-14",
+        "name": "Bryan Center estimated bay NE-14",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-15",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94146947123254,
+              36.00215938024348
+            ],
+            [
+              -78.9414487166492,
+              36.00214368387992
+            ],
+            [
+              -78.94149233863742,
+              36.00210839390157
+            ],
+            [
+              -78.94151309322076,
+              36.00212409027216
+            ],
+            [
+              -78.94146947123254,
+              36.00215938024348
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-15",
+        "name": "Bryan Center estimated bay NE-15",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-16",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94144715447626,
+              36.00214250243307
+            ],
+            [
+              -78.94142639989293,
+              36.002126806066165
+            ],
+            [
+              -78.94147002188113,
+              36.00209151608028
+            ],
+            [
+              -78.94149077646448,
+              36.0021072124542
+            ],
+            [
+              -78.94144715447626,
+              36.00214250243307
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-16",
+        "name": "Bryan Center estimated bay NE-16",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-17",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94142483771998,
+              36.002125624619055
+            ],
+            [
+              -78.94140408313662,
+              36.00210992824879
+            ],
+            [
+              -78.94144770512484,
+              36.002074638255344
+            ],
+            [
+              -78.94146845970818,
+              36.00209033463263
+            ],
+            [
+              -78.94142483771998,
+              36.002125624619055
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-17",
+        "name": "Bryan Center estimated bay NE-17",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-18",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94140252096369,
+              36.00210874680144
+            ],
+            [
+              -78.94138176638035,
+              36.0020930504278
+            ],
+            [
+              -78.94142538836856,
+              36.00205776042681
+            ],
+            [
+              -78.94144614295189,
+              36.00207345680746
+            ],
+            [
+              -78.94140252096369,
+              36.00210874680144
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-18",
+        "name": "Bryan Center estimated bay NE-18",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-19",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.9413802042074,
+              36.00209186898021
+            ],
+            [
+              -78.94135944962406,
+              36.0020761726032
+            ],
+            [
+              -78.94140307161226,
+              36.00204088259465
+            ],
+            [
+              -78.94142382619562,
+              36.00205657897866
+            ],
+            [
+              -78.9413802042074,
+              36.00209186898021
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-19",
+        "name": "Bryan Center estimated bay NE-19",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-20",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94135788745113,
+              36.002074991155354
+            ],
+            [
+              -78.94133713286777,
+              36.00205929477499
+            ],
+            [
+              -78.94138075485597,
+              36.00202400475888
+            ],
+            [
+              -78.94140150943933,
+              36.00203970114625
+            ],
+            [
+              -78.94135788745113,
+              36.002074991155354
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-20",
+        "name": "Bryan Center estimated bay NE-20",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-21",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94133557069482,
+              36.00205811332689
+            ],
+            [
+              -78.94131481611149,
+              36.00204241694318
+            ],
+            [
+              -78.9413584380997,
+              36.00200712691951
+            ],
+            [
+              -78.94137919268304,
+              36.002022823310256
+            ],
+            [
+              -78.94133557069482,
+              36.00205811332689
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-21",
+        "name": "Bryan Center estimated bay NE-21",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-22",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94131325393855,
+              36.002041235494815
+            ],
+            [
+              -78.94129249935519,
+              36.00202553910774
+            ],
+            [
+              -78.94133612134341,
+              36.00199024907651
+            ],
+            [
+              -78.94135687592676,
+              36.00200594547062
+            ],
+            [
+              -78.94131325393855,
+              36.002041235494815
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-22",
+        "name": "Bryan Center estimated bay NE-22",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-23",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94129093718226,
+              36.00202435765912
+            ],
+            [
+              -78.94127018259891,
+              36.0020086612687
+            ],
+            [
+              -78.94131380458712,
+              36.001973371229916
+            ],
+            [
+              -78.94133455917046,
+              36.00198906762738
+            ],
+            [
+              -78.94129093718226,
+              36.00202435765912
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-23",
+        "name": "Bryan Center estimated bay NE-23",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-24",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94126862042597,
+              36.002007479819824
+            ],
+            [
+              -78.94124786584263,
+              36.001991783426035
+            ],
+            [
+              -78.94129148783082,
+              36.00195649337972
+            ],
+            [
+              -78.94131224241417,
+              36.00197218978053
+            ],
+            [
+              -78.94126862042597,
+              36.002007479819824
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-24",
+        "name": "Bryan Center estimated bay NE-24",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-25",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94124630366969,
+              36.00199060197691
+            ],
+            [
+              -78.94122554908634,
+              36.001974905579765
+            ],
+            [
+              -78.94126917107454,
+              36.00193961552589
+            ],
+            [
+              -78.9412899256579,
+              36.00195531193006
+            ],
+            [
+              -78.94124630366969,
+              36.00199060197691
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-25",
+        "name": "Bryan Center estimated bay NE-25",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-26",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94122398691339,
+              36.001973724130394
+            ],
+            [
+              -78.94120323233005,
+              36.00195802772988
+            ],
+            [
+              -78.94124685431827,
+              36.00192273766846
+            ],
+            [
+              -78.94126760890161,
+              36.001938434075974
+            ],
+            [
+              -78.94122398691339,
+              36.001973724130394
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-26",
+        "name": "Bryan Center estimated bay NE-26",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-27",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94120167015711,
+              36.00195684628025
+            ],
+            [
+              -78.94118091557377,
+              36.00194114987638
+            ],
+            [
+              -78.94122453756198,
+              36.0019058598074
+            ],
+            [
+              -78.94124529214533,
+              36.00192155621829
+            ],
+            [
+              -78.94120167015711,
+              36.00195684628025
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-27",
+        "name": "Bryan Center estimated bay NE-27",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-28",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94117935340083,
+              36.00193996842651
+            ],
+            [
+              -78.94115859881747,
+              36.00192427201929
+            ],
+            [
+              -78.94120222080569,
+              36.001888981942734
+            ],
+            [
+              -78.94122297538902,
+              36.001904678356986
+            ],
+            [
+              -78.94117935340083,
+              36.00193996842651
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-28",
+        "name": "Bryan Center estimated bay NE-28",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-29",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94115703664454,
+              36.00192309056914
+            ],
+            [
+              -78.9411362820612,
+              36.00190739415856
+            ],
+            [
+              -78.9411799040494,
+              36.00187210407446
+            ],
+            [
+              -78.94120065863274,
+              36.001887800492085
+            ],
+            [
+              -78.94115703664454,
+              36.00192309056914
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-29",
+        "name": "Bryan Center estimated bay NE-29",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "estimate-bryan-img-2025-ne-30",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -78.94113471988825,
+              36.001906212708164
+            ],
+            [
+              -78.94111396530491,
+              36.001890516294225
+            ],
+            [
+              -78.9411575872931,
+              36.00185522620257
+            ],
+            [
+              -78.94117834187647,
+              36.00187092262355
+            ],
+            [
+              -78.94113471988825,
+              36.001906212708164
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": "estimate-bryan-img-2025-ne-30",
+        "name": "Bryan Center estimated bay NE-30",
+        "kind": "parking_space_estimate",
+        "facility_id": "duke-2021-W6",
+        "facility_name": "Bryan Ctr Pay Lot",
+        "row_id": "bryan-northeast-row-2025",
+        "geometry_status": "estimated_imagery_guided",
+        "geometryStatus": "Imagery-guided estimate; not surveyed",
+        "confidence": "medium",
+        "count_confidence": "low",
+        "method": "Manual row anchors and interpolated divisions from 2025 orthophoto",
+        "estimated": true,
+        "surveyed": false,
+        "imagery_year": 2025,
+        "retrieved": "2026-11-07",
+        "source": "City of Durham 2025 aerial orthophotos (derived estimate)",
+        "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+        "source_tile_z": 20,
+        "position_accuracy_m": null,
+        "individual_divider_visibility": "partial; vehicles obscure some boundaries",
+        "accessible": null,
+        "ev": null,
+        "ada_status": "unknown",
+        "ev_status": "unknown",
+        "occupancy": null,
+        "occupancy_status": "unknown",
+        "warning": "Estimated geometry only. Verify painted boundaries and signs on site. Imagery does not establish current occupancy, accessible designation, or EV designation."
+      }
+    }
+  ],
+  "description": "30 imagery-guided estimates in one Bryan Center row; incomplete lot coverage; not an authoritative capacity"
+}

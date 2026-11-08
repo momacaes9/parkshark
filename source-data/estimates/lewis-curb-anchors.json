@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "street": "Lewis Street",
+  "curbSide": "north (H Lot side)",
+  "orientation": "perpendicular",
+  "reviewDate": "2026-11-07",
+  "imagery": {
+    "name": "City of Durham 2025 aerial orthophotos",
+    "year": 2025,
+    "sourceUrl": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+    "zoom": 20,
+    "tileSize": 256,
+    "mosaicOriginTile": [294380, 411746],
+    "mosaicSizePixels": [2048, 768],
+    "tileRangeInclusive": {"x": [294380, 294387], "y": [411746, 411748]},
+    "pixelCoordinateConvention": "x increases east, y increases south, relative to the northwest mosaic corner. Tile requests use /tile/{zoom}/{y}/{x}."
+  },
+  "publishedVisitorParking": {
+    "count": 44,
+    "hours": "Daily 8 a.m. to sunset when the Gardens grounds are open",
+    "sourceUrl": "https://gardens.duke.edu/visit/parking/",
+    "payment": "Blue Spot",
+    "paymentSourceUrl": "https://parking.duke.edu/visitor-parking/blue-spot-hourly-parking/",
+    "note": "Official street-level count and hours are context only. Neither defines a bay's coordinates, designation, or present availability. The count is not an input to geometry generation."
+  },
+  "referenceCenterlineUrls": ["https://www.openstreetmap.org/way/16547065", "https://www.openstreetmap.org/way/709355906"],
+  "method": "Manual aerial interpretation of visible stripe endpoints. Each adjacent pair in a run defines one approximate bay, with a curb edge and a travel-lane edge. Endpoints are approximate, not surveyed. No positions are assigned across gaps between runs.",
+  "confidence": "medium",
+  "modeledBayExclusion": {
+    "purpose": "Suppress lower-confidence surface-lot models inside the visually identifiable curb row, including imagery gaps. This mask is not a mapped parking area or a legal boundary.",
+    "ringPixels": [[798,235],[798,296],[1781,335],[1781,278],[798,235]]
+  },
+  "excluded": [
+    "West end and foliage-obscured part of the row before the first mapped run.",
+    "Shadowed and vehicle-obscured area between the west-middle and middle runs.",
+    "Equipment-obscured gap between the middle and east runs.",
+    "Intersection, crosswalk, curb return, driveway/turning areas, opposite curb and internal H Lot rows."
+  ],
+  "runs": [
+    {
+      "id": "west-middle",
+      "stripeEndpointsPixels": [
+        [[1071,253],[1068,298]], [[1091,254],[1090,299]], [[1113,254.5],[1113,300]],
+        [[1134,255],[1133,301]], [[1156,255.5],[1155,301.5]], [[1178,256.5],[1176,303]]
+      ]
+    },
+    {
+      "id": "middle",
+      "stripeEndpointsPixels": [
+        [[1327,264],[1328,309]], [[1347,265],[1347,311]], [[1371,265.5],[1368,311]],
+        [[1390,267],[1390,311]], [[1413,267.5],[1412,312]], [[1434,268.5],[1433,313.5]]
+      ]
+    },
+    {
+      "id": "east",
+      "stripeEndpointsPixels": [
+        [[1520,272],[1519,316]], [[1542,272.5],[1539,317]], [[1562,273],[1561,318]],
+        [[1585,274],[1582,319]], [[1605,274.5],[1604,320]], [[1627,275.5],[1625,321]],
+        [[1647,276.5],[1647,322]], [[1670,277.5],[1668,323]], [[1690,278.5],[1690,324]],
+        [[1713,279.5],[1710,324.5]], [[1733,280.5],[1733,325]],
+        [[1756,281.5],[1753,326]], [[1774,282.5],[1774,328]]
+      ]
+    }
+  ]
+}

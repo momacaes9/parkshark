@@ -1,0 +1,12 @@
+{
+  "z": 20,
+  "tile_origin_x": 294353,
+  "tile_origin_y": 411752,
+  "tile_size": 256,
+  "width": 1024,
+  "height": 1024,
+  "center_lon": -78.94145549,
+  "center_lat": 36.00203562,
+  "source_url": "https://webgis2.durhamnc.gov/server/rest/services/Rasters/Ortho2025/MapServer",
+  "imagery_year": 2025
+}
