@@ -134,8 +134,15 @@ def duke_fields(ds):
     }
 
 
+def published_total(v):
+    """'541 permit; 1,253 visitor' -> 1794 (separate sections); '1,424 (includes 250 visitor ...)' -> 1424."""
+    parts = [first_int(x) for x in str(v).split(";")] if "includ" not in str(v) else [first_int(v)]
+    parts = [x for x in parts if x]
+    return sum(parts) if parts else None
+
+
 def capacity_of(published, osm_cap, mapped, est, roof=None, levels=None):
-    nums = [first_int(c["value"]) for c in published if first_int(c["value"])]
+    nums = [published_total(c["value"]) for c in published if published_total(c["value"])]
     if nums:
         return {"value": max(nums), "confidence": "counted", "basis": "Published by Duke Parking",
                 "scopes": [f'{c["value"]} · {c["scope"]}' for c in published], "source": published[0]["source"]}
@@ -179,7 +186,7 @@ def roof_grid(ring, frame):
     return out
 
 
-def stall_rec(f, frame):
+def stall_rec(f, frame, trust_ada=True, trust_ev=True):
     ring = [frame.xy(p) for p in f["geometry"]["coordinates"][0][:4]]
     cx, cy = sum(p[0] for p in ring) / 4, sum(p[1] for p in ring) / 4
     e1 = math.dist(ring[0], ring[1]); e2 = math.dist(ring[1], ring[2])
@@ -188,7 +195,10 @@ def stall_rec(f, frame):
     if e1 > e2: a += 90
     a = ((a + 90) % 180) - 90
     p = f["properties"]
-    flags = (1 if p.get("ada") else 0) | (2 if p.get("ev") else 0) | (4 if p.get("estimated") else 0)
+    est = p.get("estimated")
+    # Estimated stalls only carry ADA/EV when OSM tags the counts (capacity:disabled / capacity:charging);
+    # the old pipeline's 1-per-25 ADA rule of thumb is not sourced data, so it is dropped here.
+    flags = (1 if p.get("ada") and (not est or trust_ada) else 0) | (2 if p.get("ev") and (not est or trust_ev) else 0) | (4 if est else 0)
     return [r1(cx), r1(cy), round(a), r1(w), r1(l), flags]
 
 
@@ -206,7 +216,7 @@ for lot in lots:
     levels_tag = first_int(t.get("building:levels") or t.get("levels"))
     frame = Frame(ring)
     st = stalls_by_lot.get(lid, [])
-    recs = [stall_rec(f, frame) for f in st]
+    recs = [stall_rec(f, frame, "capacity:disabled" in t, "capacity:charging" in t) for f in st]
     roof = None
     if multi and not recs:
         recs = roof_grid(ring, frame); roof = len(recs)
@@ -214,19 +224,20 @@ for lot in lots:
     mapped = sum(1 for f in st if not f["properties"].get("estimated"))
     osm_cap = first_int(t.get("capacity"))
     cap = capacity_of(dk["capacityPublished"] if dk else [], osm_cap, mapped, p.get("estimated_spaces") or 0, roof, levels_tag)
+    alt_cap = capacity_of([], osm_cap, mapped, p.get("estimated_spaces") or 0, roof, levels_tag)
     name = dk["name"] if dk else (t.get("name") or None)
     name_src = "Duke Parking (official)" if dk else ("OpenStreetMap" if t.get("name") else None)
     deck = multi or underground or bool(dk and dk["description"] and re.search(r"garage|deck", dk["description"], re.I))
     outline = [[r1(v) for v in frame.xy(q)] for q in ring]
     layouts[lid] = {"outline": outline, "stalls": recs, "entrances": entrances(ring, frame)}
-    ada_osm = sum(1 for f in st if f["properties"].get("ada")); ev_osm = sum(1 for f in st if f["properties"].get("ev"))
+    ada_osm = sum(1 for r in recs if r[5] & 1); ev_osm = sum(1 for r in recs if r[5] & 2)
     osm_url = ("https://www.openstreetmap.org/way/" + lid[1:]) if lid.startswith("w") else None
     out_lots.append({
         "id": lid, "kind": "deck" if deck else "lot", "name": name, "nameSource": name_src,
         "lat": round(p["center"][1], 6), "lon": round(p["center"][0], 6),
         "dist": round(dist_m(p["center"], WILK)),
         "ring": [[round(q[0], 6), round(q[1], 6)] for q in ring],
-        "capacity": cap,
+        "capacity": cap, "_alt": alt_cap,
         "permits": dk["permits"] if dk else None,
         "access": dk["access"] if dk else (("OSM access=" + t["access"]) if t.get("access") else None),
         "visitorRate": dk["visitorRate"] if dk else None,
@@ -234,10 +245,10 @@ for lot in lots:
         "hours": (dk and dk["hours"]) or (("OSM opening_hours: " + t["opening_hours"]) if t.get("opening_hours") else None),
         "description": dk["description"] if dk else None,
         "ada": dk["adaCount"] if dk and dk["adaCount"] is not None else (ada_osm or None),
-        "adaBasis": "Duke" if dk and dk["adaCount"] is not None else ("stalls tagged in OSM" if ada_osm else None),
+        "adaBasis": "Duke" if dk and dk["adaCount"] is not None else ("OSM tags" if ada_osm else None),
         "accessible": (dk and dk["accessible"]) or (True if ada_osm else None),
         "ev": (dk and dk["evStations"]) or (ev_osm or None),
-        "evBasis": ("Duke EV charging page" if dk and dk["evStations"] else ("stalls tagged in OSM" if ev_osm else None)),
+        "evBasis": ("Duke EV charging page" if dk and dk["evStations"] else ("OSM tags" if ev_osm else None)),
         "levels": levels_tag, "roof": bool(multi), "roofStalls": roof, "underground": underground,
         "layoutStatus": ("Roof level drawn by our grid model (estimated); lower levels not mapped" if roof else
                          "Underground garage: interior not mapped" if underground and not st else
@@ -265,6 +276,16 @@ for f in duke_pts:
         "layoutStatus": "Official facility reference point; Duke does not publish a stall layout",
         "warnings": dk["warnings"], "sources": dk["sources"], "profile": "department_lot",
     })
+
+# A published capacity whose scope (permit zone) covers several facilities is a zone total, not this lot's
+# capacity: keep it as a note and fall back to the lot's own count.
+from collections import Counter
+scope_n = Counter(sc for x in out_lots for sc in set((x["capacity"].get("scopes") or [])))
+for x in out_lots:
+    alt = x.pop("_alt", None) or capacity_of([], None, 0, 0)
+    sc = x["capacity"].get("scopes")
+    if sc and all(scope_n[s_] > 1 for s_ in sc):
+        x["capacity"] = dict(alt, zoneNote=[f"Zone total {s_} (shared by {scope_n[s_]} facilities)" for s_ in sorted(set(sc))])
 
 # ------------------------------------------------------------------ on-street
 signs = [s for s in read(ATLAS / "signs.geojson")["features"]

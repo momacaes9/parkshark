@@ -17,7 +17,10 @@ if (existsSync(envFile)) {
     if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
   }
 }
-const api = await import(path.join(ROOT, "api", "concierge.js"));
+const apis = {
+  "/api/concierge": await import(path.join(ROOT, "api", "concierge.js")),
+  "/api/config": await import(path.join(ROOT, "api", "config.js")),
+};
 
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css",
   ".json": "application/json", ".geojson": "application/geo+json", ".png": "image/png", ".jpg": "image/jpeg",
@@ -27,7 +30,8 @@ const BLOCKED = [/^\/\.env/, /^\/\.git/, /^\/\.venv/, /^\/node_modules/];
 createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   try {
-    if (url.pathname === "/api/concierge") {
+    if (apis[url.pathname]) {
+      const api = apis[url.pathname];
       const chunks = [];
       for await (const c of req) chunks.push(c);
       const request = new Request(url, { method: req.method, headers: req.headers, body: req.method === "POST" ? Buffer.concat(chunks) : undefined });

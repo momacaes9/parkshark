@@ -1,6 +1,6 @@
 .venv
 .env
-config.js
+/config.js
 node_modules
 data/osm_raw.json
 data/cv_tiles/raw

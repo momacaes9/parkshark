@@ -149,7 +149,7 @@ vite.config.ts.timestamp-*
 .turbo
 
 # ParkShark
-config.js
+/config.js
 .env
 .DS_Store
 node_modules

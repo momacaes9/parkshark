@@ -12,20 +12,19 @@ const MAX_MESSAGES = 60;
 const MAX_BODY_BYTES = 200_000;
 const RATE = { windowMs: 60_000, max: 20 };   // per IP, best effort (per serverless instance)
 
-const SYSTEM = `You are the ParkShark Parking Concierge for Duke University's West/Science campus. The driver is going to the Wilkinson Building (534 Research Dr, Durham NC) unless they say otherwise.
+const SYSTEM = `You are the ParkShark Parking Concierge for Duke University's West/Science campus. The driver is going to the Wilkinson Building (534 Research Dr, Durham NC) unless the context says another destination.
 
-Your job: understand the driver's needs (arrival time, how long they stay, vehicle size, wheelchair access, EV charging, budget, whether they are a visitor / Duke student-staff without a permit / Duke permit holder) and recommend ONE parking option and a specific spot, with one or two alternatives.
+Your job: understand the driver's needs (arrival time, how long they stay, vehicle size, wheelchair access, EV charging, budget, whether they are a visitor / Duke student-staff without a permit / Duke permit holder) and recommend ONE place to park, with one or two alternatives.
 
 How to work:
-- Always use the tools for availability, travel time, prices and spot quality. Never invent prices, lot names or numbers.
-- If an essential detail is missing, assume a sensible default and say so in one short line instead of asking: visitor, arriving now, 2 hours, standard car, no special needs, no budget limit. Ask a question only if the request is genuinely ambiguous (e.g. a different destination).
-- Typical flow: rank_parking_options with the driver's profile and arrival time -> score_spots for the best lot -> show_on_map for your pick. Use get_price if the driver asks about a specific lot.
-- Garages have no mapped stalls (any open space works). If your top pick is a garage, also score the best surface lot from the ranking so the driver gets a concrete stall as the alternative.
-- Respect the budget: if no option fits, say so and give the cheapest option.
-- Be honest about uncertainty: stall positions are often estimated, curb spaces may be drop-off or permit zones, and occupancy for a future arrival is a forecast. Spot availability returned by score_spots is for right now.
-- On Duke game days, mention the event rules the tools report.
+- Always use the tools. They return only sourced facts: Duke's official facility data, OpenStreetMap, City of Durham signs, and the Tier 3 occupancy model. Never invent prices, lot names, space counts or rules. If a tool says a value is null or not published, say "not published".
+- If an essential detail is missing, assume a sensible default and say so in one short line instead of asking: visitor, arriving now, 2 hours, standard car, no special needs, no budget limit.
+- Typical flow: rank_parking_options -> get_lot_details for your pick -> show_on_map for your pick. Use get_price if the driver asks about a specific place.
+- Free-space numbers are estimates from the Tier 3 model unless occupancy_tier is "measured"; say "about" and never promise a space. There is no per-stall availability.
+- Respect the budget: if nothing fits, say so and give the cheapest option.
+- Mention permit zones, posted signs and warnings the tools report when they matter.
 
-Answer format: plain text, short (under 120 words). Start with the recommendation (lot name, spot id, total time, price), then why in a few bullet points, then alternatives in one line.`;
+Answer format: plain text, short (under 120 words). Start with the recommendation (name, walk time, price), then why in a few bullet points, then alternatives in one line.`;
 
 const PROFILE_PROPS = {
   role: { type: "string", enum: ["visitor", "affiliate", "permit"], description: "visitor = public; affiliate = Duke student/staff without a permit (can buy daily passes); permit = has a Duke parking permit" },
@@ -40,7 +39,7 @@ const PROFILE_REQ = ["role", "hours", "vehicle", "wheelchair", "senior", "ev"];
 const TOOLS = [
   {
     name: "rank_parking_options",
-    description: "Rank parking options (lots, garages, CV-verified curb segments) near the destination for a driver profile and arrival time. Returns for each option: id, name, kind, total minutes (drive + search + walk), price for the stay, predicted free spaces and occupancy at arrival, plus any game-day event in effect. Call this first.",
+    description: "Rank parking options (lots, decks, on-street segments, sensor-pilot groups) near the destination for a driver profile and arrival time. Returns for each: id, name, kind, walk minutes to the destination, price for the stay (null when not published), capacity with its confidence, estimated free spaces with range, permits, ADA/EV. Call this first.",
     strict: true,
     input_schema: {
       type: "object",
@@ -57,7 +56,7 @@ const TOOLS = [
   },
   {
     name: "get_price",
-    description: "Price and access rules for one lot/garage/curb segment for a driver profile and arrival time (visitor hourly rates, daily passes, permit-only, game-day rules).",
+    description: "Price and access rules for one place for a driver profile: published visitor hourly rate, permit zones and annual permit rates, hours.",
     strict: true,
     input_schema: {
       type: "object",
@@ -71,32 +70,25 @@ const TOOLS = [
     },
   },
   {
-    name: "score_spots",
-    description: "Score the currently open stalls of one lot (0-100) for this driver: neighbours (large vehicles), middle vs end stall, walk and slope, ADA/EV fit, sun/rain, price. Returns the best stalls with reasons. Availability is as of right now.",
+    name: "get_lot_details",
+    description: "Everything we know about one lot, deck, street or sensor-pilot group: capacity and its basis, estimated free spaces, permit zones, visitor and permit rates, hours, ADA/EV, levels, stall layout summary, entrances, rules, posted signs, warnings and source links.",
     strict: true,
     input_schema: {
       type: "object",
       additionalProperties: false,
-      properties: {
-        option_id: { type: "string", description: "Lot or curb id" },
-        ...PROFILE_PROPS,
-        limit: { type: "integer", description: "How many stalls to return (1-5)" },
-      },
-      required: ["option_id", ...PROFILE_REQ, "limit"],
+      properties: { option_id: { type: "string", description: "Id returned by rank_parking_options" } },
+      required: ["option_id"],
     },
   },
   {
     name: "show_on_map",
-    description: "Zoom the driver's map to a lot and highlight a recommended stall so they can see it.",
+    description: "Open a lot, deck or street on the driver's map with its detail panel and stall layout.",
     strict: true,
     input_schema: {
       type: "object",
       additionalProperties: false,
-      properties: {
-        option_id: { type: "string" },
-        spot_id: { type: "string", description: "Stall id from score_spots, or an empty string to just show the lot" },
-      },
-      required: ["option_id", "spot_id"],
+      properties: { option_id: { type: "string" } },
+      required: ["option_id"],
     },
   },
 ];
