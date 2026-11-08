@@ -1,0 +1,5 @@
+# Raw training data and weather caches are downloaded by fetch_data.py (too big for git)
+data/
+__pycache__/
+*.pyc
+outputs/hourly_table_small.csv.gz

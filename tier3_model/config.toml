@@ -1,0 +1,296 @@
+# =====================================================================
+# Park Shark: campus configuration
+# =====================================================================
+# EVERYTHING IN THE [campus_assumptions] SECTION IS AN ASSUMPTION,
+# NOT A MEASUREMENT. Nobody has counted cars in these Duke lots yet.
+# These numbers are our best guess at how an employee permit lot
+# behaves. Replace them once real Duke counts arrive (see calibrate.py).
+# =====================================================================
+
+[duke]
+# Rough center of Duke West Campus. Weather barely changes over a mile,
+# so this only needs to be "near campus".
+latitude = 36.0014
+longitude = -78.9382
+timezone = "America/New_York"
+holiday_country = "US"
+
+# ---------------------------------------------------------------------
+# TARGET LOTS: the four groups of spots the hardware team is instrumenting.
+# These are the ONLY lots the model predicts (decided Nov 7 2026).
+# capacity = number of spots, confirmed by the team lead.
+# sensor_group links a lot to its own sensors in [[duke.sensor_groups]].
+# lot_type: what kind of parking it is (department_lot, curb, clinic_curb).
+# area: lots in the same area share live readings (a lot whose own sensors
+#   are silent is estimated from its neighbours).
+# ---------------------------------------------------------------------
+[[duke.lots]]
+name = "Germanic Languages spots"
+capacity = 5
+lot_type = "department_lot"
+area = "research_drive"
+sensor_group = "germanic_languages"
+# Where the team dashboard (github.com/momacaes9/parkshark) draws this group.
+# map_feature_id = the OSM-based id in the team's data/parking.geojson ("" = no
+# matching feature, the dashboard draws a marker at map_lat/map_lon instead).
+# ASSUMPTION: placed at the Old Chemistry Building, where we believe the department
+# sits; the Languages Building is about 70 m south. Confirm with the team lead.
+map_feature_id = ""
+map_lat = 36.00274
+map_lon = -78.93771
+map_match = "ASSUMPTION: marker at Old Chemistry Building; confirm the exact spots"
+[[duke.lots]]
+name = "OIT Telecom spots"
+capacity = 8
+lot_type = "department_lot"
+area = "research_drive"
+sensor_group = "oit_telecom"
+# Nearest mapped lot is w344316844, 16 m from the building, but OSM gives it only
+# 4 spaces (we have 8), so the dashboard draws a marker instead of taking it over.
+map_feature_id = ""
+map_lat = 36.00363
+map_lon = -78.93891
+map_match = "ASSUMPTION: marker on the small lot by the Telecom building (OSM w344316844, 4 mapped spaces vs our 8)"
+[[duke.lots]]
+name = "Steam Plant curb (Research Dr)"
+capacity = 8
+lot_type = "curb"
+area = "research_drive"
+sensor_group = "steam_plant_curb"
+# Strong match: the team's Research Dr curb segment c112643249r1 (54.5 m, 8 spaces,
+# measured in the site survey, CV saw 4 parked cars). The dashboard uses our estimate
+# for that curb.
+map_feature_id = "c112643249r1"
+map_lat = 36.00408
+map_lon = -78.93864
+map_match = "MATCHED: team curb segment c112643249r1 (Research Dr, 8 spaces, site survey)"
+[[duke.lots]]
+name = "Duke Clinic corner (Research Dr)"
+capacity = 10
+lot_type = "clinic_curb"
+area = "research_drive"
+sensor_group = "duke_clinic_corner"
+# No mapped feature for the corner spots (the nearest lot, w344316841, is the
+# designated 47 space lot, which these spots are not part of).
+map_feature_id = ""
+map_lat = 36.00381
+map_lon = -78.93749
+map_match = "ASSUMPTION: marker at the Research Dr at Duke Clinic stop; confirm the exact corner"
+
+# Sensor groups: one per target lot. n_spots confirmed by the team lead (Nov 7 2026).
+# Sensors send a reading about every 30 seconds and whenever a spot changes.
+[[duke.sensor_groups]]
+name = "germanic_languages"
+label = "Spots by the Department of Germanic Languages and Literature"
+n_spots = 5
+lot_type = "department_lot"
+area = "research_drive"
+[[duke.sensor_groups]]
+name = "oit_telecom"
+label = "Spots by the OIT Telecommunications Building (2 Telecom Dr)"
+n_spots = 8
+lot_type = "department_lot"
+area = "research_drive"
+[[duke.sensor_groups]]
+name = "steam_plant_curb"
+label = "On street spots on Research Dr by the West Campus Steam Plant"
+n_spots = 8
+lot_type = "curb"
+area = "research_drive"
+[[duke.sensor_groups]]
+name = "duke_clinic_corner"
+label = "Corner spots by the building at Research Dr and Duke Clinic (not the main lot)"
+n_spots = 10
+lot_type = "clinic_curb"
+area = "research_drive"
+
+# ---------------------------------------------------------------------
+# REFERENCE LOTS: earlier targets, NOT predicted any more. Kept so nothing is lost.
+# To bring one back, change [[duke.reference_lots]] to [[duke.lots]].
+# Capacities VERIFIED from parking.duke.edu.
+# ---------------------------------------------------------------------
+[[duke.reference_lots]]
+name = "Science (Physics) Lot"
+capacity = 52
+lot_type = "permit_lot"
+area = "west_campus"
+[[duke.reference_lots]]
+name = "Public Policy Lot"
+capacity = 85
+lot_type = "permit_lot"
+area = "west_campus"
+[[duke.reference_lots]]
+name = "Trent Lot"
+capacity = 80
+lot_type = "permit_lot"
+area = "west_campus"
+[[duke.reference_lots]]
+name = "IM Lot"
+capacity = 27
+lot_type = "permit_lot"
+area = "west_campus"
+[[duke.reference_lots]]
+name = "Bryan Research Garage"
+capacity = 163
+lot_type = "permit_garage"
+area = "research_drive"
+[[duke.reference_lots]]
+name = "Research Drive Garage Reserved"
+capacity = 239
+lot_type = "permit_garage"
+area = "research_drive"
+
+[places.birmingham]
+latitude = 52.4862
+longitude = -1.8904
+timezone = "Europe/London"
+holiday_country = "GB"
+
+[places.hague]
+latitude = 52.0705
+longitude = 4.3007
+timezone = "Europe/Amsterdam"
+holiday_country = "NL"
+
+# ---------------------------------------------------------------------
+[campus_assumptions]
+# ASSUMPTION: share of spaces taken on a normal in-session weekday,
+# one number per hour (index 0 = midnight to 1am, index 9 = 9 to 10am).
+# Shape: low overnight, ramp 7:00 to 9:30, plateau 9:30 to 16:00,
+# fall 16:00 to 18:30, low evening.
+template_weekday = [
+  0.03, 0.03, 0.03, 0.03, 0.03, 0.04,   # 00 to 05  overnight
+  0.06, 0.18, 0.50, 0.78,               # 06 to 09  morning ramp
+  0.88, 0.88, 0.86, 0.87, 0.88, 0.86,   # 10 to 15  plateau (small lunch dip)
+  0.72, 0.42, 0.18,                     # 16 to 18  evening fall
+  0.08, 0.06, 0.05, 0.04, 0.03          # 19 to 23  low evening
+]
+# ASSUMPTION: weekends look like a weekday shrunk to roughly 0.05 to 0.10.
+weekend_multiplier = 0.11
+# ASSUMPTION: the lowest any hour can go (a few cars always parked).
+overnight_floor = 0.03
+weekend_floor = 0.05
+
+# ASSUMPTION: multiplier when classes are in session (the template
+# already describes an in-session day, so this is 1.0).
+class_in_session_multiplier = 1.0
+# ASSUMPTION / GUESS: multiplier on breaks and public holidays.
+# Staff still work over breaks, so the lot does not empty, but it thins.
+# 0.5 sits in the middle of our 0.4 to 0.6 guess. Nobody measured this.
+break_holiday_multiplier = 0.5
+# ASSUMPTION: multiplier on event days (games, commencement). 1.0 means
+# "no change" until we learn how events affect these gated lots.
+event_multiplier = 1.0
+
+# ---------------------------------------------------------------------
+[blend]
+# Final campus estimate = w * template + (1 - w) * model.
+# w is high where we have NO public training data, so the template
+# (an assumption) drives those hours. w is lower where the model has
+# real examples. "Model hours" are 8:00 to 16:30, so hours 8 to 16.
+model_hours_start = 8
+model_hours_end = 16
+weight_model_hours = 0.3
+weight_assumption_hours = 0.95
+# Used INSTEAD of the two weights above when live sensor data is present for the
+# lot's area. Lower, because real readings now do part of the job the template
+# (a guess) was doing. ASSUMPTION: both numbers are guesses until Duke counts can pick them.
+weight_model_hours_live = 0.15
+weight_assumption_hours_live = 0.6
+
+# ---------------------------------------------------------------------
+[live]
+# Live sensor settings. EVERYTHING HERE IS AN ASSUMPTION until real sensor
+# readings and real lot counts exist side by side.
+# A spot reading older than this is ignored (that sensor counts as silent).
+# Sensors ping about every 30 seconds, so 2 minutes = 4 missed pings in a row.
+max_age_minutes = 2
+# A lot counts as MEASURED when at least this share of its own spots reported
+# within max_age_minutes. Its silent spots are then filled in by the model.
+own_min_share = 0.5
+# Fewer live spots reporting than this = treat it as no live data at all.
+min_sensors_reporting = 3
+# live_trend_30min compares now with this many minutes ago.
+trend_window_minutes = 30
+# cars_passed_15min adds up vehicle counts over this many minutes.
+count_window_minutes = 15
+# How much each sensor group counts toward the live area reading, by lot type.
+# Clinic corner spots serve patients and visitors, curb spots serve anyone, so they
+# say less about who parks in an employee garage than a department lot does.
+group_weight = { department_lot = 1.0, curb = 0.7, clinic_curb = 0.4 }
+# Share of the "surprise" at the sensored spots (live rate minus expected rate) that is
+# passed on to a target lot in the same area. 0 = ignore live data, 1 = assume the lot
+# moves exactly like the sensored spots.
+transfer_same_area = 0.5
+# Trust in the surprise = n / (n + shrink_spots), n = spots reporting.
+# 15 spots -> 60% trust, 3 spots -> 23% trust. Stops a few spots from swinging the whole estimate.
+shrink_spots = 10
+# How much the 10th to 90th band may narrow at full trust (0.3 = up to 30% narrower).
+max_band_shrink = 0.3
+
+# ---------------------------------------------------------------------
+[uncertainty]
+# Quantiles for the band (10th, 50th, 90th percentile).
+quantiles = [0.1, 0.5, 0.9]
+target_coverage = 0.80
+# Extra width (in occupancy rate) added to each side of the band,
+# scaled by the template weight w. Assumption driven hours get a wider
+# band because we are less sure of them.
+assumption_band_extra = 0.10
+
+# ---------------------------------------------------------------------
+[training]
+random_seed = 42
+# Lots whose shape is the opposite of a campus lot still get a little
+# weight, so the model still learns weather and day effects from them.
+min_sample_weight = 0.05
+max_iter = 250
+learning_rate = 0.05
+max_leaf_nodes = 31
+min_samples_leaf = 40
+# Cap on training rows per lot (random sample with the fixed seed).
+max_rows_per_lot = 6000
+
+[calibration]
+# Refuse to calibrate a lot with fewer readings than this.
+min_points_per_lot = 40
+min_distinct_days = 5
+# How hard the fit is pulled toward "no change" (scale 1, offset 0).
+ridge = 5.0
+
+[cleaning]
+# A lot whose readings are zero at least this often is treated as a
+# broken sensor and dropped. Set drop_dead_lots = false to keep them.
+drop_dead_lots = true
+dead_lot_zero_share = 0.5
+# Rates outside this range are sensor errors, not real parking (dropped).
+# Small overshoots inside it (for example 1.02) are clipped to 0..1.
+invalid_below = -0.05
+invalid_above = 1.05
+
+[backtest]
+# Rolling weekly test: at most this many weekly steps per city.
+max_rolling_steps = 12
+
+[duke_calendar]
+# ASSUMPTION: US public holidays on which we expect Duke staff lots to
+# thin out (break multiplier applies). Veterans Day, Columbus Day and
+# Presidents Day are left out because many universities stay open.
+# Check against Duke's official HR holiday schedule.
+closed_holiday_names = ["New Year", "Martin Luther King", "Memorial Day",
+  "Juneteenth", "Independence Day", "Labor Day", "Thanksgiving", "Christmas"]
+
+# [hague_columns] is filled in AFTER reading the Hague metadata file.
+
+# Filled in from the Hague metadata file (RDW Parking Data v2 schema).
+# Timestamps are UTC, readings every 15 minutes, 25 facilities,
+# 2022-04-07 to 2025-09-30 (measured from the file, not stated in metadata).
+[hague_columns]
+lot = "parking_facility_identifier"
+time = "timestamp_utc"
+time_is_utc = true
+capacity = "parking_capacity"
+rate = "occupancy_percentage"
+rate_scale = 100.0           # percent -> 0..1
+error_flag = "has_error"     # rows flagged true by RDW are dropped
+capacity_placeholder = 9999  # fake capacity value, rows dropped
