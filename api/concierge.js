@@ -1,4 +1,4 @@
-// ParkShark Parking Concierge - Vercel serverless proxy to Google Gemini (gemini-2.5-flash).
+// ParkShark Parking Concierge - Vercel serverless proxy to Google Gemini (gemini-3.8-flash).
 //
 // The browser runs the agent loop and executes the tools (they need the live map state);
 // this function only adds the API key, a fixed model, system prompt and tool list, and
@@ -12,9 +12,12 @@
 // content blocks {type:"text"}, {type:"tool_use", id, name, input} and {type:"tool_result", tool_use_id,
 // content}; the response is {content, stop_reason}. We translate to and from Gemini contents here.
 
-const MODEL = "gemini-2.5-flash";
-const MAX_TOKENS = 4096;           // cost cap for a public demo endpoint; answers are short
-const THINKING_BUDGET = 1024;      // 2.5 Flash thinking tokens count toward MAX_TOKENS
+// Model order: GEMINI_MODEL env override, then current stable Flash models. If Google answers 404
+// (model retired or not enabled for this key - gemini-2.5-flash was retired on Vertex on 2026-10-20),
+// the next model is tried and remembered for this serverless instance.
+const MODELS = [...new Set([process.env.GEMINI_MODEL, "gemini-3.8-flash", "gemini-3.5-flash", "gemini-2.5-flash"].filter(Boolean))];
+let modelIndex = 0;
+const MAX_TOKENS = 8192;           // cost cap for a public demo endpoint; thinking tokens count toward it
 const MAX_MESSAGES = 60;
 const MAX_BODY_BYTES = 200_000;
 const RATE = { windowMs: 60_000, max: 20 };   // per IP, best effort (per serverless instance)
@@ -180,12 +183,15 @@ function fromCandidate(data) {
   return { content, stop_reason, finish_reason: fr ?? null };
 }
 
-function endpoint(key) {
+function endpoint(key, model = MODELS[modelIndex]) {
   if (key.startsWith("AQ.")) {   // Vertex AI express mode
-    return { provider: "vertex", url: `https://aiplatform.googleapis.com/v1/publishers/google/models/${MODEL}:generateContent?key=${encodeURIComponent(key)}`, headers: {} };
+    return { provider: "vertex", model, url: `https://aiplatform.googleapis.com/v1/publishers/google/models/${model}:generateContent?key=${encodeURIComponent(key)}`, headers: {} };
   }
-  return { provider: "gemini", url: `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, headers: { "x-goog-api-key": key } };
+  return { provider: "gemini", model, url: `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, headers: { "x-goog-api-key": key } };
 }
+
+// Google's error text never contains the key, but strip anything key-like anyway before showing it.
+const cleanMsg = (m) => String(m || "").replace(/(AIza|AQ\.)[A-Za-z0-9_.-]+/g, "[key]").slice(0, 300);
 
 export async function POST(request) {
   const key = (process.env.GEMINI_API_KEY || "").trim();
@@ -199,36 +205,41 @@ export async function POST(request) {
   try { body = JSON.parse(raw); } catch { return json(400, { error: "Invalid JSON" }); }
   if (!validMessages(body.messages)) return json(400, { error: "Invalid messages" });
 
-  const { provider, url, headers } = endpoint(key);
   const payload = {
     systemInstruction: { parts: [{ text: SYSTEM }] },
     contents: toContents(body.messages),
     tools: [{ functionDeclarations: FUNCTION_DECLARATIONS }],
     toolConfig: { functionCallingConfig: { mode: "AUTO" } },
-    generationConfig: { maxOutputTokens: MAX_TOKENS, temperature: 0.3, thinkingConfig: { thinkingBudget: THINKING_BUDGET } },
+    generationConfig: { maxOutputTokens: MAX_TOKENS },   // Gemini 3: keep default temperature and thinking
   };
-  let res;
-  try {
-    res = await fetch(url, { method: "POST", headers: { "content-type": "application/json", ...headers },
-      body: JSON.stringify(payload), signal: AbortSignal.timeout(TIMEOUT_MS) });
-  } catch (error) {
-    return json(502, { error: error?.name === "TimeoutError" ? "The AI service timed out - try again." : "AI service unreachable" });
+  let res, data, ep;
+  for (let i = modelIndex; i < MODELS.length; i++) {
+    ep = endpoint(key, MODELS[i]);
+    try {
+      res = await fetch(ep.url, { method: "POST", headers: { "content-type": "application/json", ...ep.headers },
+        body: JSON.stringify(payload), signal: AbortSignal.timeout(TIMEOUT_MS) });
+    } catch (error) {
+      return json(502, { error: error?.name === "TimeoutError" ? "The AI service timed out - try again." : "AI service unreachable" });
+    }
+    data = await res.json().catch(() => ({}));
+    if (res.status !== 404) { modelIndex = i; break; }
+    console.warn(`[concierge] ${ep.provider} model ${ep.model} -> 404: ${cleanMsg(data?.error?.message)}`);
   }
-  const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    const msg = String(data?.error?.message || "");
+    const msg = cleanMsg(data?.error?.message);
     const status = String(data?.error?.status || "");
-    if (res.status === 401 || res.status === 403 || /API key|API_KEY/i.test(msg)) return json(500, { error: "Server API key is invalid." });
+    console.warn(`[concierge] ${ep.provider} ${ep.model} -> ${res.status} ${status}: ${msg}`);
+    if (res.status === 401 || res.status === 403 || /API key|API_KEY/i.test(msg)) return json(500, { error: "Server API key is invalid or not allowed to use Gemini." });
     if (res.status === 429 || status === "RESOURCE_EXHAUSTED") return json(429, { error: "The AI service is busy - try again in a moment." });
-    if (res.status === 400) return json(400, { error: "Request rejected: " + msg.slice(0, 300) });
-    return json(502, { error: `AI service error (${res.status})` });
+    if (res.status === 400) return json(400, { error: "Request rejected: " + msg });
+    return json(502, { error: `AI service error (${res.status}): ${msg || "no details"}` });
   }
-  return json(200, { ...fromCandidate(data), model: data.modelVersion || MODEL, provider });
+  return json(200, { ...fromCandidate(data), model: data.modelVersion || ep.model, provider: ep.provider });
 }
 
 export function GET() {
   const key = (process.env.GEMINI_API_KEY || "").trim();
-  return json(200, { ok: true, configured: Boolean(key), model: MODEL, provider: key ? endpoint(key).provider : null });
+  return json(200, { ok: true, configured: Boolean(key), model: MODELS[modelIndex], fallbacks: MODELS.slice(modelIndex + 1), provider: key ? endpoint(key).provider : null });
 }
 
 // Exported for tests only.
