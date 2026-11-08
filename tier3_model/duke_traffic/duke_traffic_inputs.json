@@ -1,0 +1,848 @@
+{
+ "_read_me": "Every input for the Duke only traffic model. Nothing here comes from Birmingham or The Hague. Each item carries status: VERIFIED (read from the cited source), ASSUMPTION (our guess, change it freely), or PARTIAL. Lot coordinates are the named building next to each lot (from OpenStreetMap), not the lot outline.",
+ "stations": {
+  "erwin_w_anderson": {
+   "station_id": "0320000348",
+   "road": "Erwin Rd",
+   "location": "West of Anderson St",
+   "lat": 36.00703934629202,
+   "lon": -78.93052012820273,
+   "aadt": {
+    "2003": 14000,
+    "2005": 12000,
+    "2007": 14000,
+    "2009": 14000,
+    "2011": 14000,
+    "2013": 13000,
+    "2015": 12000,
+    "2017": 13000,
+    "2019": 10500,
+    "2021": 8700,
+    "2023": 9100,
+    "2025": 9100
+   },
+   "status": "VERIFIED",
+   "source": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_AADT_Traffic_Segmentation/FeatureServer/0/query?objectIds=13366&outFields=*&outSR=4326&f=json",
+   "source_2023_2025": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_2025_AADTandTrafficSegments_gdb/FeatureServer/1",
+   "d_factor": {
+    "value": 0.687,
+    "status": "VERIFIED",
+    "note": "Erwin Rd segment Fulton St to east end (RouteID 40001320032, MP 1.354 to 2.167, OBJECTID 12147): K 0.100, D 0.687, 2025 AADT 7,700",
+    "source": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_2025_AADTandTrafficSegments_gdb/FeatureServer/0/query?objectIds=12147&outFields=*&f=json"
+   }
+  },
+  "erwin_e_douglas": {
+   "station_id": "0320000349",
+   "road": "Erwin Rd",
+   "location": "East of Douglas St",
+   "lat": 36.00883230307156,
+   "lon": -78.94203730048244,
+   "aadt": {
+    "2003": 22000,
+    "2005": 21000,
+    "2007": 22000,
+    "2009": 21000,
+    "2011": 24000,
+    "2013": 23000,
+    "2015": 21000,
+    "2017": 20000,
+    "2019": 19000,
+    "2021": 15000,
+    "2023": 16000,
+    "2025": 17500
+   },
+   "status": "VERIFIED",
+   "source": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_AADT_Traffic_Segmentation/FeatureServer/0/query?objectIds=13367&outFields=*&outSR=4326&f=json",
+   "source_2023_2025": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_2025_AADTandTrafficSegments_gdb/FeatureServer/1",
+   "d_factor": {
+    "value": 0.675,
+    "status": "VERIFIED",
+    "note": "Erwin Rd segment NC 751 to Fulton St (RouteID 40001320032, MP 0 to 1.354, OBJECTID 12145): K 0.085, D 0.675, 2025 AADT 14,500",
+    "source": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_2025_AADTandTrafficSegments_gdb/FeatureServer/0/query?objectIds=12145&outFields=*&f=json"
+   }
+  },
+  "trent_s_elba": {
+   "station_id": "0320000669",
+   "road": "Trent Dr",
+   "location": "South of Elba St",
+   "lat": 36.008571080594095,
+   "lon": -78.9337063155954,
+   "aadt": {
+    "2003": 7200,
+    "2005": 7500,
+    "2007": 8300,
+    "2009": 9400,
+    "2011": 9300,
+    "2013": 9700,
+    "2015": 12000,
+    "2017": 10000,
+    "2019": 9600,
+    "2023": 10000,
+    "2025": 11000
+   },
+   "status": "VERIFIED",
+   "source": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_AADT_Traffic_Segmentation/FeatureServer/0/query?objectIds=13675&outFields=*&outSR=4326&f=json",
+   "source_2023_2025": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_2025_AADTandTrafficSegments_gdb/FeatureServer/1",
+   "d_factor": {
+    "value": 0.65,
+    "status": "ASSUMPTION",
+    "note": "Trent Dr segment has no D factor in the 2025 layer; 0.65 sits just under the Erwin Rd values",
+    "source": ""
+   }
+  },
+  "towerview": {
+   "station_id": "0320000672",
+   "road": "Towerview Rd",
+   "location": "West of Duke University Rd",
+   "lat": 35.9970438844709,
+   "lon": -78.93671198836897,
+   "aadt": {
+    "2003": 7700,
+    "2005": 5700,
+    "2007": 6400,
+    "2009": 6700,
+    "2011": 6900,
+    "2013": 7400,
+    "2017": 5500
+   },
+   "status": "VERIFIED",
+   "source": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_AADT_Traffic_Segmentation/FeatureServer/0/query?objectIds=13678&outFields=*&outSR=4326&f=json",
+   "d_factor": {
+    "value": 0.65,
+    "status": "ASSUMPTION",
+    "note": "Campus road, not in the 2025 segment layer",
+    "source": ""
+   }
+  },
+  "science": {
+   "station_id": "0320000673",
+   "road": "Science Dr",
+   "location": "North of NC 751",
+   "lat": 35.99533128661281,
+   "lon": -78.94683083267822,
+   "aadt": {
+    "2003": 7900,
+    "2005": 5400,
+    "2007": 7400,
+    "2009": 6200,
+    "2011": 5200,
+    "2013": 5100,
+    "2015": 6400,
+    "2017": 4200
+   },
+   "status": "VERIFIED",
+   "source": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_AADT_Traffic_Segmentation/FeatureServer/0/query?objectIds=13679&outFields=*&outSR=4326&f=json",
+   "d_factor": {
+    "value": 0.65,
+    "status": "ASSUMPTION",
+    "note": "Campus road, not in the 2025 segment layer",
+    "source": ""
+   }
+  },
+  "duke_univ_rd": {
+   "station_id": "0320000738",
+   "road": "Duke University Rd",
+   "location": "West of Anderson St",
+   "lat": 35.998037040879964,
+   "lon": -78.93168024554828,
+   "aadt": {
+    "2003": 9700,
+    "2005": 7900,
+    "2007": 9000,
+    "2009": 9400,
+    "2011": 9300,
+    "2013": 10000,
+    "2017": 11000,
+    "2019": 11500,
+    "2021": 10500,
+    "2023": 11500,
+    "2025": 11500
+   },
+   "status": "VERIFIED",
+   "source": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_AADT_Traffic_Segmentation/FeatureServer/0/query?objectIds=13743&outFields=*&outSR=4326&f=json",
+   "source_2023_2025": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_2025_AADTandTrafficSegments_gdb/FeatureServer/1",
+   "d_factor": {
+    "value": 0.65,
+    "status": "ASSUMPTION",
+    "note": "Duke University Rd segment has no D factor in the 2025 layer",
+    "source": ""
+   }
+  },
+  "research_dr_sensor": {
+   "station_id": "PARK-SHARK-MAG",
+   "road": "Research Dr",
+   "location": "By the West Campus Steam Plant (team magnetometer, sensor group steam_plant_curb)",
+   "lat": null,
+   "lon": null,
+   "status": "MEASURED once the sensor feed has vehicle counts; until then this road is skipped",
+   "measured": true,
+   "sensor_groups": [
+    "steam_plant_curb"
+   ],
+   "aadt": {},
+   "d_factor": {
+    "value": 0.65,
+    "status": "ASSUMPTION",
+    "note": "No NCDOT D factor for Research Dr; same 0.65 as the other campus roads",
+    "source": ""
+   },
+   "source": "Park Shark sensor feed (see measured_counts)"
+  }
+ },
+ "aadt_year_rule": {
+  "value": "latest_any",
+  "options": [
+   "latest_before_2020",
+   "latest_any"
+  ],
+  "why": "NCDOT's 2025 layer adds 2023 and 2025 counts, which are past the 2021 pandemic dip. Science Dr and Towerview Rd still stop at 2017.",
+  "status": "VERIFIED data, ASSUMPTION choice"
+ },
+ "lots": [
+  {
+   "id": "science",
+   "name": "Science (Physics) Lot",
+   "capacity": 52,
+   "anchor": "Levine Science Research Center",
+   "lat": 36.004497,
+   "lon": -78.94168,
+   "roads": [
+    {
+     "station": "science",
+     "weight": 1.0
+    }
+   ],
+   "class_turnover": true,
+   "note": "Science Dr station sits at the south end of Science Dr, about 1 km from the lot."
+  },
+  {
+   "id": "policy",
+   "name": "Public Policy Lot",
+   "capacity": 85,
+   "anchor": "Sanford School of Public Policy",
+   "lat": 35.999405,
+   "lon": -78.943927,
+   "roads": [
+    {
+     "station": "science",
+     "weight": 0.5
+    },
+    {
+     "station": "towerview",
+     "weight": 0.5
+    }
+   ],
+   "class_turnover": true,
+   "note": "Duke expects construction parking impacts here through fall 2027 (lost space count unknown)."
+  },
+  {
+   "id": "trent",
+   "name": "Trent Lot",
+   "capacity": 80,
+   "anchor": "Trent Hall",
+   "lat": 36.007078,
+   "lon": -78.93358,
+   "roads": [
+    {
+     "station": "trent_s_elba",
+     "weight": 0.5
+    },
+    {
+     "station": "erwin_w_anderson",
+     "weight": 0.5
+    }
+   ],
+   "class_turnover": false,
+   "note": "Entrance is on Flowers Dr, which has no count. Nearest counts are Trent Dr and Erwin Rd."
+  },
+  {
+   "id": "im",
+   "name": "IM Lot",
+   "capacity": 27,
+   "anchor": "Intramural Building",
+   "lat": 35.996621,
+   "lon": -78.940027,
+   "roads": [
+    {
+     "station": "towerview",
+     "weight": 1.0
+    }
+   ],
+   "class_turnover": false,
+   "note": "Next to Cameron Indoor and Wallace Wade, so game days hit it hardest."
+  },
+  {
+   "id": "bryan",
+   "name": "Bryan Research Garage",
+   "capacity": 163,
+   "anchor": "Bryan Research Building",
+   "lat": null,
+   "lon": null,
+   "roads": [
+    {
+     "station": "research_dr_sensor",
+     "weight": 0.5
+    },
+    {
+     "station": "erwin_e_douglas",
+     "weight": 0.5
+    }
+   ],
+   "class_turnover": false,
+   "reference_lot": false,
+   "note": "Added Nov 7 2026 for the live sensor test. Capacity VERIFIED (parking.duke.edu, 'Bryan Research Building on Research Drive'). Coordinates not looked up yet. Which Erwin Rd station feeds it is an ASSUMPTION."
+  },
+  {
+   "id": "rdg_reserved",
+   "name": "Research Drive Garage Reserved",
+   "capacity": 239,
+   "anchor": "Research Drive Garage",
+   "lat": null,
+   "lon": null,
+   "roads": [
+    {
+     "station": "research_dr_sensor",
+     "weight": 0.5
+    },
+    {
+     "station": "erwin_e_douglas",
+     "weight": 0.5
+    }
+   ],
+   "class_turnover": false,
+   "reference_lot": false,
+   "note": "Added Nov 7 2026 for the live sensor test. Capacity VERIFIED (parking.duke.edu, 'Corner of Erwin Road and Research Drive'). Coordinates not looked up yet. Which Erwin Rd station feeds it is an ASSUMPTION."
+  }
+ ],
+ "lot_capacity_status": {
+  "status": "VERIFIED (from config.toml, parking.duke.edu permit page)"
+ },
+ "lot_anchor_status": {
+  "status": "VERIFIED building coordinates from OpenStreetMap; the lot itself is next to the building, not at that exact point",
+  "source": "https://api.openstreetmap.org/api/0.6/map?bbox=-78.952,35.994,-78.925,36.012"
+ },
+ "road_weights_status": {
+  "status": "ASSUMPTION",
+  "why": "Equal split between the counted roads next to each lot."
+ },
+ "street_hour_share": {
+  "status": "ASSUMPTION",
+  "why": "Share of a day's traffic in each hour (0 = midnight). No hourly counts exist for these roads that we could reach. Weekday has a morning and evening commute peak; weekends peak midday. Google Typical traffic showed every counted road green at every hour checked, so the peaks are not strong enough to jam.",
+  "weekday": [
+   0.008,
+   0.005,
+   0.004,
+   0.004,
+   0.006,
+   0.015,
+   0.035,
+   0.07,
+   0.075,
+   0.058,
+   0.052,
+   0.056,
+   0.06,
+   0.058,
+   0.06,
+   0.068,
+   0.078,
+   0.08,
+   0.06,
+   0.045,
+   0.035,
+   0.028,
+   0.02,
+   0.013
+  ],
+  "saturday": [
+   0.015,
+   0.01,
+   0.008,
+   0.006,
+   0.006,
+   0.01,
+   0.018,
+   0.03,
+   0.045,
+   0.058,
+   0.068,
+   0.074,
+   0.076,
+   0.074,
+   0.07,
+   0.068,
+   0.066,
+   0.062,
+   0.056,
+   0.048,
+   0.04,
+   0.034,
+   0.03,
+   0.022
+  ],
+  "sunday": [
+   0.018,
+   0.012,
+   0.009,
+   0.007,
+   0.006,
+   0.008,
+   0.014,
+   0.024,
+   0.038,
+   0.052,
+   0.064,
+   0.072,
+   0.078,
+   0.078,
+   0.074,
+   0.07,
+   0.067,
+   0.063,
+   0.057,
+   0.048,
+   0.04,
+   0.032,
+   0.026,
+   0.018
+  ]
+ },
+ "day_factor": {
+  "status": "ASSUMPTION",
+  "why": "AADT is an average over all 7 days. Weekdays run above it, weekends below. 5 x 1.08 + 0.85 + 0.70 = 6.95, close to 7, so the week still averages to AADT.",
+  "weekday": 1.08,
+  "saturday": 0.85,
+  "sunday": 0.7
+ },
+ "lot_moves": {
+  "status": "ASSUMPTION",
+  "why": "Cars entering plus leaving each lot per hour = capacity x turnover x hourly share. Employee permit lots fill in the morning and empty late afternoon. Lots near classrooms get a small extra churn at Duke class change times.",
+  "turnover_weekday": 1.2,
+  "weekend_fraction": 0.12,
+  "arrive_weekday": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0.01,
+   0.05,
+   0.22,
+   0.3,
+   0.16,
+   0.08,
+   0.05,
+   0.05,
+   0.04,
+   0.02,
+   0.01,
+   0.01,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "depart_weekday": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0.01,
+   0.03,
+   0.05,
+   0.05,
+   0.05,
+   0.1,
+   0.22,
+   0.3,
+   0.12,
+   0.04,
+   0.02,
+   0.01,
+   0,
+   0
+  ],
+  "weekend_hours": [
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16
+  ],
+  "class_change_extra_per_change": 0.06,
+  "class_change_hours_status": "VERIFIED class start times; the size of the extra churn is ASSUMPTION",
+  "class_change_hours_source": "https://registrar.duke.edu/faculty-staff-resources/class-scheduling/",
+  "class_change_hours": {
+   "mwf": [
+    8,
+    10,
+    12,
+    13,
+    15,
+    16
+   ],
+   "tth": [
+    8,
+    10,
+    11,
+    13,
+    15,
+    16
+   ]
+  },
+  "class_change_note": "MWF starts 8:45, 10:20, 12:00, 1:40, 3:20, 4:55. TTh starts 8:30, 10:05, 11:45, 1:25, 3:05, 4:40. Counted in the hour the class starts."
+ },
+ "calendar": {
+  "status": "VERIFIED dates",
+  "source": "https://registrar.duke.edu/2026-2027-academic-calendar/",
+  "no_class_ranges": [
+   [
+    "2026-11-25",
+    "2026-11-29",
+    "Thanksgiving recess"
+   ],
+   [
+    "2026-12-05",
+    "2026-12-08",
+    "Undergraduate reading period"
+   ],
+   [
+    "2026-12-15",
+    "2027-01-05",
+    "Winter break"
+   ],
+   [
+    "2027-01-18",
+    "2027-01-18",
+    "Martin Luther King Jr. Day"
+   ],
+   [
+    "2027-03-06",
+    "2027-03-14",
+    "Spring recess"
+   ],
+   [
+    "2027-04-22",
+    "2027-04-25",
+    "Undergraduate reading period"
+   ],
+   [
+    "2027-05-02",
+    "2027-05-31",
+    "After final exams"
+   ]
+  ],
+  "exam_ranges": [
+   [
+    "2026-12-09",
+    "2026-12-14",
+    "Fall final exams"
+   ],
+   [
+    "2027-04-26",
+    "2027-05-01",
+    "Spring final exams"
+   ]
+  ],
+  "staff_holidays_status": "ASSUMPTION: Duke HR holiday page could not be read. Thanksgiving Day and the day after, Dec 24 to Jan 1, and MLK Day are treated as staff holidays.",
+  "staff_holidays": [
+   "2026-11-26",
+   "2026-11-27",
+   "2026-12-24",
+   "2026-12-25",
+   "2026-12-28",
+   "2026-12-29",
+   "2026-12-30",
+   "2026-12-31",
+   "2027-01-01",
+   "2027-01-18"
+  ],
+  "no_class_lot_factor": {
+   "value": 0.75,
+   "status": "ASSUMPTION",
+   "why": "Staff still work, students and some faculty do not."
+  },
+  "no_class_campus_road_factor": {
+   "value": 0.75,
+   "status": "ASSUMPTION",
+   "why": "Science Dr and Towerview Rd mostly serve campus."
+  },
+  "holiday_lot_factor": {
+   "value": 0.25,
+   "status": "ASSUMPTION"
+  },
+  "holiday_road_factor": {
+   "value": 0.7,
+   "status": "ASSUMPTION"
+  },
+  "campus_roads": [
+   "science",
+   "towerview"
+  ]
+ },
+ "events": {
+  "status": "VERIFIED dates and start times; the traffic boost and window length are ASSUMPTION",
+  "boost": {
+   "value": 1.6,
+   "status": "ASSUMPTION",
+   "why": "Street traffic multiplier on affected roads during the event window."
+  },
+  "window_before_hours": 2,
+  "window_after_hours": 3,
+  "window_status": "Duke sets basketball checkpoints at Science/Cameron, Circuit/Towerview, Towerview/Duke University and Towerview/Science from 2 hours before tip-off until 45 minutes after the game (VERIFIED, https://parking.duke.edu/visitor-parking/athletic-event-parking/mens-basketball-parking/). 3 hours after start covers a roughly 2 hour game plus the exit (ASSUMPTION).",
+  "list": [
+   {
+    "date": "2026-11-13",
+    "start": 20.0,
+    "name": "Men's basketball vs SIU Edwardsville",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2026-11-17",
+    "start": 19.0,
+    "name": "Men's basketball vs Illinois",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2026-11-20",
+    "start": 19.5,
+    "name": "Football vs Clemson",
+    "roads": [
+     "science",
+     "towerview",
+     "duke_univ_rd"
+    ],
+    "boost": 2.0,
+    "source": "https://goduke.com/sports/football/schedule/2026"
+   },
+   {
+    "date": "2026-12-04",
+    "start": 19.0,
+    "name": "Men's basketball vs Harvard",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2026-12-15",
+    "start": 19.0,
+    "name": "Men's basketball vs Campbell",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2026-12-17",
+    "start": 20.0,
+    "name": "Men's basketball vs Grambling State",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-01-02",
+    "start": 14.25,
+    "name": "Men's basketball vs California",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-01-09",
+    "start": 14.0,
+    "name": "Men's basketball vs Pitt",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-01-13",
+    "start": 21.0,
+    "name": "Men's basketball vs Stanford",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-01-23",
+    "start": 14.25,
+    "name": "Men's basketball vs Notre Dame",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-02-01",
+    "start": 19.0,
+    "name": "Men's basketball vs Miami",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-02-13",
+    "start": 17.5,
+    "name": "Men's basketball vs North Carolina",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "boost": 2.0,
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-02-16",
+    "start": 19.0,
+    "name": "Men's basketball vs Florida State",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-02-27",
+    "start": 12.0,
+    "name": "Men's basketball vs NC State",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-03-01",
+    "start": 19.0,
+    "name": "Men's basketball vs Virginia",
+    "roads": [
+     "science",
+     "towerview"
+    ],
+    "source": "https://goduke.com/sports/mens-basketball/schedule/2026-27"
+   },
+   {
+    "date": "2027-05-09",
+    "start": 9.0,
+    "name": "Commencement (Wallace Wade)",
+    "roads": [
+     "science",
+     "towerview",
+     "duke_univ_rd",
+     "erwin_w_anderson",
+     "trent_s_elba"
+    ],
+    "boost": 2.0,
+    "source": "https://commencement.duke.edu/"
+   }
+  ],
+  "untimed": [
+   {
+    "dates": [
+     "2026-11-15",
+     "2026-11-19",
+     "2026-12-03",
+     "2026-12-06",
+     "2026-12-28",
+     "2027-01-14",
+     "2027-01-17",
+     "2027-01-24",
+     "2027-02-07",
+     "2027-02-14",
+     "2027-02-18",
+     "2027-02-28"
+    ],
+    "name": "Women's basketball home game (time not read)",
+    "source": "https://goduke.com/sports/womens-basketball/schedule/2026-27",
+    "note": "Dates VERIFIED by the research package; start times could not be read, so these days are flagged but not boosted."
+   }
+  ]
+ },
+ "google_typical_traffic": {
+  "status": "VERIFIED observation by eye, Nov 7 2026",
+  "source": "https://www.google.com/maps/@36.0015,-78.9395,16z/data=!5m1!1e1 (Traffic layer, Typical traffic)",
+  "finding": "Erwin Rd, Duke University Rd and NC 147 were green on Tuesday at 6:10, 7:00, 8:00, 8:55, 12:00, 15:50, 16:55, 17:55 and Saturday at 11:50 and 17:55. Science Dr, Towerview Rd (inside campus), Flowers Dr, Wannamaker Dr and campus Trent Dr have no traffic colour at all (Google shows no data for them)."
+ },
+ "direction": {
+  "status": "D factors VERIFIED where marked; which way the heavy flow goes, the hours it applies to, and the weights are ASSUMPTION",
+  "why": "NCDOT's D factor is the share of peak hour traffic going the busier way. It does not say which way. We assume the busy direction is toward campus in the morning peak and away from campus in the evening peak (Duke and the hospital are the main employers here), and an even split at other hours and on weekends.",
+  "peak_pattern": {
+   "6": 0.5,
+   "7": 1,
+   "8": 1,
+   "9": 0.5,
+   "15": -0.5,
+   "16": -1,
+   "17": -1,
+   "18": -0.5
+  },
+  "pattern_note": "Share toward campus = 0.5 + (D - 0.5) x pattern. Pattern +1 = full morning peak, -1 = full evening peak, 0 = even split.",
+  "weight_toward_campus": {
+   "value": 1.0,
+   "status": "ASSUMPTION"
+  },
+  "weight_away_from_campus": {
+   "value": 0.5,
+   "status": "ASSUMPTION",
+   "why": "Leaving cars still crowd the road but cannot take a space."
+  },
+  "k_factor_check": "NCDOT K factor (share of daily traffic in the design hour) on Erwin Rd is 0.085 to 0.100. The model's weekday peak hour is about 0.087 of daily traffic, inside that range.",
+  "source": "https://services.arcgis.com/NuWFvHYDMVmmxMeM/ArcGIS/rest/services/NCDOT_2025_AADTandTrafficSegments_gdb/FeatureServer/0"
+ },
+ "measured_counts": {
+  "file": "../sensor_data/sensor_feed.csv",
+  "status": "VERIFIED when present: real counts from our own sensor. Until the file exists, no road uses it.",
+  "why": "NCDOT has no count on Research Dr. The hardware team's magnetometer counts passing cars, which replaces a guessed hourly shape with a measured one.",
+  "format": "Same CSV as park_shark.py reads: timestamp, sensor_id, group, kind, value. Only rows with kind = vehicle_count are used; value = cars since that sensor's last message.",
+  "min_minutes_per_hour": {
+   "value": 40,
+   "status": "ASSUMPTION",
+   "why": "An hour only counts if its readings span at least this many minutes, so a half recorded hour is not mistaken for a quiet one."
+  },
+  "counts_both_directions": {
+   "value": true,
+   "status": "ASSUMPTION",
+   "why": "We assume the magnetometer counts cars going both ways. Confirm with the hardware lead; if it counts one lane, double the counts or change the direction split."
+  },
+  "how_used": "For each date and hour: the exact measured count if one exists; otherwise the average measured count for that day type and hour, with the usual calendar and event factors; otherwise the road is skipped and the lot's other counted roads take its weight (same rule as before: weights split over counted roads)."
+ },
+ "reference_lot_rule": {
+  "status": "CHOICE",
+  "why": "Index 100 stays tied to the original four lots (Trent Lot, 08:00 on a class Tuesday) so adding lots does not rescale old results. New lots have reference_lot = false."
+ }
+}
