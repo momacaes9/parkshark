@@ -19,6 +19,7 @@ HOW TO RUN
   python3 park_shark.py predict "OIT Telecom spots" "2026-11-10 09:00" feed.csv
   python3 park_shark.py feed-to-counts feed.csv   # hourly counts, then: calibrate sensor_data/hourly_counts.csv
   python3 park_shark.py export-app path/to/parkshark/data/tier3_forecast.json   # forecast for the team dashboard
+  python3 park_shark.py nearby "2026-11-10 09:00" [feed.csv]   # lots WITHOUT sensors, low confidence
 
 KEY IDEA: we predict an OCCUPANCY RATE (0 = empty, 1 = full), not a car
 count. A rate means the same thing for a 27 space lot and a 2,000 space
@@ -1334,11 +1335,215 @@ def export_app(out_path=None):
                             "used yet. On the most campus-like public lots it beat the hour x weekday average by 44% "
                             "(MAE 0.129 vs 0.231). Live sensor readings replace these estimates when present."),
            "groups": groups}
+    # Sensored groups: confidence is "high" when live, "medium" otherwise (set by the dashboard).
+    for g in groups.values():
+        g["confidence"] = "medium"
+        g["sensors_for_80pct"] = sensors_for_80(g["spots"])
+    if NEARBY:
+        typ_frames = {}
+        for kind, day in typical_days.items():
+            start = pd.Timestamp(day, tz=tz)
+            typ_frames[kind] = pd.DataFrame({"timestamp_local": [start + pd.Timedelta(hours=h) for h in range(24)],
+                                             "temperature_2m": 15.0, "precipitation": 0.0, "snowfall": 0.0,
+                                             "weather_code": 1})
+        nb, unusual, settings = nearby_export(typ_frames, w if files else None)
+        doc["nearby"] = nb
+        doc["traffic_unusual"] = unusual
+        doc["nearby_settings"] = settings
+        doc["nearby_note"] = ("Lots WITHOUT sensors. Same AI curve as the sensored groups (the model has no lot "
+                              "identity yet), a wider band, a small street traffic nudge (duke_traffic) and part of "
+                              "the live sensor surprise from the nearest sensored groups. Expect these to be wrong "
+                              "by several cars; that gap is the case for more sensors.")
     out_path = Path(out_path or OUT / "tier3_forecast.json")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(doc, indent=1))
-    log(f"Wrote {out_path} ({len(groups)} groups, {sum(len(g['hourly']) for g in groups.values())} hourly rows)")
+    log(f"Wrote {out_path} ({len(groups)} groups, {sum(len(g['hourly']) for g in groups.values())} hourly rows, "
+        f"{len(doc.get('nearby', {}))} nearby lots)")
     return out_path
+
+
+# =====================================================================
+# NEARBY LOTS (Nov 8 2026): lots with NO sensors, estimated with LOW confidence
+# =====================================================================
+# The team lead asked for a few lots around the 4 sensored groups, shown with honest
+# (lower) confidence, to show two things on one dashboard: the model can say something
+# beyond the hardware, and it gets worse the further a lot is from real sensors.
+NEARBY = CFG["duke"].get("nearby_lots", [])
+NB_CFG = CFG.get("nearby", {})
+# sensors_needed.py (Nov 7 sim): sensors for 80% of busy hours within +/- 10 points.
+SENSORS_FOR_80 = [(5, 5), (8, 6), (10, 7), (27, 12), (52, 14.5), (80, 16), (85, 16), (163, 18), (239, 19)]
+
+
+def sensors_for_80(n):
+    """Sensors a lot of n spots needs for 80% of busy hours within +/- 10 points.
+    Read off the simulation table on a log scale; beyond 239 spots it stays near 20,
+    like a poll needing about the same sample for a small or a huge town."""
+    if n <= SENSORS_FOR_80[0][0]:
+        return int(n)
+    xs = [math.log(a) for a, _ in SENSORS_FOR_80]
+    ys = [b for _, b in SENSORS_FOR_80]
+    if n >= SENSORS_FOR_80[-1][0]:
+        return int(min(n, 20))
+    return int(min(n, math.ceil(np.interp(math.log(n), xs, ys))))
+
+
+def _dist_m(lat1, lon1, lat2, lon2):
+    return math.hypot((lat1 - lat2) * 111_000, (lon1 - lon2) * 111_000 * math.cos(math.radians(lat1)))
+
+
+def nearby_info(c):
+    """Distance to the nearest sensored group, confidence level and live transfer for
+    one [[duke.nearby_lots]] entry. Confidence is worked out here, never typed in."""
+    placed = [l for l in CFG["duke"]["lots"] if l.get("map_lat") is not None]
+    dists = sorted((_dist_m(c["map_lat"], c["map_lon"], l["map_lat"], l["map_lon"]), l) for l in placed)
+    d_near, near = dists[0][0], dists[0][1]
+    same = [(d, l) for d, l in dists if l.get("area") == c.get("area")]
+    low = d_near <= NB_CFG.get("low_max_m", 150) and c.get("lot_type") in NB_CFG.get("similar_types", [])
+    why = []
+    why.append(f"nearest sensored group: {near['name']}, about {round(d_near, -1):.0f} m away")
+    if d_near > NB_CFG.get("low_max_m", 150):
+        why.append(f"more than {NB_CFG.get('low_max_m', 150)} m from any sensor")
+    if c.get("lot_type") not in NB_CFG.get("similar_types", []):
+        why.append(f"a {c.get('lot_type', 'unknown').replace('_', ' ')} behaves unlike the sensored spots")
+    transfer = 0.0
+    if same:
+        transfer = LIVE_CFG.get("transfer_same_area", 0.5) * math.exp(-same[0][0] / NB_CFG.get("decay_m", 150))
+        why.append(f"gets {transfer / max(LIVE_CFG.get('transfer_same_area', 0.5), 1e-9):.0%} of the normal "
+                   f"live sensor nudge from the {c.get('area', '').replace('_', ' ')} groups")
+    else:
+        why.append("no sensored group in its area, so live sensor data is not passed on")
+    conf = "low" if low else "very_low"
+    mae = NB_CFG.get("mae_low" if low else "mae_very_low", 0.23)
+    return {"confidence": conf, "nearest_group": near.get("sensor_group"), "nearest_group_name": near["name"],
+            "distance_m": round(d_near), "live_transfer": round(transfer, 3), "why": why,
+            "typical_error_cars": max(1, round(mae * c["capacity"])), "mae_rate": mae,
+            "sensors_for_80pct": sensors_for_80(c["capacity"])}
+
+
+def traffic_ratios(path=None):
+    """Street traffic this hour divided by the same hour on a normal day of the same kind
+    (median of all weekdays, or of all weekend days), per traffic lot and date.
+    Comes from duke_traffic (NCDOT counts, Duke calendar, game windows). It is about 1.0
+    on a normal day and moves on breaks, holidays and game windows.
+    Returns {traffic_lot: {"YYYY-MM-DD": [24 ratios]}}; empty if the file is missing."""
+    path = Path(path or ROOT / "duke_traffic" / "outputs" / "duke_traffic_by_hour.csv")
+    if not path.exists():
+        log(f"note: {path} not found, street traffic nudge switched off (ratio 1.0)")
+        return {}
+    t = pd.read_csv(path)
+    want = {c.get("traffic_lot") for c in NEARBY if c.get("traffic_lot")}
+    t = t[t["lot"].isin(want)].copy()
+    t = t.assign(is_weekend=pd.to_datetime(t["date"]).dt.dayofweek >= 5)
+    ref = t.groupby(["lot", "is_weekend", "hour"])["street_vph"].median().rename("ref")
+    t = t.join(ref, on=["lot", "is_weekend", "hour"])
+    lo, hi = NB_CFG.get("traffic_ratio_clip", [0.5, 1.5])
+    t["ratio"] = (t["street_vph"] / t["ref"].where(t["ref"] > 0)).fillna(1.0).clip(lo, hi)
+    out = {}
+    for (lot, date), g in t.sort_values("hour").groupby(["lot", "date"]):
+        r = g.set_index("hour")["ratio"].reindex(range(24)).fillna(1.0)
+        out.setdefault(lot, {})[date] = [round(float(x), 2) for x in r]
+    return out
+
+
+def _campus_curve(frame, class_in_session=1, event_flag=0):
+    """The shared AI curve (before any lot calibration) for many Duke hours."""
+    df = add_time_features(frame.copy())
+    is_hol, closed = duke_holiday_flags(list(df["date"]))
+    df["is_holiday"] = is_hol
+    p = predict_bundle(load_bundle(), df)
+    med, lo, hi, wt = campus_estimate(p["lo"], p["pred"], p["hi"], df.hour.values,
+                                      df.is_weekend.values, closed, class_in_session, event_flag)
+    return df, med, lo, hi
+
+
+def nearby_adjust(med, lo, hi, info, ratio=1.0):
+    """Street traffic nudge, then a wider band. Live data is applied later (dashboard or
+    nearby_now), because it changes minute to minute."""
+    beta = NB_CFG.get("traffic_beta", 0.3)
+    f = 1 + beta * (np.asarray(ratio, dtype=float) - 1)
+    extra = NB_CFG.get("band_extra_low" if info["confidence"] == "low" else "band_extra_very_low", 0.1)
+    m = np.clip(med * f, 0, 1)
+    return m, np.clip(lo * f - extra, 0, m), np.clip(hi * f + extra, m, 1)
+
+
+def nearby_export(typical_frames, forecast_frame=None):
+    """The 'nearby' block of tier3_forecast.json."""
+    ratios = traffic_ratios()
+    out = {}
+    for c in NEARBY:
+        info = nearby_info(c)
+        tr = ratios.get(c.get("traffic_lot"), {})
+        typical = {}
+        for kind, frame in typical_frames.items():
+            _, med, lo, hi = _campus_curve(frame)
+            m, l, h = nearby_adjust(med, lo, hi, info, 1.0)
+            typical[kind] = [[round(float(a), 3), round(float(b), 3), round(float(x), 3)] for a, b, x in zip(m, l, h)]
+        hourly = []
+        if forecast_frame is not None and len(forecast_frame):
+            df, med, lo, hi = _campus_curve(forecast_frame)
+            keys = df.timestamp_local.dt.strftime("%Y-%m-%d").values
+            r = np.array([tr.get(k, [1.0] * 24)[hh] for k, hh in zip(keys, df.hour.values)])
+            m, l, h = nearby_adjust(med, lo, hi, info, r)
+            hourly = [{"t": t.strftime("%Y-%m-%d %H:%M"), "m": round(float(a), 3), "lo": round(float(b), 3),
+                       "hi": round(float(x), 3), "tr": round(float(rr), 2)}
+                      for t, a, b, x, rr in zip(df.timestamp_local, m, l, h, r)]
+        out[c["name"]] = {"name": c["name"], "spots": c["capacity"], "lot_type": c.get("lot_type"),
+                          "area": c.get("area"), "feature_ids": c.get("map_feature_ids", []),
+                          "lat": c.get("map_lat"), "lon": c.get("map_lon"), "note": c.get("note", ""),
+                          "traffic_lot": c.get("traffic_lot"), **info,
+                          "typical": typical, "hourly": hourly}
+    # Only days where traffic is not normal are written (the dashboard assumes 1.0 otherwise).
+    unusual = {lot: {d: v for d, v in days.items() if any(abs(x - 1) > 0.02 for x in v)}
+               for lot, days in ratios.items()}
+    settings = {"transfer_same_area": LIVE_CFG.get("transfer_same_area", 0.5),
+                "shrink_spots": LIVE_CFG.get("shrink_spots", 10),
+                "min_sensors_reporting": LIVE_CFG.get("min_sensors_reporting", 3),
+                "group_weight": LIVE_CFG.get("group_weight", {}),
+                "max_band_shrink": NB_CFG.get("max_band_shrink", 0.0),
+                "traffic_beta": NB_CFG.get("traffic_beta", 0.3),
+                "share_within_10_no_sensors": NB_CFG.get("share_within_10_no_sensors", [0.31, 0.51]),
+                "confidence_levels": {
+                    "high": "Measured: this lot's own sensors are reporting right now",
+                    "medium": "Sensored group, AI estimate: sensors are installed here, so the estimate is "
+                              "replaced by readings when they arrive and calibrated after about 5 days",
+                    "low": "No sensors, but close to a sensored group and a similar kind of parking",
+                    "very_low": "No sensors, and far from them or a different kind of parking (garage, huge lot)"}}
+    return out, unusual, settings
+
+
+def nearby_now(when, feed=None):
+    """Every nearby lot at one moment, with live sensor data if a feed is given.
+    Same rule as live_adjust(), scaled by each lot's live_transfer, band NOT narrowed."""
+    ts = pd.Timestamp(when)
+    if ts.tzinfo is None:
+        ts = ts.tz_localize(CFG["duke"]["timezone"])
+    frame = pd.DataFrame({"timestamp_local": [ts.floor("h")], "temperature_2m": 15.0, "precipitation": 0.0,
+                          "snowfall": 0.0, "weather_code": 1})
+    _, med, lo, hi = _campus_curve(frame)
+    ratios = traffic_ratios()
+    rows = []
+    for c in NEARBY:
+        info = nearby_info(c)
+        r = ratios.get(c.get("traffic_lot"), {}).get(ts.strftime("%Y-%m-%d"), [1.0] * 24)[ts.hour]
+        m, l, h = nearby_adjust(med, lo, hi, info, r)
+        shift, n = 0.0, 0
+        if feed is not None and info["live_transfer"] > 0:
+            live = live_features(feed, ts, c.get("area"))
+            if live and live["usable"]:
+                n = live["sensors_reporting"]
+                trust = n / (n + LIVE_CFG.get("shrink_spots", 10))
+                shift = info["live_transfer"] * trust * live["live_vs_expected"]
+                m2 = np.clip(m + shift, 0, 1)
+                l, h = np.clip(m2 - (m - l), 0, m2), np.clip(m2 + (h - m), m2, 1)
+                m = m2
+        cap = c["capacity"]
+        rows.append({"lot": c["name"], "confidence": info["confidence"], "distance_m": info["distance_m"],
+                     "capacity": cap, "cars": round(float(m[0]) * cap),
+                     "likely": f"{round(float(l[0]) * cap)} to {round(float(h[0]) * cap)}",
+                     "typical_error_cars": info["typical_error_cars"], "traffic_ratio": r,
+                     "live_shift_cars": round(shift * cap, 1), "sensors_reporting": n,
+                     "sensors_for_80pct": info["sensors_for_80pct"]})
+    return pd.DataFrame(rows)
 
 
 def write_example_feed(path=None, day="2026-11-10"):
@@ -1567,6 +1772,12 @@ if __name__ == "__main__":
     elif cmd == "export-app":
         # python3 park_shark.py export-app ../parkshark/data/tier3_forecast.json
         export_app(sys.argv[2] if len(sys.argv) > 2 else None)
+    elif cmd == "nearby":
+        # python3 park_shark.py nearby "2026-11-10 09:00" [sensor_feed.csv]
+        feed = sys.argv[3] if len(sys.argv) > 3 else None
+        with pd.option_context("display.width", 250, "display.max_columns", 30):
+            log(nearby_now(sys.argv[2], feed).to_string(index=False))
+        log("\nLots WITHOUT sensors: low confidence by design. typical_error_cars = typical miss in cars.")
     elif cmd == "example-feed":
         write_example_feed(sys.argv[2] if len(sys.argv) > 2 else None)
     else:
