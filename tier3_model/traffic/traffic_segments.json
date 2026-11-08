@@ -1,0 +1,54 @@
+{
+  "_read_me": "One entry per short street stretch next to a lot entrance. start and end are [latitude, longitude]: right click the spot in Google Maps and click the numbers to copy them. Keep each stretch short (one block) and on ONE road so Google cannot pick a different route. Coordinates marked needs_check are placeholders and must be replaced.",
+  "segments": [
+    {
+      "id": "erwin_e_of_douglas",
+      "lot": "Trent Lot",
+      "road": "Erwin Rd",
+      "road_class": "secondary",
+      "lanes_per_direction": null,
+      "speed_limit_mph": null,
+      "ncdot_aadt": 15000,
+      "ncdot_note": "Station 0320000349, EAST OF DOUGLAS ST, 2021 count (19,000 in 2019)",
+      "start": null,
+      "end": null,
+      "needs_check": true
+    },
+    {
+      "id": "flowers_dr",
+      "lot": "Trent Lot",
+      "road": "Flowers Dr",
+      "road_class": "tertiary",
+      "lanes_per_direction": 1,
+      "speed_limit_mph": null,
+      "ncdot_aadt": null,
+      "start": null,
+      "end": null,
+      "needs_check": true
+    },
+    {
+      "id": "science_dr",
+      "lot": "Science (Physics) Lot, Public Policy Lot",
+      "road": "Science Dr",
+      "road_class": "tertiary",
+      "lanes_per_direction": 1,
+      "speed_limit_mph": null,
+      "ncdot_aadt": null,
+      "start": null,
+      "end": null,
+      "needs_check": true
+    },
+    {
+      "id": "towerview_rd",
+      "lot": "Public Policy Lot, IM Lot",
+      "road": "Towerview Rd",
+      "road_class": "tertiary",
+      "lanes_per_direction": 1,
+      "speed_limit_mph": null,
+      "ncdot_aadt": null,
+      "start": null,
+      "end": null,
+      "needs_check": true
+    }
+  ]
+}
