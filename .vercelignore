@@ -8,3 +8,7 @@ scripts/*.pt
 *.pt
 docs/*.pdf
 scripts
+dist
+tier3_model
+source-data
+data/elevation_cache.json
