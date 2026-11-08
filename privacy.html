@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ParkShark Duke · Privacy</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦈</text></svg>">
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #0b1220; color: #e5e7eb; font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 18px 60px; }
+  a { color: #38bdf8; }
+  h1 { font-size: 26px; margin: 0 0 4px; } h1 span { color: #38bdf8; }
+  h2 { font-size: 18px; margin: 28px 0 8px; border-bottom: 1px solid #1e293b; padding-bottom: 4px; }
+  .sub { color: #94a3b8; margin-top: 0; }
+  .card { background: #111c33; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 16px; margin: 12px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid #1e293b; vertical-align: top; }
+  th { color: #94a3b8; font-weight: 500; }
+  .tablewrap { overflow-x: auto; }
+  .yes { color: #86efac; } .no { color: #fca5a5; }
+  code { background: #0f172a; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <p><a href="index.html">← Back to the map</a></p>
+  <h1>🦈 ParkShark <span>Duke</span> · Privacy</h1>
+  <p class="sub">Hackathon prototype (Triangle AI Hackathon, Robotics track). Last updated November 2026.</p>
+
+  <div class="card">
+    <b>In one sentence:</b> ParkShark counts cars, not people. Plates are turned into a salted hash on the sensor itself,
+    the camera image is deleted right after reading, and nothing can identify you or track where you drive.
+  </div>
+
+  <h2>What we collect</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Data</th><th>Where it comes from</th><th>Why</th></tr>
+    <tr><td><b>Hashed plate ID</b>: SHA-256 of the plate text plus a <b>per-session salt</b></td>
+        <td>Gate camera + OCR running on the Raspberry Pi in the lot</td>
+        <td>Match a car's entry to its exit and to the stall it parked in, so we can count dwell time without knowing who it is</td></tr>
+    <tr><td><b>Timestamps</b> of entry, exit and "parked" events</td><td>Gate radar, in-lot radar, magnetometers</td><td>Occupancy over time</td></tr>
+    <tr><td><b>Occupancy counts</b> per lot / per stall (occupied yes/no)</td><td>Sensors and our estimator</td><td>The live map and the time-to-park agent</td></tr>
+    <tr><td>Radar tracks (distance, speed, angle, anonymous target ID)</td><td>60 GHz in-lot radar</td><td>Follow a car from the gate to a stall; tracks hold no image or identity</td></tr>
+  </table></div>
+
+  <h2>What we do <span class="no">not</span> collect</h2>
+  <ul>
+    <li><b>No images are kept.</b> The plate photo exists only in the Pi's memory long enough to run OCR (about a second) and is then deleted. Images never go over LoRa or to the cloud.</li>
+    <li><b>No raw plate numbers</b> leave the Pi, and they are never written to disk or to the database.</li>
+    <li><b>No names</b>, DukeCard data, permit records or anything linking a vehicle to a person.</li>
+    <li><b>No location tracking of drivers.</b> The website never asks for your GPS location. The "start point" on the map is a pin you place yourself, and it stays in your browser.</li>
+    <li><b>No accounts, cookies, ads or analytics.</b></li>
+    <li><b>No payment data.</b> The Reserve / Pay button is a demo using Google Pay's <b>TEST</b> environment with the example gateway. It returns a dummy token that is thrown away, and nothing is charged.</li>
+  </ul>
+
+  <h2>How the hash protects you</h2>
+  <p>Each sensing session uses a fresh random salt that is kept only in the Pi's memory. The database stores
+    <code>sha256(salt ‖ plate)</code>. Without the salt, nobody (including us) can reverse the hash or check whether a given plate was seen.
+    When the session ends the salt is destroyed, and the hashes from that session can never be linked to any other session.</p>
+  <p>During the hackathon the live plate demo runs <b>only on team members' and volunteers' cars</b>, with their consent.
+    If plate reading fails, the fallback ID is arrival order plus timestamp, which contains no plate at all.</p>
+
+  <h2>Retention</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Data</th><th>Kept for</th></tr>
+    <tr><td>Camera image</td><td>Deleted right after OCR (seconds), never stored</td></tr>
+    <tr><td>Per-session salt</td><td>Memory only; destroyed at the end of the session (at most 24 h)</td></tr>
+    <tr><td>Hashed plate IDs + event timestamps (<code>vehicle_events</code>)</td><td>30 days, then deleted. They're already unlinkable once the salt is destroyed</td></tr>
+    <tr><td>Anonymous occupancy counts (<code>occupancy</code>)</td><td>Kept to train and evaluate the occupancy model; contains no identifiers</td></tr>
+  </table></div>
+
+  <h2>Who can see what</h2>
+  <ul>
+    <li>The public dashboard can read only anonymous occupancy (Supabase Row Level Security, read-only for the public key).</li>
+    <li>The <code>vehicle_events</code> table (hashes) has RLS enabled and <b>no public policy</b>. Only the sensor gateway's server key can write it.</li>
+  </ul>
+
+  <h2>Third-party services the website calls</h2>
+  <ul>
+    <li><b>Esri</b> (satellite and street tiles) and <b>unpkg</b> (Leaflet library): standard web requests for map tiles and code.</li>
+    <li><b>Open-Meteo</b> (weather): asked for the weather at Wilkinson Building's coordinates, not yours.</li>
+    <li><b>Google Pay</b> (only if you open the demo checkout), in TEST mode.</li>
+    <li>Lots you draw with the "Draw lot" tool are saved only in your browser (<code>localStorage</code>) until you download them.</li>
+  </ul>
+
+  <h2>Open data</h2>
+  <p>Parking inventory is © OpenStreetMap contributors (ODbL). Curb verification uses NC OneMap orthoimagery (NC CGIA), where vehicles show up as
+    anonymous shapes at 15 cm per pixel. No Google-derived data is used for the inventory.</p>
+
+  <h2>Contact</h2>
+  <p>Questions, or want data from a session deleted early? Open an issue at
+    <a href="https://github.com/momacaes9/parkshark/issues" target="_blank" rel="noopener">github.com/momacaes9/parkshark/issues</a>
+    or talk to the ParkShark team at the Triangle AI Hackathon.</p>
+</main>
+</body>
+</html>

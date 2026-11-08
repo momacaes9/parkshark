@@ -39,7 +39,7 @@ grant select on public.occupancy_latest to anon, authenticated;
 create table if not exists public.vehicle_events (
   id          bigserial primary key,
   lot_id      text not null,
-  plate_hash  text not null,          -- sha256(salt || plate); raw plates never leave the Pi
+  plate_hash  text not null,          -- sha256(per-session salt || plate); raw plates and images never leave the Pi
   event       text not null check (event in ('enter', 'exit')),
   observed_at timestamptz not null default now()
 );
@@ -48,3 +48,6 @@ revoke all on public.vehicle_events from anon, authenticated;
 
 -- Example test row (run once to see a lot turn "live" on the dashboard):
 -- insert into public.occupancy (lot_id, occupancy, source) values ('w32336367', 0.95, 'manual');
+
+-- Retention (see privacy.html): delete hashed events after 30 days, e.g. with pg_cron:
+-- select cron.schedule('purge-vehicle-events', '0 4 * * *', $$delete from public.vehicle_events where observed_at < now() - interval '30 days'$$);
