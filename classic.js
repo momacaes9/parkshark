@@ -937,7 +937,7 @@
     $("gpay-container").innerHTML = ""; $("pay-sim").hidden = true;
   }
 
-  // ------------------------------------------------------------------ Parking Concierge (Claude via /api/concierge)
+  // ------------------------------------------------------------------ Parking Concierge (Gemini via /api/concierge)
   // The serverless function holds the API key and fixed model/tools; the browser runs the tools
   // against the live map state and keeps the conversation (echoing assistant content unchanged).
   const chat = { messages: [], busy: false };
@@ -1017,6 +1017,12 @@
                spots: scored.map(({ s, r }) => ({ spot_id: s.props.id, score: r.score, ada: !!s.props.ada, ev: !!s.props.ev,
                                                    reasons: r.reasons.slice(0, 5).map((x) => (x.delta ? `${x.delta > 0 ? "+" : ""}${x.delta} ` : "") + x.text) })) };
     },
+    get_lot_details(i) {         // the server's tool list is shared with the main page; reuse price + stall scoring here
+      const prof = { role: "visitor", hours: 2, vehicle: "standard", wheelchair: false, senior: false, ev: false };
+      const price = this.get_price({ ...prof, option_id: i.option_id, arrival: "now" });
+      const stalls = this.score_spots({ ...prof, option_id: i.option_id, limit: 3 });
+      return { ...price, profile_assumed_for_price: "visitor, 2 h, now", stalls };
+    },
     show_on_map(i) {
       const o = findOption(i.option_id);
       if (i.spot_id && state.spots.has(i.spot_id)) {
@@ -1030,7 +1036,7 @@
     },
   };
   const TOOL_LABEL = { rank_parking_options: "🔎 Ranked parking options", get_price: "💲 Checked price",
-                       score_spots: "⭐ Scored stalls", show_on_map: "🗺 Showed on map" };
+                       score_spots: "⭐ Scored stalls", get_lot_details: "📋 Read lot details", show_on_map: "🗺 Showed on map" };
   function chatAdd(cls, html) {
     const el = document.createElement("div");
     el.className = "msg " + cls;

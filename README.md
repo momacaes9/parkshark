@@ -21,7 +21,7 @@ Around Duke's West and Science campus, drivers circle lots looking for a free st
   - Anything we could not source shows **"Not published"**. We never invent names, prices or spaces.
 - **Free-space forecasts.** Jacob's Tier 3 model estimates occupancy for any hour, with a confidence level (medium, low or very low). Live sensor readings replace the estimate whenever a sensor is reporting.
 - **Search, filters and location.** Search lots, streets and destinations. Filter chips: ♿ Wheelchair, ⚡ EV, 🛻 Large vehicle, 💲 Cheapest. **Use my location** stays on your device. Light and dark mode.
-- **💬 Parking Concierge.** Ask "visitor arriving 9:30 for 3 hours, budget $10". Claude (`claude-opus-5-5`) calls our ranking, price and lot-detail functions as tools, then answers with a lot and highlights it on the map.
+- **💬 Parking Concierge.** Ask "visitor arriving 9:30 for 3 hours, budget $10". Google Gemini (`gemini-2.5-flash`) calls our ranking, price and lot-detail functions through function calling, then answers with a lot and highlights it on the map.
 - **Pay demo.** Google Pay in **TEST** mode, labeled "Demo, no real charge". No card data reaches us and nothing is stored.
 
 ## How we built it
@@ -53,7 +53,8 @@ Around Duke's West and Science campus, drivers circle lots looking for a free st
 **App**
 - `index.html` + `app.js` + `style.css`: Google Maps JS (Advanced Markers, Places autocomplete). It falls back to Leaflet with OSM tiles when no key is configured.
 - `api/config.js` serves the public browser config from server environment variables.
-- `api/concierge.js`: a Vercel serverless proxy to the Claude API. It keeps `ANTHROPIC_API_KEY` on the server, with strict tools, per-IP rate limiting and size caps. The browser runs the tool loop, so the key never reaches it.
+- `api/concierge.js`: a Vercel serverless proxy to Gemini 2.5 Flash with function calling. It keeps `GEMINI_API_KEY` on the server, with per-IP rate limiting, size caps and a timeout. The browser runs the tool loop, so the key never reaches it.
+  - A key starting with `AQ.` uses Vertex AI express mode (`aiplatform.googleapis.com`). Any other key uses the Gemini API (`generativelanguage.googleapis.com`).
 - `supabase.sql`: `occupancy` and `occupancy_latest` (public read), and `vehicle_events` (hashed plates, no public access, 30-day purge).
 - The earlier analyst dashboard (stall packing along aisles, curb candidates verified by CV on NC OneMap imagery, game-day rules, spot score) is still at [`classic.html`](https://parkshark-blond.vercel.app/classic.html).
 
@@ -90,20 +91,21 @@ Confidence labels matter as much as the numbers themselves. Users trust "estimat
 - Real reservations and payment through Duke Parking's Blue Spot.
 
 ## Built with
-Google Maps JavaScript API · Leaflet · OpenStreetMap · Python · scikit-learn · Claude API (`claude-opus-5-5`) · Vercel serverless · Supabase · Google Pay (TEST) · Raspberry Pi · LoRa · mmWave radar
+Google Maps JavaScript API · Leaflet · OpenStreetMap · Python · scikit-learn · Google Gemini 2.5 Flash (Gemini API / Vertex AI) · Vercel serverless · Supabase · Google Pay (TEST) · Raspberry Pi · LoRa · mmWave radar
 
 ## Team
 Ishan (founder, product) · Anne (Duke parking atlas) · Jacob (Tier 3 occupancy model) · Monica (map, app and deployment)
 
 ## Security & privacy
 - `.env` and `config.js` are gitignored and never committed. API keys exist only as Vercel environment variables.
-- `/api/config` returns only public browser values: the Google Maps key (restrict it to this site's referrers) and the Supabase anon key (RLS enforced). `ANTHROPIC_API_KEY` and `SUPABASE_SERVICE_KEY` stay on the server.
+- `/api/config` returns only public browser values: the Google Maps key (restrict it to this site's referrers) and the Supabase anon key (RLS enforced). `GEMINI_API_KEY` and `SUPABASE_SERVICE_KEY` stay on the server.
+- Concierge messages go through our server to Google's Gemini API; your location is never included.
 - Geolocation never leaves the browser. Plates are hashed on the device, images are deleted right after OCR, and events are purged after 30 days. See [privacy.html](privacy.html).
 
 ## Run it
 ```bash
 npm install
-cp .env.example .env                # ANTHROPIC_API_KEY, GOOGLE_MAPS_KEY, SUPABASE_URL, SUPABASE_ANON_KEY (gitignored)
+cp .env.example .env                # GEMINI_API_KEY, GOOGLE_MAPS_KEY, SUPABASE_URL, SUPABASE_ANON_KEY (gitignored)
 npm start                           # http://localhost:8000 (static + /api)
 ```
 Rebuild the data: `python3 scripts/build_data.py && python3 scripts/build_main.py`.

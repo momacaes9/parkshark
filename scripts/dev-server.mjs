@@ -1,5 +1,5 @@
 // Local dev server: serves the static site and runs api/concierge.js like Vercel does.
-// Usage: npm start  ->  http://localhost:8000  (kept in scripts/ so Vercel does not treat it as the app entrypoint)   (put ANTHROPIC_API_KEY in .env, which is gitignored)
+// Usage: npm start  ->  http://localhost:8000  (kept in scripts/ so Vercel does not treat it as the app entrypoint)   (put GEMINI_API_KEY in .env, which is gitignored)
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { existsSync, readFileSync } from "node:fs";
@@ -51,4 +51,4 @@ createServer(async (req, res) => {
   } catch {
     res.writeHead(404, { "content-type": "text/plain" }).end("Not found");
   }
-}).listen(PORT, () => console.log(`ParkShark on http://localhost:${PORT}  (concierge ${process.env.ANTHROPIC_API_KEY ? "configured" : "NOT configured: add ANTHROPIC_API_KEY to .env"})`));
+}).listen(PORT, () => console.log(`ParkShark on http://localhost:${PORT}  (concierge ${process.env.GEMINI_API_KEY ? "configured" : "NOT configured: add GEMINI_API_KEY to .env"})`));

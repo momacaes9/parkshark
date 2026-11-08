@@ -1,16 +1,24 @@
-// ParkShark Parking Concierge - Vercel serverless proxy to the Claude API.
+// ParkShark Parking Concierge - Vercel serverless proxy to Google Gemini (gemini-2.5-flash).
 //
 // The browser runs the agent loop and executes the tools (they need the live map state);
 // this function only adds the API key, a fixed model, system prompt and tool list, and
-// forwards the conversation. The key lives in the ANTHROPIC_API_KEY env var (Vercel project
+// forwards the conversation. The key lives in the GEMINI_API_KEY env var (Vercel project
 // settings / local .env) and never reaches the browser.
-import Anthropic from "@anthropic-ai/sdk";
+//
+// Key types: a key starting with "AQ." is a Vertex AI express-mode key (aiplatform.googleapis.com);
+// any other key is a Gemini API key (generativelanguage.googleapis.com).
+//
+// Wire format with the browser is unchanged: messages are {role: "user"|"assistant", content} with
+// content blocks {type:"text"}, {type:"tool_use", id, name, input} and {type:"tool_result", tool_use_id,
+// content}; the response is {content, stop_reason}. We translate to and from Gemini contents here.
 
-const MODEL = "claude-opus-5-5";
+const MODEL = "gemini-2.5-flash";
 const MAX_TOKENS = 4096;           // cost cap for a public demo endpoint; answers are short
+const THINKING_BUDGET = 1024;      // 2.5 Flash thinking tokens count toward MAX_TOKENS
 const MAX_MESSAGES = 60;
 const MAX_BODY_BYTES = 200_000;
 const RATE = { windowMs: 60_000, max: 20 };   // per IP, best effort (per serverless instance)
+const TIMEOUT_MS = 45_000;
 
 const SYSTEM = `You are the ParkShark Parking Concierge for Duke University's West/Science campus. The driver is going to the Wilkinson Building (534 Research Dr, Durham NC) unless the context says another destination.
 
@@ -40,7 +48,6 @@ const TOOLS = [
   {
     name: "rank_parking_options",
     description: "Rank parking options (lots, decks, on-street segments, sensor-pilot groups) near the destination for a driver profile and arrival time. Returns for each: id, name, kind, walk minutes to the destination, price for the stay (null when not published), capacity with its confidence, estimated free spaces with range, permits, ADA/EV. Call this first.",
-    strict: true,
     input_schema: {
       type: "object",
       additionalProperties: false,
@@ -57,7 +64,6 @@ const TOOLS = [
   {
     name: "get_price",
     description: "Price and access rules for one place for a driver profile: published visitor hourly rate, permit zones and annual permit rates, hours.",
-    strict: true,
     input_schema: {
       type: "object",
       additionalProperties: false,
@@ -72,7 +78,6 @@ const TOOLS = [
   {
     name: "get_lot_details",
     description: "Everything we know about one lot, deck, street or sensor-pilot group: capacity and its basis, estimated free spaces, permit zones, visitor and permit rates, hours, ADA/EV, levels, stall layout summary, entrances, rules, posted signs, warnings and source links.",
-    strict: true,
     input_schema: {
       type: "object",
       additionalProperties: false,
@@ -83,7 +88,6 @@ const TOOLS = [
   {
     name: "show_on_map",
     description: "Open a lot, deck or street on the driver's map with its detail panel and stall layout.",
-    strict: true,
     input_schema: {
       type: "object",
       additionalProperties: false,
@@ -113,10 +117,79 @@ function validMessages(messages) {
     (typeof m.content === "string" || Array.isArray(m.content)));
 }
 
-export async function POST(request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return json(503, { error: "Concierge is not configured: set ANTHROPIC_API_KEY on the server." });
+// Gemini function declarations: same tools, schema without the JSON-Schema-only keywords.
+function toGeminiSchema(schema) {
+  if (Array.isArray(schema)) return schema.map(toGeminiSchema);
+  if (!schema || typeof schema !== "object") return schema;
+  const out = {};
+  for (const [k, v] of Object.entries(schema)) {
+    if (k === "additionalProperties") continue;
+    out[k] = k === "properties" ? Object.fromEntries(Object.entries(v).map(([n, p]) => [n, toGeminiSchema(p)])) : toGeminiSchema(v);
   }
+  return out;
+}
+const FUNCTION_DECLARATIONS = TOOLS.map((t) => ({ name: t.name, description: t.description, parameters: toGeminiSchema(t.input_schema) }));
+
+// Browser messages -> Gemini contents.
+function toContents(messages) {
+  const names = new Map();   // tool_use id -> function name (functionResponse needs the name)
+  return messages.map((m) => {
+    const blocks = typeof m.content === "string" ? [{ type: "text", text: m.content }] : m.content;
+    const parts = [];
+    for (const b of blocks) {
+      if (!b || typeof b !== "object") continue;
+      if (b.type === "text" && typeof b.text === "string" && b.text) parts.push({ text: b.text });
+      else if (b.type === "tool_use" && typeof b.name === "string") {
+        names.set(b.id, b.name);
+        const part = { functionCall: { name: b.name, args: b.input && typeof b.input === "object" ? b.input : {} } };
+        if (typeof b.signature === "string") part.thoughtSignature = b.signature;   // must be echoed back
+        parts.push(part);
+      } else if (b.type === "tool_result") {
+        const name = names.get(b.tool_use_id);
+        if (!name) continue;
+        let result = b.content;
+        if (typeof result === "string") { try { result = JSON.parse(result); } catch { /* keep text */ } }
+        parts.push({ functionResponse: { name, response: b.is_error ? { error: result } : { result } } });
+      }
+    }
+    if (!parts.length) parts.push({ text: "(empty)" });
+    return { role: m.role === "assistant" ? "model" : "user", parts };
+  });
+}
+
+// Gemini response -> browser content blocks + stop_reason.
+function fromCandidate(data) {
+  if (data.promptFeedback?.blockReason) return { content: [], stop_reason: "refusal" };
+  const cand = data.candidates?.[0];
+  if (!cand) return { content: [], stop_reason: "refusal" };
+  const content = [];
+  let calls = 0;
+  for (const p of cand.content?.parts || []) {
+    if (p.thought) continue;                          // internal reasoning summary, not shown
+    if (p.functionCall) {
+      calls++;
+      content.push({ type: "tool_use", id: p.functionCall.id || `call_${Date.now().toString(36)}_${calls}`,
+        name: p.functionCall.name, input: p.functionCall.args || {}, ...(p.thoughtSignature ? { signature: p.thoughtSignature } : {}) });
+    } else if (typeof p.text === "string" && p.text) content.push({ type: "text", text: p.text });
+  }
+  const fr = cand.finishReason;
+  let stop_reason = "end_turn";
+  if (calls) stop_reason = "tool_use";
+  else if (fr === "MAX_TOKENS") stop_reason = "max_tokens";
+  else if (["SAFETY", "PROHIBITED_CONTENT", "BLOCKLIST", "SPII", "RECITATION"].includes(fr)) stop_reason = "refusal";
+  return { content, stop_reason, finish_reason: fr ?? null };
+}
+
+function endpoint(key) {
+  if (key.startsWith("AQ.")) {   // Vertex AI express mode
+    return { provider: "vertex", url: `https://aiplatform.googleapis.com/v1/publishers/google/models/${MODEL}:generateContent?key=${encodeURIComponent(key)}`, headers: {} };
+  }
+  return { provider: "gemini", url: `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, headers: { "x-goog-api-key": key } };
+}
+
+export async function POST(request) {
+  const key = (process.env.GEMINI_API_KEY || "").trim();
+  if (!key) return json(503, { error: "Concierge is not configured: set GEMINI_API_KEY on the server." });
   const ip = (request.headers.get("x-forwarded-for") || "local").split(",")[0].trim();
   if (rateLimited(ip)) return json(429, { error: "Too many requests - wait a minute and try again." });
 
@@ -126,32 +199,37 @@ export async function POST(request) {
   try { body = JSON.parse(raw); } catch { return json(400, { error: "Invalid JSON" }); }
   if (!validMessages(body.messages)) return json(400, { error: "Invalid messages" });
 
-  const client = new Anthropic();   // reads ANTHROPIC_API_KEY
+  const { provider, url, headers } = endpoint(key);
+  const payload = {
+    systemInstruction: { parts: [{ text: SYSTEM }] },
+    contents: toContents(body.messages),
+    tools: [{ functionDeclarations: FUNCTION_DECLARATIONS }],
+    toolConfig: { functionCallingConfig: { mode: "AUTO" } },
+    generationConfig: { maxOutputTokens: MAX_TOKENS, temperature: 0.3, thinkingConfig: { thinkingBudget: THINKING_BUDGET } },
+  };
+  let res;
   try {
-    const response = await client.beta.messages.create({
-      model: MODEL,
-      max_tokens: MAX_TOKENS,
-      output_config: { effort: "medium" },
-      // Server-side refusal fallback: if Opus 5.5 declines on a safety classifier, the API re-runs the turn
-      // on a fallback model chosen by refusal category.
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
-      system: SYSTEM,
-      tools: TOOLS,
-      cache_control: { type: "ephemeral" },
-      messages: body.messages,
-    });
-    // Return the full content (thinking/fallback blocks included) - the browser echoes it back unchanged.
-    return json(200, { content: response.content, stop_reason: response.stop_reason, stop_details: response.stop_details ?? null, model: response.model });
+    res = await fetch(url, { method: "POST", headers: { "content-type": "application/json", ...headers },
+      body: JSON.stringify(payload), signal: AbortSignal.timeout(TIMEOUT_MS) });
   } catch (error) {
-    if (error instanceof Anthropic.AuthenticationError) return json(500, { error: "Server API key is invalid." });
-    if (error instanceof Anthropic.RateLimitError) return json(429, { error: "The AI service is busy - try again in a moment." });
-    if (error instanceof Anthropic.BadRequestError) return json(400, { error: "Request rejected: " + error.message });
-    if (error instanceof Anthropic.APIError) return json(502, { error: `AI service error (${error.status ?? "network"})` });
-    return json(500, { error: "Unexpected server error" });
+    return json(502, { error: error?.name === "TimeoutError" ? "The AI service timed out - try again." : "AI service unreachable" });
   }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = String(data?.error?.message || "");
+    const status = String(data?.error?.status || "");
+    if (res.status === 401 || res.status === 403 || /API key|API_KEY/i.test(msg)) return json(500, { error: "Server API key is invalid." });
+    if (res.status === 429 || status === "RESOURCE_EXHAUSTED") return json(429, { error: "The AI service is busy - try again in a moment." });
+    if (res.status === 400) return json(400, { error: "Request rejected: " + msg.slice(0, 300) });
+    return json(502, { error: `AI service error (${res.status})` });
+  }
+  return json(200, { ...fromCandidate(data), model: data.modelVersion || MODEL, provider });
 }
 
 export function GET() {
-  return json(200, { ok: true, configured: Boolean(process.env.ANTHROPIC_API_KEY), model: MODEL });
+  const key = (process.env.GEMINI_API_KEY || "").trim();
+  return json(200, { ok: true, configured: Boolean(key), model: MODEL, provider: key ? endpoint(key).provider : null });
 }
+
+// Exported for tests only.
+export const _internal = { toContents, fromCandidate, endpoint, FUNCTION_DECLARATIONS };

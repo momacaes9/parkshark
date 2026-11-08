@@ -479,7 +479,7 @@
     $("gpay-container").innerHTML = ""; $("pay-sim").hidden = true;
   }
 
-  // ---------------------------------------------------------------- Parking Concierge (Claude via /api/concierge; tools run here on the same data)
+  // ---------------------------------------------------------------- Parking Concierge (Gemini via /api/concierge; tools run here on the same data)
   const chat = { messages: [], busy: false };
   function parseArrival(str) {
     if (!str || /^now$/i.test(str.trim())) return now();
