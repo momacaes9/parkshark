@@ -60,15 +60,29 @@
     return { m: avg(0), lo: avg(1), hi: avg(2), basis: `Tier 3 typical ${dayKind(d)} profile (${profile === "curb" ? "curb" : "department lot"})` };
   }
   function occFor(it, d) {
-    if (S.live.lot[it.id] != null) return { m: S.live.lot[it.id], lo: S.live.lot[it.id], hi: S.live.lot[it.id], measured: true, basis: "Live sensors" };
+    if (S.live.lot[it.id] != null) return { m: S.live.lot[it.id], lo: S.live.lot[it.id], hi: S.live.lot[it.id], measured: true, conf: "high", basis: "Live sensors" };
     if (it.tier3) {
       const g = S.data.tier3.groups[it.tier3];
       const row = (g.hourly || []).find((r) => r.t === hourKey(d));
-      if (row) return { m: row.m, lo: row.lo, hi: row.hi, basis: "Tier 3 forecast for this hour (with weather)" };
+      if (row) return { m: row.m, lo: row.lo, hi: row.hi, conf: g.confidence, basis: "Tier 3 forecast for this hour (with weather)" };
       const t = g.typical && g.typical[dayKind(d)] && g.typical[dayKind(d)][d.getHours()];
-      if (t) return { m: t[0], lo: t[1], hi: t[2], basis: `Tier 3 typical ${dayKind(d)}` };
+      if (t) return { m: t[0], lo: t[1], hi: t[2], conf: g.confidence, basis: `Tier 3 typical ${dayKind(d)}` };
     }
-    return tier3Profile(it.profile, d);
+    if (it.tier3Nearby) {                          // Jacob's per-lot forecast for nearby lots without sensors
+      const n = S.data.tier3.nearby[it.tier3Nearby];
+      const row = (n.hourly || []).find((r) => r.t === hourKey(d));
+      if (row) return { m: row.m, lo: row.lo, hi: row.hi, conf: n.confidence, basis: "Tier 3 forecast for this lot and hour (no sensors here)" };
+      const t = n.typical && n.typical[dayKind(d)] && n.typical[dayKind(d)][d.getHours()];
+      if (t) {   // outside the forecast window: typical day nudged by street traffic for that date
+        const days = (S.data.tier3.traffic_unusual || {})[n.traffic_lot] || {};
+        const day = hourKey(d).slice(0, 10), tr = days[day] ? days[day][d.getHours()] : 1;
+        const f = 1 + (S.data.tier3.traffic_beta ?? 0.3) * (tr - 1), cl = (v) => Math.min(1, Math.max(0, v));
+        const m = cl(t[0] * f);
+        return { m, lo: Math.min(cl(t[1] * f), m), hi: Math.max(cl(t[2] * f), m), conf: n.confidence, basis: `Tier 3 typical ${dayKind(d)} for this lot, traffic-adjusted` };
+      }
+    }
+    const pr = tier3Profile(it.profile, d);
+    return pr && { ...pr, conf: "very_low" };
   }
   function stat(it, d = now()) {
     const cap = it.capacity && it.capacity.value;
@@ -342,7 +356,8 @@
     const permitRates = (it.permitRates || []).length ? it.permitRates.map((r) => `${esc(r.name)}: ${r.annualUsd != null ? "$" + r.annualUsd.toLocaleString() + "/yr" : NP}${r.eligibility ? " · " + esc(r.eligibility) : ""}${r.clearance ? " · clearance " + esc(r.clearance) : ""}`).join("<br>") : null;
     const freeBlock = st.free != null
       ? `<div class="d-free" style="--c:${st.color}"><div class="big">${esc(freeText(st))}</div><div style="flex:1"><div class="bar"><i style="width:${Math.round(st.ratio * 100)}%"></i></div>
-          <small>free of ${st.cap} · likely ${st.freeLo}–${st.freeHi} · <span class="badge b-${st.tier}">${st.tier}</span> ${esc(st.o.basis)}</small></div></div>`
+          <small>free of ${st.cap} · likely ${st.freeLo}–${st.freeHi} · <span class="badge b-${st.tier}">${st.tier}</span> ${esc(st.o.basis)}
+          ${st.o.conf ? `<br>Model confidence: <b>${esc(st.o.conf.replace("_", " "))}</b> · ${esc((S.data.tier3.confidence_levels || {})[st.o.conf] || "")}` : ""}</small></div></div>`
       : `<div class="d-free"><div class="big">?</div><small>Free spaces unknown: ${it.capacity.value == null ? "capacity is not published" : "no occupancy estimate for this hour"}.</small></div>`;
     $("detailBody").innerHTML = `
       <div class="d-head"><div><h2>${esc(displayName(it))}</h2>
@@ -502,7 +517,7 @@
       price_usd: pr.price_usd, price_label: pr.label, available_to_driver: pr.available,
       capacity: it.capacity.value, capacity_confidence: it.capacity.confidence, capacity_basis: it.capacity.basis,
       free_spaces_estimate: st.free, free_range: st.free != null ? [st.freeLo, st.freeHi] : null,
-      occupancy_basis: st.o ? st.o.basis : null, occupancy_tier: st.tier,
+      occupancy_basis: st.o ? st.o.basis : null, occupancy_tier: st.tier, model_confidence: st.o ? st.o.conf : null,
       permits: it.permits || null, ada: it.ada || (it.accessible ? "available, count not published" : null), ev_stations: it.ev || null,
       clearance: (it.permitRates || []).map((r) => r.clearance).find(Boolean) || null,
     };

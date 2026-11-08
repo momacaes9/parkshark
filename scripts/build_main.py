@@ -371,6 +371,11 @@ for gid, g in t3["groups"].items():
                     "ada": None, "ev": None, "layoutStatus": "Spot positions not surveyed yet",
                     "sources": [], "warnings": [g["match"]], "profile": "pilot", "tier3": gid})
 
+# Jacob's "nearby" lots (no sensors; low / very_low confidence) attach to our lot ids via feature_ids
+near_by_feature = {fid: k for k, n in t3.get("nearby", {}).items() for fid in n.get("feature_ids", [])}
+for x in out_lots:
+    if x["id"] in near_by_feature: x["tier3Nearby"] = near_by_feature[x["id"]]
+
 main = {
     "generated": t3.get("generated"), "center": {"lon": WILK[0], "lat": WILK[1], "name": "Wilkinson Building"},
     "radius_m": RADIUS,
@@ -383,7 +388,15 @@ main = {
     "lots": sorted(out_lots, key=lambda x: x["dist"]),
     "streets": sorted(streets, key=lambda x: x["dist"]),
     "tier3": {"typical": t3["typical_days"], "groups": {k: {"name": v["name"], "spots": v["spots"], "hourly": v["hourly"],
-                                                           "typical": v["typical"], "match": v["match"], "lot_type": v["lot_type"]} for k, v in t3["groups"].items()}},
+                                                           "typical": v["typical"], "match": v["match"], "lot_type": v["lot_type"],
+                                                           "confidence": v.get("confidence", "medium")} for k, v in t3["groups"].items()},
+              "nearby": {k: {"name": n["name"], "hourly": n["hourly"], "typical": n["typical"], "confidence": n["confidence"],
+                             "traffic_lot": n.get("traffic_lot"), "typical_error_cars": n.get("typical_error_cars"), "note": n.get("note")}
+                         for k, n in t3.get("nearby", {}).items()},
+              "traffic_unusual": t3.get("traffic_unusual", {}),
+              "traffic_beta": t3.get("nearby_settings", {}).get("traffic_beta", 0.3),
+              "confidence_levels": t3.get("nearby_settings", {}).get("confidence_levels", {}),
+              "nearby_note": t3.get("nearby_note")},
 }
 (DATA / "main.json").write_text(json.dumps(main, separators=(",", ":")))
 (DATA / "layouts.json").write_text(json.dumps(layouts, separators=(",", ":")))

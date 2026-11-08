@@ -63,6 +63,7 @@
     streets: [], chargers: [],
     occSource: "prior", liveLot: {}, liveSpot: {}, liveLotSrc: {}, liveSensorRows: 0, liveEstimatorRows: 0,
     tier3: null, tier3Now: {}, tier3Markers: {},   // AI estimate for the 4 sensored spot groups
+    nearbyNow: {}, nearbyMarkers: {}, nearbyByFeature: {}, tier3Surprise: {},   // lots WITHOUT sensors (low confidence)
     weather: { tempF: null, precip: 0, cloud: null, isDay: 1, label: "loading…" },
     selectedSpot: null, origin: null,
   };
@@ -110,7 +111,7 @@
       `${p.length_m} m · ~${p.est_spaces} parallel spaces (6.1 m)<br>Confidence: <b>${esc(p.confidence)}</b>` +
       (p.observed_cars != null ? `<br>Cars detected in NC OneMap ortho${p.cv_date ? " (" + esc(p.cv_date) + ")" : ""}: <b>${p.observed_cars}</b>` : "") +
       (p.cv_image ? `<br><img src="${esc(p.cv_image)}" style="width:220px;margin-top:4px;border-radius:4px" alt="detections">` : "") +
-      tier3CurbLine(p.id) +
+      tier3CurbLine(p.id) + nearbyLine(p.id) +
       `<br><small>Generated from OSM road geometry; no signage data. A car seen in one aerial photo may be a drop-off, not legal parking. Check the signs.</small>`;
   }
   function lotName(p) {
@@ -298,9 +299,16 @@
   }
   function updateTier3(d) {
     const byFeature = {};
+    state.tier3Surprise = {};
     if (!state.tier3) return byFeature;
+    const gw = ((state.tier3.nearby_settings || {}).group_weight) || {};
     for (const [gid, g] of Object.entries(state.tier3.groups)) {
       const est = tier3At(g, d), live = tier3Live(gid, g);
+      if (live && est && live.n > 0) {   // "surprise" = live rate minus what the AI expected here
+        const a = state.tier3Surprise[g.area] || (state.tier3Surprise[g.area] = { sw: 0, w: 0, n: 0 });
+        const wt = (gw[g.lot_type] ?? 1) * live.n;
+        a.sw += wt * (Math.min(live.occ, live.n) / live.n - est.m); a.w += wt; a.n += live.n;
+      }
       let r;
       if (live) {                    // measured spots as they are; only silent spots are estimated
         const e = est || { m: live.occ / live.n, lo: live.occ / live.n, hi: live.occ / live.n };
@@ -311,6 +319,7 @@
       } else if (est) {
         r = { ...est, src: "AI estimate (Tier 3 model)", live: false };
       } else continue;
+      r.confidence = r.live ? "high" : "medium";
       state.tier3Now[gid] = r;
       if (g.feature_id) byFeature[g.feature_id] = r;
       const mk = state.tier3Markers[gid];
@@ -327,6 +336,7 @@
     const g = state.tier3.groups[gid], r = state.tier3Now[gid];
     const cars = (x) => Math.round(x * g.spots);
     return `<b>📡 ${esc(g.name)}</b><br>${g.spots} sensored spots · ${esc((g.lot_type || "").replace("_", " "))}<br>` +
+      (r ? confBadge(r.confidence) + "<br>" : "") +
       (r ? `<b>${r.live ? "Live" : "AI estimate"}: ${cars(r.m)} of ${g.spots} taken</b>` +
            (r.hi > r.lo ? ` (likely ${cars(r.lo)} to ${cars(r.hi)})` : "") +
            `<br>Source: ${esc(r.src)}, ${esc(r.basis)}` : "No estimate for this hour") +
@@ -353,6 +363,105 @@
       mk.bindPopup(() => tier3Popup(gid));
       mk.addTo(layer);
       state.tier3Markers[gid] = mk;
+    }
+  }
+
+  // ------------------------------------------------------------------ Nearby lots WITHOUT sensors (low confidence)
+  // tier3_forecast.json "nearby": a few lots around the sensored groups. Same AI curve (the model has no
+  // lot identity yet), a wider band, a street traffic nudge from the Duke traffic model, and part of the
+  // live "surprise" at the sensored groups (less the further away). Confidence is set by park_shark.py
+  // from distance and lot type. The point for the demo: estimates get worse the further from hardware.
+  const CONF = {
+    high: { label: "HIGH", color: "#22c55e", text: "measured by this lot's own sensors" },
+    medium: { label: "MEDIUM", color: "#38bdf8", text: "sensors installed here; AI estimate until they report" },
+    low: { label: "LOW", color: "#f59e0b", text: "no sensors; near a sensored group" },
+    very_low: { label: "VERY LOW", color: "#f87171", text: "no sensors; far away or a different kind of parking" },
+  };
+  function confBadge(c) {
+    const k = CONF[c] || CONF.very_low;
+    return `Confidence: <b style="color:${k.color}">${k.label}</b> <small>(${esc(k.text)})</small>`;
+  }
+  function nearbyAt(n, d) {
+    const k = tier3Key(d);
+    const row = (n.hourly || []).find((r) => r.t === k);
+    if (row) return { m: row.m, lo: row.lo, hi: row.hi, tr: row.tr ?? 1, basis: "forecast for this hour (with weather)" };
+    const wd = d.getDay(), kind = wd === 0 ? "sunday" : wd === 6 ? "saturday" : "weekday";
+    const t = n.typical && n.typical[kind] && n.typical[kind][d.getHours()];
+    if (!t) return null;
+    // Outside the forecast window: typical day, nudged by street traffic for that date (breaks, game windows)
+    const p2 = (x) => String(x).padStart(2, "0"), day = `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
+    const days = ((state.tier3.traffic_unusual || {})[n.traffic_lot]) || {};
+    const tr = days[day] ? days[day][d.getHours()] : 1;
+    const beta = (state.tier3.nearby_settings || {}).traffic_beta ?? 0.3, f = 1 + beta * (tr - 1);
+    const m = clamp(t[0] * f, 0, 1);
+    return { m, lo: clamp(t[1] * f, 0, m), hi: clamp(t[2] * f, m, 1), tr, basis: `typical ${kind} (outside the forecast window)` };
+  }
+  function updateNearby(d) {
+    const byFeature = {};
+    if (!state.tier3 || !state.tier3.nearby) return byFeature;
+    const S = state.tier3.nearby_settings || {};
+    for (const [key, n] of Object.entries(state.tier3.nearby)) {
+      const est = nearbyAt(n, d);
+      if (!est) continue;
+      const r = { ...est, confidence: n.confidence, shift: 0, liveN: 0 };
+      const a = state.tier3Surprise[n.area];
+      if (a && a.w > 0 && n.live_transfer > 0 && a.n >= (S.min_sensors_reporting ?? 3)) {
+        const trust = a.n / (a.n + (S.shrink_spots ?? 10));
+        r.shift = n.live_transfer * trust * (a.sw / a.w);
+        r.liveN = a.n;
+        const m = clamp(est.m + r.shift, 0, 1);                       // band moves with the estimate,
+        r.lo = clamp(m - (est.m - est.lo), 0, m); r.hi = clamp(m + (est.hi - est.m), m, 1); r.m = m;   // never narrows
+      }
+      state.nearbyNow[key] = r;
+      for (const fid of n.feature_ids || []) byFeature[fid] = { ...r, key };
+      const mk = state.nearbyMarkers[key];
+      if (mk) {
+        mk.setStyle({ fillColor: occColor(r.m), color: (CONF[n.confidence] || CONF.very_low).color });
+        mk.setTooltipContent(`${esc(nearbyShort(n))}: ~${Math.round(r.m * n.spots)}/${n.spots} · ${(CONF[n.confidence] || CONF.very_low).label.toLowerCase()} conf.`);
+      }
+    }
+    state.nearbyByFeature = byFeature;
+    return byFeature;
+  }
+  function nearbyShort(n) { return n.name.replace(/ \(.*\)$/, ""); }
+  function nearbyPopup(key) {
+    const n = state.tier3.nearby[key], r = state.nearbyNow[key], S = state.tier3.nearby_settings || {};
+    const cars = (x) => Math.round(x * n.spots);
+    const share = S.share_within_10_no_sensors || [0.31, 0.51];
+    const trTxt = r && Math.abs(r.tr - 1) > 0.02 ? `${r.tr.toFixed(2)}x normal for this hour${r.tr < 1 ? " (quieter: break, holiday or weekend)" : " (busier: game or event window)"}` : "normal for this hour";
+    return `<b>❔ ${esc(n.name)}</b><br>${n.spots.toLocaleString()} spaces · ${esc((n.lot_type || "").replace("_", " "))} · <b>no sensors</b><br>` +
+      confBadge(n.confidence) + "<br>" +
+      (r ? `<b>AI estimate: about ${cars(r.m).toLocaleString()} of ${n.spots.toLocaleString()} taken</b> (likely ${cars(r.lo).toLocaleString()} to ${cars(r.hi).toLocaleString()})<br>` +
+           `Typical miss: about ±${n.typical_error_cars.toLocaleString()} cars<br>` +
+           `Street traffic (Research Dr / Erwin Rd model): ${trTxt}<br>` +
+           (r.liveN ? `Live nudge from ${r.liveN} sensored spots nearby: ${r.shift >= 0 ? "+" : ""}${(r.shift * n.spots).toFixed(1)} cars<br>`
+                    : n.live_transfer > 0 ? "Live nudge: none right now (nearby sensors not reporting)<br>"
+                                          : "Live nudge: none (too far from the sensors)<br>") +
+           `Source: ${esc(r.basis)}<br>` : "No estimate for this hour<br>") +
+      `<small>Why this confidence: ${n.why.map(esc).join("; ")}.</small><br>` +
+      `<small><b>To make this lot reliable:</b> about ${n.sensors_for_80pct} sensors would put 8 in 10 busy hours within ±10 points of the true fill. ` +
+      `With none, the model gets about ${Math.round(share[0] * 10)} to ${Math.round(share[1] * 10)} in 10.</small><br>` +
+      `<small>${esc(n.note)}</small>`;
+  }
+  function nearbyLine(fid) {
+    const r = state.nearbyByFeature[fid];
+    if (!r) return "";
+    const n = state.tier3.nearby[r.key], cars = (x) => Math.round(x * n.spots);
+    return `<br>❔ <b>No sensors: ${esc(n.name)}</b><br>AI estimate: <b>about ${cars(r.m)} of ${n.spots} taken</b> (likely ${cars(r.lo)} to ${cars(r.hi)})<br>` +
+      confBadge(n.confidence);
+  }
+  function buildNearbyLayer() {
+    if (!state.tier3 || !state.tier3.nearby) return;
+    const layer = L.layerGroup().addTo(map);
+    for (const [key, n] of Object.entries(state.tier3.nearby)) {
+      if (n.lat == null || n.lon == null) continue;
+      const c = (CONF[n.confidence] || CONF.very_low).color;
+      const mk = L.circleMarker([n.lat, n.lon], { radius: 8, color: c, weight: 2, dashArray: "3,3",
+                                                  fillColor: "#64748b", fillOpacity: 0.55 });
+      mk.bindTooltip(nearbyShort(n), { permanent: true, direction: "top", offset: [0, -8], className: "t3-tip nb-tip" });
+      mk.bindPopup(() => nearbyPopup(key));
+      mk.addTo(layer);
+      state.nearbyMarkers[key] = mk;
     }
   }
 
@@ -435,15 +544,19 @@
     if (live && state.liveSensorRows) srcs.push("Supabase live sensors");
     if (live && state.liveEstimatorRows) srcs.push("AI estimates (Supabase)");
     srcs.push(srcs.length ? "prior elsewhere" : "Time-of-day prior");
+    const nNear = state.tier3 && state.tier3.nearby ? Object.keys(state.tier3.nearby).length : 0;
     state.occSource = srcs.join(" + ") + (state.tier3 ? " · AI estimate on 4 sensored spot groups" : "") +
+      (nNear ? ` + ${nNear} nearby lots without sensors (low confidence)` : "") +
       (state.activeEvent && state.activeEvent.live ? " + game-day boost" : "");
     const t3 = updateTier3(d);
+    const nb = updateNearby(d);   // after updateTier3: needs the live surprise at the sensored groups
     for (const lot of state.lots.values()) {
       const p = lot.props;
       let occ = state.liveLot[p.id];
       const liveSpots = lot.spots.filter((s) => s.props.id in state.liveSpot);
       if (occ == null && liveSpots.length) occ = liveSpots.filter((s) => state.liveSpot[s.props.id]).length / liveSpots.length;
       if (occ == null && t3[p.id]) occ = t3[p.id].m;
+      if (occ == null && nb[p.id]) occ = nb[p.id].m;
       if (occ == null) occ = eventBoost(p, priorOcc(p, d));
       lot.occ = occ;
       // mark exactly round(occ * n) spots as taken, chosen by a stable per-5-min shuffle
@@ -462,6 +575,11 @@
         const order = c.spots.slice().sort((a, b) => hash01(a.props.id + bucket) - hash01(b.props.id + bucket));
         const nTaken = Math.round(t3[c.props.id].m * order.length);
         order.forEach((s, i) => { s.taken = i < nTaken; s.big = s.taken && hash01("veh" + s.props.id) > 0.72; });
+        continue;
+      }
+      if (nb[c.props.id]) {                          // nearby curb without sensors: low confidence AI estimate
+        c.occ = clamp(nb[c.props.id].m, 0.02, 0.99);
+        c.spots.forEach((s) => { s.taken = hash01(s.props.id + bucket) < c.occ; s.big = s.taken && hash01("veh" + s.props.id) > 0.72; });
         continue;
       }
       c.occ = eventBoost(c.props, clamp(priorOcc({ id: c.props.id, dist_to_wilkinson_m: c.props.dist_to_wilkinson_m }, d) * 1.05, 0.02, 0.99));
@@ -672,7 +790,7 @@
       `Confidence: <b>${p.tier}</b>${p.capacity_tagged ? " (capacity tagged in OSM)" : ""}<br>` +
       (() => { const pr = priceFor(p, profile()); return `Price: <b>${pr.ok ? (pr.cost == null ? "?" : "$" + pr.cost.toFixed(2)) : "n/a"}</b> · ${esc(pr.label)}<br>`; })() +
       (p.duke_name ? `Duke: ${esc(p.duke_name)} (${p.duke_capacity} spaces, ${esc(p.duke_rate_tier || "")}${p.duke_match === "proximity" ? ", name matched by proximity" : ""})<br>` : "") +
-      `${p.area_m2.toLocaleString()} m² · ${p.dist_to_wilkinson_m} m to Wilkinson<br>` +
+      `${p.area_m2.toLocaleString()} m² · ${p.dist_to_wilkinson_m} m to Wilkinson` + nearbyLine(p.id) + `<br>` +
       `<a href="https://www.openstreetmap.org/${{ w: "way", r: "relation" }[p.id[0]]}/${p.id.slice(1)}" target="_blank" rel="noopener">View on OSM</a>`
     ).openOn(map);
     document.querySelectorAll("#lots li").forEach((li) => li.classList.toggle("active", li.dataset.id === id));
@@ -876,6 +994,7 @@
           price_usd: money(r.price.cost), price_label: r.price.label, price_note: r.price.note || null,
           free_spaces: r.free, occupancy_pct: Math.round(r.occ * 100), ada_stalls: r.p.ada || 0,
           confidence: r.kind === "curb" ? r.p.confidence : r.p.tier, walk_climb_m: Math.round(r.climb),
+          occupancy_confidence: state.nearbyByFeature[r.p.id] ? state.nearbyByFeature[r.p.id].confidence + " (no sensors, AI estimate)" : undefined,
         })),
         caveats: [!hasEV && prof.ev ? "No EV chargers are mapped in OpenStreetMap near Wilkinson." : null,
                   prof.role === "visitor" ? "Visitors can only use Duke visitor facilities except on football game days." : null].filter(Boolean),
@@ -997,6 +1116,7 @@
     state.destElev = fc.metadata.dest_elev_m;
     buildLayers(fc);
     buildTier3Layer();
+    buildNearbyLayer();
     initDraw();
     initConcierge();
     $("filter").oninput = renderLots;

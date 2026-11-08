@@ -140,6 +140,72 @@ capacity = 239
 lot_type = "permit_garage"
 area = "research_drive"
 
+# ---------------------------------------------------------------------
+# NEARBY LOTS (added Nov 8 2026): lots with NO sensors of their own, shown on the
+# dashboard as LOW CONFIDENCE estimates. The point is to show the model can say
+# something beyond the 4 sensored groups, and that the answer gets worse the
+# further a lot is from real hardware. Keep this list short.
+# Every number here is the same AI curve as the sensored groups (the model has no
+# lot identity yet), with a wider band, a street traffic nudge, and a share of the
+# live "surprise" at the nearest sensored groups (smaller the further away it is).
+# confidence is NOT typed in by hand: park_shark.py works it out from distance to
+# the nearest sensored group and lot type (see [nearby]).
+# map_feature_ids = ids in the team dashboard's data/parking.geojson (OSM based).
+# capacity = the dashboard's estimate from the lot outline unless marked VERIFIED.
+# traffic_lot = which lot in duke_traffic/outputs/duke_traffic_by_hour.csv gives the
+#   street traffic next to it (Bryan Research Garage = Research Dr + Erwin Rd counts).
+# ---------------------------------------------------------------------
+[[duke.nearby_lots]]
+name = "Duke Clinic lot (Research Dr)"
+capacity = 47
+lot_type = "surface_lot"
+area = "research_drive"
+map_feature_ids = ["w344316841"]
+map_lat = 36.00412
+map_lon = -78.93775
+traffic_lot = "Bryan Research Garage"
+note = "Designated lot next to the Duke Clinic corner sensors. 47 = stalls estimated from the OSM outline."
+[[duke.nearby_lots]]
+name = "Lot north of the Steam Plant"
+capacity = 43
+lot_type = "surface_lot"
+area = "research_drive"
+map_feature_ids = ["w344316839"]
+map_lat = 36.00453
+map_lon = -78.93842
+traffic_lot = "Bryan Research Garage"
+note = "Unnamed in OSM, across from the Steam Plant curb sensors. 43 = stalls estimated from the outline."
+[[duke.nearby_lots]]
+name = "Telecom Dr curbs"
+capacity = 40
+lot_type = "curb"
+area = "research_drive"
+map_feature_ids = ["c112643248l0", "c112643248r0"]
+map_lat = 36.00330
+map_lon = -78.93870
+traffic_lot = "Bryan Research Garage"
+note = "Both sides of Telecom Dr by the OIT building. 40 = 20 + 20 candidate spaces, not verified on site."
+[[duke.nearby_lots]]
+name = "Large lot southeast (232 stalls)"
+capacity = 232
+lot_type = "surface_lot"
+area = "west_campus"
+map_feature_ids = ["a30250179"]
+map_lat = 36.00197
+map_lon = -78.93624
+traffic_lot = "Bryan Research Garage"
+note = "Mapped from OSM parking aisles; name and permit type unknown. Far enough that no live sensor data is passed on."
+[[duke.nearby_lots]]
+name = "Research Drive Garage"
+capacity = 1424
+lot_type = "permit_garage"
+area = "research_drive"
+map_feature_ids = ["w47108081"]
+map_lat = 36.00781
+map_lon = -78.94109
+traffic_lot = "Bryan Research Garage"
+note = "Capacity 1,424 VERIFIED from parking.duke.edu. A big garage about 470 m from the nearest sensor: a deliberately hard case."
+
 [places.birmingham]
 latitude = 52.4862
 longitude = -1.8904
@@ -227,6 +293,39 @@ transfer_same_area = 0.5
 shrink_spots = 10
 # How much the 10th to 90th band may narrow at full trust (0.3 = up to 30% narrower).
 max_band_shrink = 0.3
+
+# ---------------------------------------------------------------------
+[nearby]
+# Settings for [[duke.nearby_lots]]. EVERYTHING HERE IS AN ASSUMPTION until a few
+# days of hand counts at 1 or 2 of these lots can test it.
+# Confidence levels:  LOW      = within low_max_m of a sensored group AND a lot type
+#                                the sensored groups resemble
+#                     VERY LOW = anything else (far away, or a garage / huge lot)
+low_max_m = 150
+similar_types = ["surface_lot", "curb", "department_lot", "clinic_curb"]
+# Extra band width (occupancy rate, each side) on top of the model's 10th to 90th band.
+band_extra_low = 0.05
+band_extra_very_low = 0.12
+# Live transfer: the share of the sensored groups' surprise passed on is
+#   transfer_same_area x trust x exp(-distance_m / decay_m)    (same area only)
+# 150 m: a lot 40 m away gets about 77% of the normal transfer, 470 m away about 4%.
+decay_m = 150
+# The band is NOT narrowed by live data for these lots: the Nov 7 simulation showed a
+# narrower band was overconfident (coverage fell from 84% to 50 to 70%).
+max_band_shrink = 0.0
+# Street traffic nudge: estimate x (1 + traffic_beta x (traffic_ratio - 1)), where
+# traffic_ratio = street traffic this hour / the same hour on a normal day of the same
+# kind (weekday or weekend) from duke_traffic. It only moves on breaks, holidays and
+# game windows. Nobody has measured how much a quiet street empties a lot: 0.3 is a guess.
+traffic_beta = 0.3
+traffic_ratio_clip = [0.5, 1.5]
+# Typical error to show next to a no-sensor estimate (occupancy rate, mean absolute error):
+# 0.13 = model on the most campus-like public lots, 0.23 = model on all public lots,
+# 0.21 = all lots with live neighbours (sim_live.py). Shown in cars = error x capacity.
+mae_low = 0.21
+mae_very_low = 0.23
+# From sensors_needed.py: share of busy hours within +/- 10 points with NO sensors.
+share_within_10_no_sensors = [0.31, 0.51]
 
 # ---------------------------------------------------------------------
 [uncertainty]
