@@ -1046,7 +1046,7 @@
     return el;
   }
   function fmtAnswer(t) {
-    return esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/^\s*[-•]\s+/gm, "• ").replace(/\n/g, "<br>");
+    return esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/^\s*[-•*]\s+/gm, "• ").replace(/\n/g, "<br>");
   }
   async function askConcierge(text) {
     if (chat.busy || !text.trim()) return;
