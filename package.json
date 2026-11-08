@@ -1,0 +1,11 @@
+{
+  "name": "parkshark-duke",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ParkShark Duke - real-time parking dashboard (Triangle AI Hackathon, Robotics track)",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "data": "python3 scripts/fetch_osm.py"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ParkShark Duke</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦈</text></svg>">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" id="leaflet-css"
+      onerror="this.href='vendor/leaflet.css'">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Fallback to the local copy if unpkg is unreachable (offline demo, bad wifi).
+  if (!window.L) {
+    document.write('<link rel="stylesheet" href="vendor/leaflet.css"><script src="vendor/leaflet.js"><\/script>');
+  }
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<aside id="sidebar">
+  <header>
+    <h1>🦈 ParkShark <span>Duke</span></h1>
+    <p class="sub">Real parking around Wilkinson Building · 534 Research Dr</p>
+  </header>
+
+  <section id="status" class="card">
+    <div class="row"><span>Occupancy source</span><b id="occ-source">…</b></div>
+    <div class="row"><span>Weather</span><b id="weather">…</b></div>
+    <div class="row"><span>Updated</span><b id="updated">…</b></div>
+    <div class="totals" id="totals"></div>
+  </section>
+
+  <section id="agent" class="card">
+    <h2>Time-to-park agent</h2>
+    <p class="hint">Ranks lots by drive + search + walk to <b id="dest-name">Wilkinson</b>.
+      Right-click the map to move the start point.</p>
+    <label class="chk"><input type="checkbox" id="permit"> I have a Duke permit (include restricted lots)</label>
+    <ol id="ranking"></ol>
+  </section>
+
+  <section id="spot" class="card" hidden>
+    <h2>Spot score <span id="spot-score" class="score"></span></h2>
+    <div id="spot-meta" class="hint"></div>
+    <ul id="spot-reasons"></ul>
+  </section>
+
+  <section class="card">
+    <h2>Lots <small id="lot-count"></small></h2>
+    <input id="filter" type="search" placeholder="Filter lots (name, garage, permit…)">
+    <ul id="lots"></ul>
+  </section>
+
+  <section class="card legend">
+    <span><i style="background:#22c55e"></i>open</span>
+    <span><i style="background:#ef4444"></i>taken</span>
+    <span><i style="background:#3b82f6"></i>ADA</span>
+    <span><i style="background:#a855f7"></i>EV</span>
+    <span><i class="dash"></i>estimated stall</span>
+    <span><i style="background:#22c55e;height:5px"></i>street</span>
+  </section>
+  <footer>Inventory © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL).
+    Estimated stalls are generated inside real OSM lot polygons. Imagery © Esri.</footer>
+</aside>
+<main id="map"></main>
+<script src="app.js"></script>
+</body>
+</html>

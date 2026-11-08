@@ -438,7 +438,7 @@ def build(raw):
                  "dist_to_wilkinson_m": round(math.hypot(lc[0], lc[1]))}
         for k in TAG_KEYS:
             if k in t:
-                props[k] = t[k]
+                props[k if k not in props else "osm_" + k] = t[k]   # never clobber computed ints
         coords = [ring_to_ll(r) for r in lot["outers"]] if len(lot["outers"]) == 1 else None
         geom = ({"type": "Polygon", "coordinates": coords + [ring_to_ll(h) for h in lot["inners"]]}
                 if coords else {"type": "MultiPolygon",
