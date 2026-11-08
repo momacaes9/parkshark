@@ -1,0 +1,19 @@
+[out:json][timeout:180];
+(
+  way["amenity"="parking"](around:1500,36.00346,-78.93805);
+  relation["amenity"="parking"](around:1500,36.00346,-78.93805);
+  node["amenity"="parking_space"](around:1500,36.00346,-78.93805);
+  way["amenity"="parking_space"](around:1500,36.00346,-78.93805);
+  way[~"^parking:(lane|both|left|right)"~"."](around:1500,36.00346,-78.93805);
+  node["amenity"="charging_station"](around:1500,36.00346,-78.93805);
+  way["amenity"="charging_station"](around:1500,36.00346,-78.93805);
+  way["highway"~"^(primary|secondary|tertiary|residential|unclassified|service|living_street|primary_link|secondary_link|tertiary_link)$"](around:1500,36.00346,-78.93805);
+  node["highway"~"^(crossing|bus_stop|traffic_signals|stop)$"](around:1500,36.00346,-78.93805);
+  node["public_transport"="platform"](around:1500,36.00346,-78.93805);
+  way["building"](around:1500,36.00346,-78.93805);
+  way["area:highway"](around:1500,36.00346,-78.93805);
+  way["surface"~"^(asphalt|paved|concrete)$"]["area"="yes"](around:1500,36.00346,-78.93805);
+  way["landuse"~"^(garages|parking)$"](around:1500,36.00346,-78.93805);
+  way["leisure"="stadium"](around:1500,36.00346,-78.93805);
+);
+out tags geom;

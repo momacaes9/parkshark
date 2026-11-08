@@ -14,6 +14,13 @@
     document.write('<link rel="stylesheet" href="vendor/leaflet.css"><script src="vendor/leaflet.js"><\/script>');
   }
 </script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" onerror="this.href='vendor/draw/leaflet.draw.css'">
+<script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+<script>
+  if (!window.L || !L.Draw) {
+    document.write('<script src="vendor/draw/leaflet.draw.js"><\/script>');
+  }
+</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -50,6 +57,17 @@
     <ul id="lots"></ul>
   </section>
 
+  <section class="card" id="tools">
+    <h2>Missing a lot? <small id="drawn-count"></small></h2>
+    <p class="hint">Draw the outline of a paved lot that OSM is missing. Then download the file, save it as
+      <code>data/manual_lots.geojson</code> and run <code>npm run data</code> to generate its stalls.</p>
+    <div class="btns">
+      <button id="draw-btn" type="button">✏️ Draw lot</button>
+      <button id="dl-btn" type="button">⬇ Download manual_lots.geojson</button>
+      <button id="clear-btn" type="button" class="ghost">Clear drawings</button>
+    </div>
+  </section>
+
   <section class="card legend">
     <span><i style="background:#22c55e"></i>open</span>
     <span><i style="background:#ef4444"></i>taken</span>
@@ -57,6 +75,8 @@
     <span><i style="background:#a855f7"></i>EV</span>
     <span><i class="dash"></i>estimated stall</span>
     <span><i style="background:#22c55e;height:5px"></i>street</span>
+    <span><i class="dash" style="border-color:#22d3ee"></i>drawn lot</span>
+    <span><i class="dash" style="border-color:#94a3b8"></i>paved candidate</span>
   </section>
   <footer>Inventory © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL).
     Estimated stalls are generated inside real OSM lot polygons. Imagery © Esri.</footer>

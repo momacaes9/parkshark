@@ -11,7 +11,7 @@ window.PARKSHARK_CONFIG = {
   GOOGLE_MAPS_KEY: "",
 
   // Destination for the time-to-park agent (Wilkinson Building, 534 Research Dr).
-  DESTINATION: { name: "Wilkinson Building", lat: 36.0035, lon: -78.9405 },
+  DESTINATION: { name: "Wilkinson Building", lat: 36.00346, lon: -78.93805 },
   // Default origin for drive-time (right-click the map to move it).
-  ORIGIN: { name: "Erwin Rd & Research Dr", lat: 36.0067, lon: -78.9420 },
+  ORIGIN: { name: "Erwin Rd & Research Dr", lat: 36.0076, lon: -78.9418 },
 };

@@ -1,0 +1,311 @@
+{
+ "source": "https://parking.duke.edu/parking-permits/garages-lots-fees/",
+ "retrieved": "2026-11-07",
+ "note": "Duke publishes names, capacity, gating and rate tier but NOT coordinates. Each lot is matched to the nearest OSM polygon of the right type around the anchor described in Duke's 'Location' column (anchor coordinates taken from OSM buildings/roads). Matches by proximity are marked duke_match='proximity' and should be verified.",
+ "lots": [
+  {
+   "name": "Bryan Research Garage",
+   "capacity": 163,
+   "gated": "yes",
+   "type": "garage",
+   "rate_tier": "Reserved",
+   "annual": 2526,
+   "monthly": 210.5,
+   "location": "Bryan Research Building on Research Drive",
+   "anchor": [
+    36.00505,
+    -78.93924
+   ],
+   "max_dist": 120
+  },
+  {
+   "name": "Research Drive Garage",
+   "capacity": 1424,
+   "gated": "yes",
+   "type": "garage",
+   "rate_tier": "Premium",
+   "annual": 1593,
+   "monthly": 132.75,
+   "location": "Research Drive and Erwin Road",
+   "anchor_road": "Research Drive",
+   "anchor_near": [
+    36.0076,
+    -78.9418
+   ],
+   "max_dist": 250
+  },
+  {
+   "name": "Allen Lot",
+   "capacity": 209,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "Premium",
+   "annual": 1593,
+   "monthly": 132.75,
+   "location": "West Campus behind the Allen Building",
+   "anchor": [
+    36.00118,
+    -78.93743
+   ],
+   "max_dist": 250
+  },
+  {
+   "name": "LaSalle Lots (LaSalle Upper / FEL)",
+   "capacity": 156,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "Premium",
+   "annual": 1593,
+   "monthly": 132.75,
+   "location": "Adjacent to North Building, FEL Building",
+   "anchor": [
+    36.00547,
+    -78.94097
+   ],
+   "max_dist": 180
+  },
+  {
+   "name": "Parking Garage IV (PG4, Bryan Center)",
+   "capacity": 458,
+   "gated": "yes",
+   "type": "garage",
+   "rate_tier": "Premium",
+   "annual": 1593,
+   "monthly": 132.75,
+   "location": "Adjacent to Bryan Center",
+   "osm_name": "Bryan Center Parking Garage",
+   "anchor": [
+    36.00164,
+    -78.94214
+   ],
+   "max_dist": 120
+  },
+  {
+   "name": "Science (Physics) Lot",
+   "capacity": 52,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "Premium",
+   "annual": 1593,
+   "monthly": 132.75,
+   "location": "Adjacent to Physics Building and LSRC",
+   "anchor": [
+    36.0041,
+    -78.9424
+   ],
+   "max_dist": 150
+  },
+  {
+   "name": "Trent Lot",
+   "capacity": 80,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "Premium",
+   "annual": 1593,
+   "monthly": 132.75,
+   "location": "Off Flowers Drive",
+   "anchor_road": "Flowers Drive",
+   "max_dist": 120
+  },
+  {
+   "name": "Parking Garage I (PG1)",
+   "capacity": 1794,
+   "gated": "yes",
+   "type": "garage",
+   "rate_tier": "Medical Center Garages",
+   "annual": 1326,
+   "monthly": 110.5,
+   "location": "Trent Drive",
+   "anchor_road": "Trent Drive",
+   "max_dist": 150
+  },
+  {
+   "name": "Parking Garage II (PG2)",
+   "capacity": 2629,
+   "gated": "yes",
+   "type": "garage",
+   "rate_tier": "Medical Center Garages",
+   "annual": 1326,
+   "monthly": 110.5,
+   "location": "Erwin Rd / Fulton St / Elba St across from Duke Hospital",
+   "anchor_road": "Elba Street",
+   "max_dist": 200
+  },
+  {
+   "name": "Hock Plaza Garage",
+   "capacity": 923,
+   "gated": "yes",
+   "type": "garage",
+   "rate_tier": "Medical Center Garages",
+   "annual": 1326,
+   "monthly": 110.5,
+   "location": "Erwin Road adjacent to Hock Plaza",
+   "anchor": [
+    36.00919,
+    -78.94181
+   ],
+   "max_dist": 200
+  },
+  {
+   "name": "Diet and Fitness Center Lot",
+   "capacity": 85,
+   "gated": "no",
+   "type": "surface",
+   "rate_tier": "Medical Center Lots",
+   "annual": 873,
+   "monthly": 72.75,
+   "location": "Douglas Street behind Hock Plaza",
+   "anchor_road": "Douglas Street",
+   "max_dist": 150
+  },
+  {
+   "name": "Fuqua Lot",
+   "capacity": 214,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "University Lots",
+   "annual": 918,
+   "monthly": 76.5,
+   "location": "Off Towerview Drive adjacent to Fuqua",
+   "anchor": [
+    35.99881,
+    -78.94742
+   ],
+   "max_dist": 200
+  },
+  {
+   "name": "Law Lot",
+   "capacity": 152,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "University Lots",
+   "annual": 918,
+   "monthly": 76.5,
+   "location": "Towerview Drive adjacent to Law School",
+   "anchor": [
+    35.99979,
+    -78.94551
+   ],
+   "max_dist": 250
+  },
+  {
+   "name": "Public Policy Lot",
+   "capacity": 85,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "University Lots",
+   "annual": 918,
+   "monthly": 76.5,
+   "location": "Adjacent to Sanford School of Public Policy",
+   "anchor": [
+    35.9994,
+    -78.94393
+   ],
+   "max_dist": 250
+  },
+  {
+   "name": "Card Gym Lot",
+   "capacity": 201,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "Proximate",
+   "annual": 786,
+   "monthly": 65.5,
+   "location": "Towerview Drive",
+   "anchor": [
+    35.99738,
+    -78.94139
+   ],
+   "max_dist": 180
+  },
+  {
+   "name": "IM Lot",
+   "capacity": 27,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "Proximate",
+   "annual": 786,
+   "monthly": 65.5,
+   "location": "Behind Intramural Building",
+   "anchor": [
+    35.99662,
+    -78.94003
+   ],
+   "max_dist": 120
+  },
+  {
+   "name": "Circuit Lot",
+   "capacity": 819,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "Proximate",
+   "annual": 786,
+   "monthly": 65.5,
+   "location": "Circuit Drive and LaSalle Street",
+   "anchor_road": "Circuit Drive",
+   "max_dist": 250
+  },
+  {
+   "name": "Chemistry Lot",
+   "capacity": 399,
+   "gated": "mixed",
+   "type": "surface",
+   "rate_tier": "Proximate",
+   "annual": 786,
+   "monthly": 65.5,
+   "location": "Circuit Drive near Towerview Road",
+   "anchor_road": "Circuit Drive",
+   "max_dist": 250
+  },
+  {
+   "name": "Graduate Center Lot",
+   "capacity": 1629,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "Proximate",
+   "annual": 786,
+   "monthly": 65.5,
+   "location": "Flowers Drive and Erwin Road",
+   "osm_name": "Graduate Center Lot"
+  },
+  {
+   "name": "Science Drive Garage",
+   "capacity": 2000,
+   "gated": "yes",
+   "type": "garage",
+   "rate_tier": "Proximate / Grad-Professional",
+   "annual": 786,
+   "monthly": 65.5,
+   "location": "Science Drive and Hwy 751/Cameron Blvd",
+   "osm_name": "Science Drive Garage"
+  },
+  {
+   "name": "H Lot",
+   "capacity": 936,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "University/H Lot Remote",
+   "annual": 243,
+   "monthly": 20.25,
+   "location": "Anderson and Yearby Streets",
+   "osm_name": "H Lot"
+  },
+  {
+   "name": "Blue Zone",
+   "capacity": 1350,
+   "gated": "yes",
+   "type": "surface",
+   "rate_tier": "Residential & Commuter",
+   "annual": 504,
+   "monthly": null,
+   "location": "BZ1-BZ9, around Wallace Wade / Cameron",
+   "zone": true,
+   "anchor": [
+    35.99541,
+    -78.94203
+   ],
+   "max_dist": 380,
+   "min_area": 2500
+  }
+ ]
+}

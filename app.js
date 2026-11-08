@@ -4,8 +4,8 @@
 
   const DEFAULTS = {
     SUPABASE_URL: "", SUPABASE_KEY: "", GOOGLE_MAPS_KEY: "",
-    DESTINATION: { name: "Wilkinson Building", lat: 36.0035, lon: -78.9405 },
-    ORIGIN: { name: "Erwin Rd & Research Dr", lat: 36.0067, lon: -78.9420 },
+    DESTINATION: { name: "Wilkinson Building", lat: 36.00346, lon: -78.93805 },
+    ORIGIN: { name: "Erwin Rd & Research Dr", lat: 36.0076, lon: -78.9418 },
   };
   const COLORS = { open: "#22c55e", taken: "#ef4444", ada: "#3b82f6", ev: "#a855f7", lot: "#facc15", street: "#22c55e" };
   const params = new URLSearchParams(location.search);   // ?weather=hot|rain|normal  ?hour=9  for demos
@@ -98,9 +98,11 @@
 
   // ------------------------------------------------------------------ data
   function lotName(p) {
+    if (p.duke_name) return (p.duke_match === "osm_name" ? "" : "≈ ") + p.duke_name;
     if (p.name) return p.name;
     if (p.ref) return "Lot " + p.ref;
-    const kind = p.garage ? "Parking garage" : (p.parking === "rooftop" ? "Rooftop lot" : "Surface lot");
+    const kind = p.garage ? "Parking garage" : p.source === "parking_aisle" ? "Unmapped lot (from aisles)" :
+      p.source === "manual" ? "Manual lot" : (p.parking === "rooftop" ? "Rooftop lot" : "Surface lot");
     return `${kind} · ${p.id}`;
   }
 
@@ -113,8 +115,10 @@
     for (const f of fc.features) {
       const p = f.properties;
       if (p.kind === "lot") {
+        const lc = p.source === "manual" ? "#22d3ee" : COLORS.lot;
         const layer = L.geoJSON(f, {
-          style: { color: COLORS.lot, weight: 2, fillColor: COLORS.lot, fillOpacity: p.garage ? 0.18 : 0.04 },
+          style: { color: lc, weight: 2, fillColor: lc, fillOpacity: p.garage ? 0.18 : 0.04,
+                   dashArray: p.source === "parking_aisle" ? "6,4" : null },
           renderer: spotRenderer, interactive: true,
         });
         layer.on("click", (e) => { if (!e.originalEvent._spotHit) selectLot(p.id, false); });
@@ -143,6 +147,10 @@
         const layer = L.polyline(f.geometry.coordinates.map((c) => [c[1], c[0]]), { color: COLORS.street, weight: 7, opacity: 0.85 });
         layer.bindPopup(`<b>${esc(p.name || "Street parking")}</b><br>${esc(p.sides.join(" + "))} side · ~${p.est_spaces} spaces`);
         layer.addTo(streetLayer); state.streets.push(p);
+      } else if (p.kind === "candidate") {
+        L.geoJSON(f, { style: { color: "#94a3b8", weight: 2, dashArray: "4,4", fillOpacity: 0.05 } })
+          .bindPopup(`<b>Paved area (candidate)</b><br>${p.area_m2} m² · not tagged as parking in OSM.<br>Draw it as a lot if it is one.`)
+          .addTo(lotLayer);
       } else if (p.kind === "charger") {
         L.circleMarker([f.geometry.coordinates[1], f.geometry.coordinates[0]], { radius: 7, color: "#fff", weight: 2, fillColor: COLORS.ev, fillOpacity: 1 })
           .bindPopup(`<b>⚡ ${esc(p.name || "EV charging station")}</b><br>${esc(p.operator || "")} ${p.capacity ? "· " + p.capacity + " ports" : ""}`)
@@ -153,6 +161,59 @@
     // spots only make sense when zoomed in; hide below z15 to keep the overview readable
     const toggleSpots = () => { if (map.getZoom() >= 15) spotLayer.addTo(map); else spotLayer.remove(); };
     map.on("zoomend", toggleSpots); toggleSpots();
+  }
+
+  // ------------------------------------------------------------------ draw missing lots (Leaflet.draw)
+  const DRAW_KEY = "parkshark.drawnLots";
+  function initDraw() {
+    if (!L.Draw) { $("tools").hidden = true; return; }
+    const drawn = new L.FeatureGroup().addTo(map);
+    const style = { color: "#22d3ee", weight: 2, dashArray: "6,4", fillOpacity: 0.15 };
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem(DRAW_KEY) || "[]"); } catch (e) { saved = []; }
+    const persist = () => {
+      const feats = [];
+      drawn.eachLayer((l) => feats.push(l.toGeoJSON()));
+      try { localStorage.setItem(DRAW_KEY, JSON.stringify(feats)); } catch (e) { /* private mode */ }
+      $("drawn-count").textContent = feats.length ? `${feats.length} drawn` : "";
+      return feats;
+    };
+    const addFeature = (f) => {
+      const layer = L.geoJSON(f, { style }).getLayers()[0];
+      layer.feature = f;
+      layer.bindTooltip(f.properties.name || "Drawn lot");
+      drawn.addLayer(layer);
+    };
+    saved.forEach(addFeature);
+    persist();
+    const control = new L.Control.Draw({
+      position: "topleft",
+      draw: { polygon: { allowIntersection: false, showArea: true, shapeOptions: style }, rectangle: { shapeOptions: style },
+              polyline: false, circle: false, circlemarker: false, marker: false },
+      edit: { featureGroup: drawn },
+    });
+    map.addControl(control);
+    map.on(L.Draw.Event.CREATED, (e) => {
+      const f = e.layer.toGeoJSON();
+      const name = window.prompt("Lot name (optional)", "") || "";
+      const cap = window.prompt("Capacity if known (optional)", "") || "";
+      f.properties = { name: name || undefined, capacity: cap.replace(/\D/g, "") || undefined, drawn_at: new Date().toISOString() };
+      addFeature(f);
+      persist();
+    });
+    map.on(L.Draw.Event.EDITED, persist);
+    map.on(L.Draw.Event.DELETED, persist);
+    $("draw-btn").onclick = () => new L.Draw.Polygon(map, control.options.draw.polygon).enable();
+    $("clear-btn").onclick = () => { drawn.clearLayers(); persist(); };
+    $("dl-btn").onclick = async () => {
+      let existing = [];
+      try { existing = (await (await fetch("data/manual_lots.geojson", { cache: "no-store" })).json()).features || []; } catch (e) { /* none yet */ }
+      const fc = { type: "FeatureCollection", features: existing.concat(persist()) };
+      const url = URL.createObjectURL(new Blob([JSON.stringify(fc, null, 1)], { type: "application/geo+json" }));
+      const a = Object.assign(document.createElement("a"), { href: url, download: "manual_lots.geojson" });
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    };
   }
 
   // ------------------------------------------------------------------ occupancy
@@ -394,13 +455,14 @@
     initMap();
     const fc = await (await fetch("data/parking.geojson")).json();
     buildLayers(fc);
+    initDraw();
     $("filter").oninput = renderLots;
     $("permit").onchange = renderAgent;
     await updateWeather();
     await updateOccupancy();
     setInterval(updateOccupancy, 60 * 1000);
     setInterval(updateWeather, 10 * 60 * 1000);
-    window.parkshark = state;   // handy for debugging in the console
+    window.parkshark = state; window.parksharkMap = map;   // handy for debugging in the console
   }
   boot().catch((e) => { console.error(e); alert("ParkShark failed to load: " + e.message); });
 })();
