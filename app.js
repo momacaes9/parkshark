@@ -61,7 +61,8 @@
     spots: new Map(),         // id -> {props, layer, center:[lon,lat], taken, big}
     rowIndex: new Map(),      // "lot|row|pos" -> spot id
     streets: [], chargers: [],
-    occSource: "prior", liveLot: {}, liveSpot: {},
+    occSource: "prior", liveLot: {}, liveSpot: {}, liveLotSrc: {}, liveSensorRows: 0, liveEstimatorRows: 0,
+    tier3: null, tier3Now: {}, tier3Markers: {},   // AI estimate for the 4 sensored spot groups
     weather: { tempF: null, precip: 0, cloud: null, isDay: 1, label: "loading…" },
     selectedSpot: null, origin: null,
   };
@@ -109,6 +110,7 @@
       `${p.length_m} m · ~${p.est_spaces} parallel spaces (6.1 m)<br>Confidence: <b>${esc(p.confidence)}</b>` +
       (p.observed_cars != null ? `<br>Cars detected in NC OneMap ortho${p.cv_date ? " (" + esc(p.cv_date) + ")" : ""}: <b>${p.observed_cars}</b>` : "") +
       (p.cv_image ? `<br><img src="${esc(p.cv_image)}" style="width:220px;margin-top:4px;border-radius:4px" alt="detections">` : "") +
+      tier3CurbLine(p.id) +
       `<br><small>Generated from OSM road geometry; no signage data. A car seen in one aerial photo may be a drop-off, not legal parking. Check the signs.</small>`;
   }
   function lotName(p) {
@@ -268,6 +270,92 @@
     return clamp(base * (0.82 + 0.25 * closeness) + jitter, 0.02, 0.99);
   }
 
+  // ------------------------------------------------------------------ Tier 3 AI estimate (sensored spot groups)
+  // data/tier3_forecast.json comes from the Park Shark Tier 3 model (park_shark.py export-app).
+  // For each of the 4 spot groups the team lead is putting sensors on, it holds an hour by hour
+  // occupancy estimate (rate 0..1) with a 10th to 90th percentile band, plus a typical weekday,
+  // Saturday and Sunday for hours outside the forecast. Live sensor rows in Supabase always win.
+  // Supabase ids for these groups: lot_id = feature_id or "ps-<group>", spot_id = "ps-<group>-01" ...
+  function tier3Key(d) {
+    const p2 = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())} ${p2(d.getHours())}:00`;
+  }
+  function tier3At(g, d) {
+    const k = tier3Key(d);
+    const row = (g.hourly || []).find((r) => r.t === k);
+    if (row) return { m: row.m, lo: row.lo, hi: row.hi, basis: "forecast for this hour (with weather)" };
+    const wd = d.getDay(), kind = wd === 0 ? "sunday" : wd === 6 ? "saturday" : "weekday";
+    const t = g.typical && g.typical[kind] && g.typical[kind][d.getHours()];
+    return t ? { m: t[0], lo: t[1], hi: t[2], basis: `typical ${kind} (outside the forecast window)` } : null;
+  }
+  function tier3Live(gid, g) {
+    const lotId = g.feature_id || "ps-" + gid;
+    if (state.liveLot[lotId] != null && state.liveLotSrc[lotId] !== "estimator")
+      return { n: g.spots, occ: state.liveLot[lotId] * g.spots };
+    const ids = Object.keys(state.liveSpot).filter((k) => k.startsWith("ps-" + gid + "-"));
+    if (!ids.length) return null;
+    return { n: Math.min(ids.length, g.spots), occ: ids.filter((k) => state.liveSpot[k]).length };
+  }
+  function updateTier3(d) {
+    const byFeature = {};
+    if (!state.tier3) return byFeature;
+    for (const [gid, g] of Object.entries(state.tier3.groups)) {
+      const est = tier3At(g, d), live = tier3Live(gid, g);
+      let r;
+      if (live) {                    // measured spots as they are; only silent spots are estimated
+        const e = est || { m: live.occ / live.n, lo: live.occ / live.n, hi: live.occ / live.n };
+        const silent = g.spots - live.n, occ = Math.min(live.occ, live.n);
+        r = { m: (occ + silent * e.m) / g.spots, lo: (occ + silent * e.lo) / g.spots, hi: (occ + silent * e.hi) / g.spots,
+              src: "Live sensors" + (silent > 0 ? ` (${live.n} of ${g.spots} spots reporting, rest AI estimate)` : ""),
+              basis: "measured now", live: true };
+      } else if (est) {
+        r = { ...est, src: "AI estimate (Tier 3 model)", live: false };
+      } else continue;
+      state.tier3Now[gid] = r;
+      if (g.feature_id) byFeature[g.feature_id] = r;
+      const mk = state.tier3Markers[gid];
+      if (mk) {
+        mk.setStyle({ fillColor: occColor(r.m) });
+        mk.setTooltipContent(`${esc(tier3Short(g))}: ${Math.round(r.m * g.spots)}/${g.spots}${r.live ? " 📡" : " 🤖"}`);
+      }
+    }
+    return byFeature;
+  }
+  function tier3Short(g) { return g.name.replace(/ \(Research Dr\)$/, "").replace(/ spots$/, ""); }
+  function occColor(m) { return m < 0.6 ? "#22c55e" : m < 0.85 ? "#f59e0b" : "#ef4444"; }
+  function tier3Popup(gid) {
+    const g = state.tier3.groups[gid], r = state.tier3Now[gid];
+    const cars = (x) => Math.round(x * g.spots);
+    return `<b>📡 ${esc(g.name)}</b><br>${g.spots} sensored spots · ${esc((g.lot_type || "").replace("_", " "))}<br>` +
+      (r ? `<b>${r.live ? "Live" : "AI estimate"}: ${cars(r.m)} of ${g.spots} taken</b>` +
+           (r.hi > r.lo ? ` (likely ${cars(r.lo)} to ${cars(r.hi)})` : "") +
+           `<br>Source: ${esc(r.src)}, ${esc(r.basis)}` : "No estimate for this hour") +
+      `<br><small>Map placement: ${esc(g.match)}</small>` +
+      `<br><small>${esc(state.tier3.honesty_note)} Range = ${esc(state.tier3.band)}. Generated ${esc(state.tier3.generated)}.</small>`;
+  }
+  function tier3CurbLine(curbId) {
+    if (!state.tier3) return "";
+    const gid = Object.keys(state.tier3.groups).find((k) => state.tier3.groups[k].feature_id === curbId);
+    const r = gid && state.tier3Now[gid];
+    if (!r) return "";
+    const n = state.tier3.groups[gid].spots, cars = (x) => Math.round(x * n);
+    return `<br>📡 <b>Sensored group: ${esc(state.tier3.groups[gid].name)}</b><br>` +
+      `${r.live ? "Live" : "AI estimate"}: <b>${cars(r.m)} of ${n} taken</b>` + (r.hi > r.lo ? ` (likely ${cars(r.lo)} to ${cars(r.hi)})` : "");
+  }
+  function buildTier3Layer() {
+    if (!state.tier3) return;
+    const layer = L.layerGroup().addTo(map);
+    for (const [gid, g] of Object.entries(state.tier3.groups)) {
+      if (g.lat == null || g.lon == null) continue;
+      const mk = L.circleMarker([g.lat, g.lon], { radius: 9 + g.spots / 2, color: "#f8fafc", weight: 3,
+                                                   fillColor: "#64748b", fillOpacity: 0.9 });
+      mk.bindTooltip(tier3Short(g), { permanent: true, direction: "top", offset: [0, -10], className: "t3-tip" });
+      mk.bindPopup(() => tier3Popup(gid));
+      mk.addTo(layer);
+      state.tier3Markers[gid] = mk;
+    }
+  }
+
   // ------------------------------------------------------------------ events (goduke.com home games)
   function eventWindow(e) {
     if (!e.time) return null;
@@ -321,10 +409,15 @@
       });
       if (!r.ok) throw new Error("HTTP " + r.status);
       const rows = await r.json();
-      state.liveLot = {}; state.liveSpot = {};
+      state.liveLot = {}; state.liveSpot = {}; state.liveLotSrc = {};
+      state.liveSensorRows = 0; state.liveEstimatorRows = 0;
       for (const row of rows) {
+        if (row.source === "estimator") state.liveEstimatorRows++; else state.liveSensorRows++;
         if (row.spot_id) state.liveSpot[row.spot_id] = !!row.occupied;
-        else if (row.lot_id != null && row.occupancy != null) state.liveLot[row.lot_id] = clamp(+row.occupancy, 0, 1);
+        else if (row.lot_id != null && row.occupancy != null) {
+          state.liveLot[row.lot_id] = clamp(+row.occupancy, 0, 1);
+          state.liveLotSrc[row.lot_id] = row.source || "sensor";
+        }
       }
       return rows.length > 0;
     } catch (e) {
@@ -337,12 +430,20 @@
     const live = await fetchLive();
     const d = nowDate(), bucket = Math.floor(d.getTime() / (5 * 60 * 1000));
     renderEvent(d);
-    state.occSource = (live ? "Supabase live sensors" : "Time-of-day prior") + (state.activeEvent && state.activeEvent.live ? " + game-day boost" : "");
+    // Label by where the numbers come from: a Supabase row from the estimator is not a sensor reading.
+    const srcs = [];
+    if (live && state.liveSensorRows) srcs.push("Supabase live sensors");
+    if (live && state.liveEstimatorRows) srcs.push("AI estimates (Supabase)");
+    srcs.push(srcs.length ? "prior elsewhere" : "Time-of-day prior");
+    state.occSource = srcs.join(" + ") + (state.tier3 ? " · AI estimate on 4 sensored spot groups" : "") +
+      (state.activeEvent && state.activeEvent.live ? " + game-day boost" : "");
+    const t3 = updateTier3(d);
     for (const lot of state.lots.values()) {
       const p = lot.props;
       let occ = state.liveLot[p.id];
       const liveSpots = lot.spots.filter((s) => s.props.id in state.liveSpot);
       if (occ == null && liveSpots.length) occ = liveSpots.filter((s) => state.liveSpot[s.props.id]).length / liveSpots.length;
+      if (occ == null && t3[p.id]) occ = t3[p.id].m;
       if (occ == null) occ = eventBoost(p, priorOcc(p, d));
       lot.occ = occ;
       // mark exactly round(occ * n) spots as taken, chosen by a stable per-5-min shuffle
@@ -356,6 +457,13 @@
     }
     for (const s of state.spots.values()) if (!s.props.lot && !s.props.curb) s.taken = hash01(s.props.id + bucket) < 0.7;
     for (const c of state.curbs.values()) {          // curb occupancy only meaningful once observed
+      if (t3[c.props.id]) {                          // sensored group: AI estimate (or live), exact count of taken spaces
+        c.occ = clamp(t3[c.props.id].m, 0.02, 0.99);
+        const order = c.spots.slice().sort((a, b) => hash01(a.props.id + bucket) - hash01(b.props.id + bucket));
+        const nTaken = Math.round(t3[c.props.id].m * order.length);
+        order.forEach((s, i) => { s.taken = i < nTaken; s.big = s.taken && hash01("veh" + s.props.id) > 0.72; });
+        continue;
+      }
       c.occ = eventBoost(c.props, clamp(priorOcc({ id: c.props.id, dist_to_wilkinson_m: c.props.dist_to_wilkinson_m }, d) * 1.05, 0.02, 0.99));
       c.spots.forEach((s) => { s.taken = hash01(s.props.id + bucket) < c.occ; s.big = s.taken && hash01("veh" + s.props.id) > 0.72; });
     }
@@ -878,14 +986,17 @@
     CFG = Object.assign({}, DEFAULTS, window.PARKSHARK_CONFIG || {});
     initMap();
     const getJSON = (u) => fetch(u).then((r) => (r.ok ? r.json() : null)).catch(() => null);
-    const [fc, cv, pricing, events] = await Promise.all([
+    const [fc, cv, pricing, events, tier3] = await Promise.all([
       fetch("data/parking.geojson").then((r) => r.json()),
       getJSON("data/curb_cv.json"), getJSON("data/pricing.json"), getJSON("data/events.json"),
+      getJSON("data/tier3_forecast.json"),
     ]);
+    state.tier3 = tier3 && tier3.groups ? tier3 : null;
     state.curbCV = (cv && cv.segments) || {};
     state.pricing = pricing; state.events = (events && events.events) || [];
     state.destElev = fc.metadata.dest_elev_m;
     buildLayers(fc);
+    buildTier3Layer();
     initDraw();
     initConcierge();
     $("filter").oninput = renderLots;

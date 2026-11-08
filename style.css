@@ -106,3 +106,7 @@ select { font: inherit; font-size: 12.5px; padding: 5px 6px; border-radius: 7px;
 #chat-input { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid #334155; background: #0b1220; color: #e5e7eb; font: inherit; }
 #chat .fine { margin: 0; padding: 0 12px 8px; color: #64748b; font-size: 10.5px; }
 @media (max-width: 760px) { #chat { right: 16px; left: 16px; width: auto; height: 70vh; } }
+
+/* Tier 3 sensored spot group labels */
+.leaflet-tooltip.t3-tip { background: #0f172a; color: #f8fafc; border: 1px solid #334155; font-weight: 600; font-size: 12px; padding: 2px 6px; }
+.leaflet-tooltip.t3-tip::before { border-top-color: #334155; }
