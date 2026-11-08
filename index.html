@@ -88,6 +88,7 @@
     <div id="spot-meta" class="hint"></div>
     <div id="spot-price" class="hint"></div>
     <ul id="spot-reasons"></ul>
+    <button id="reserve-btn" type="button" style="margin-top:8px">Reserve / Pay (demo)</button>
   </section>
 
   <section class="card">
@@ -128,6 +129,19 @@
     Estimated stalls are generated inside real OSM lot polygons. Imagery © Esri.</footer>
 </aside>
 <main id="map"></main>
+<div id="pay-modal" class="modal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="pay-title">
+    <button type="button" class="close ghost" id="pay-close" aria-label="Close">✕</button>
+    <div class="demo-flag">DEMO · TEST MODE · NO REAL CHARGE</div>
+    <h2 id="pay-title">Reserve this spot</h2>
+    <div id="pay-summary" class="hint"></div>
+    <div id="gpay-container"></div>
+    <button type="button" id="pay-sim" class="ghost" hidden>Simulate payment (Google Pay unavailable here)</button>
+    <div id="pay-result"></div>
+    <p class="hint" style="margin-top:10px">Google Pay runs in its <b>TEST</b> environment with the example gateway. Google returns a dummy token,
+      no card data reaches ParkShark, and nothing is charged. Duke parking is actually paid at the pay station or in the Blue Spot / Pay-on-Phone apps.</p>
+  </div>
+</div>
 <script src="app.js"></script>
 </body>
 </html>

@@ -375,6 +375,8 @@
       if (!c || c.props.confidence !== "observed parking")
         return { color: "#f59e0b", weight: 1, dashArray: "3,3", fillColor: "#f59e0b", fillOpacity: 0.12, opacity: 0.8 };
     }
+    if (state.reserved && state.reserved[p.id])
+      return { color: "#facc15", weight: 3, dashArray: null, fillColor: "#facc15", fillOpacity: 0.85, opacity: 1 };
     const special = p.ada ? COLORS.ada : p.ev ? COLORS.ev : null;
     const fill = s.taken ? COLORS.taken : (special || COLORS.open);
     return {
@@ -633,6 +635,68 @@
     if (!silent) $("spot").scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
+  // ------------------------------------------------------------------ reserve / pay demo (Google Pay TEST only)
+  // Never handles real card data: environment "TEST" + the "example" gateway return a dummy token.
+  const GPAY_BASE = { apiVersion: 2, apiVersionMinor: 0 };
+  const GPAY_CARD = {
+    type: "CARD",
+    parameters: { allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"], allowedCardNetworks: ["AMEX", "DISCOVER", "MASTERCARD", "VISA"] },
+    tokenizationSpecification: { type: "PAYMENT_GATEWAY", parameters: { gateway: "example", gatewayMerchantId: "exampleGatewayMerchantId" } },
+  };
+  let gpayClient = null, payCtx = null;
+  async function getGpayClient() {
+    if (gpayClient) return gpayClient;
+    if (!(window.google && google.payments)) await loadScript("https://pay.google.com/gp/p/js/pay.js");
+    gpayClient = new google.payments.api.PaymentsClient({ environment: "TEST" });
+    return gpayClient;
+  }
+  function openPay() {
+    const s = state.spots.get(state.selectedSpot); if (!s) return;
+    const { price } = scoreSpot(s);
+    const lot = s.props.lot && state.lots.get(s.props.lot);
+    const prof = profile();
+    payCtx = { spot: s.props.id, amount: price.ok && price.cost ? price.cost : 0 };
+    $("pay-summary").innerHTML = `<b>${esc(lot ? lotName(lot.props) : "Curb space")}</b> · spot ${esc(s.props.id)}<br>` +
+      `${prof.hours} h · ${esc(price.label)} · total <b>$${payCtx.amount.toFixed(2)}</b>`;
+    $("pay-result").innerHTML = ""; $("gpay-container").innerHTML = ""; $("pay-sim").hidden = true;
+    $("pay-modal").hidden = false;
+    if (!price.ok || s.taken) {
+      $("pay-result").innerHTML = `<div class="err">${s.taken ? "This spot is taken right now." : "Not available for your profile: " + esc(price.label)}</div>`;
+      return;
+    }
+    if (!payCtx.amount) {
+      const b = Object.assign(document.createElement("button"), { type: "button", textContent: "Hold this spot (free, demo)" });
+      b.onclick = () => confirmReservation("free hold");
+      $("gpay-container").appendChild(b);
+      return;
+    }
+    getGpayClient()
+      .then((c) => c.isReadyToPay({ ...GPAY_BASE, allowedPaymentMethods: [{ type: "CARD", parameters: GPAY_CARD.parameters }] })
+        .then((r) => {
+          if (!r.result) throw new Error("Google Pay not ready in this browser");
+          $("gpay-container").appendChild(c.createButton({ onClick: payWithGoogle, buttonType: "pay", buttonSizeMode: "fill" }));
+        }))
+      .catch((e) => { console.info("Google Pay unavailable:", e.message); $("pay-sim").hidden = false; });
+  }
+  function payWithGoogle() {
+    const req = {
+      ...GPAY_BASE, allowedPaymentMethods: [GPAY_CARD],
+      transactionInfo: { totalPriceStatus: "FINAL", totalPrice: payCtx.amount.toFixed(2), currencyCode: "USD", countryCode: "US" },
+      merchantInfo: { merchantName: "ParkShark Demo (TEST)" },
+    };
+    gpayClient.loadPaymentData(req)
+      .then((data) => confirmReservation("Google Pay TEST token (" + data.paymentMethodData.type + ")"))   // token discarded, never sent anywhere
+      .catch((e) => { if (e.statusCode !== "CANCELED") $("pay-result").innerHTML = `<div class="err">Payment error: ${esc(e.statusMessage || e.message)}</div>`; });
+  }
+  function confirmReservation(method) {
+    const code = "PS-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+    state.reserved = state.reserved || {};
+    state.reserved[payCtx.spot] = code;
+    const s = state.spots.get(payCtx.spot); if (s) s.layer.setStyle(spotStyle(s));
+    $("pay-result").innerHTML = `<div class="ok">✅ Demo reservation <b>${code}</b> confirmed via ${esc(method)}.<br>No real charge was made.</div>`;
+    $("gpay-container").innerHTML = ""; $("pay-sim").hidden = true;
+  }
+
   // ------------------------------------------------------------------ boot
   async function boot() {
     try { await loadScript("config.js"); } catch (e) { console.info("No config.js found, using defaults (copy config.example.js)."); }
@@ -649,6 +713,10 @@
     buildLayers(fc);
     initDraw();
     $("filter").oninput = renderLots;
+    $("reserve-btn").onclick = openPay;
+    $("pay-close").onclick = () => { $("pay-modal").hidden = true; };
+    $("pay-modal").onclick = (e) => { if (e.target === $("pay-modal")) $("pay-modal").hidden = true; };
+    $("pay-sim").onclick = () => confirmReservation("simulated demo payment");
     const rerender = () => { renderAgent(); renderLots(); if (state.selectedSpot) selectSpot(state.selectedSpot, true); };
     ["role", "hours", "vehicle", "vot", "wheelchair", "senior", "evneed"].forEach((id) => $(id).onchange = rerender);
     $("sort").querySelectorAll("button").forEach((b) => b.onclick = () => {

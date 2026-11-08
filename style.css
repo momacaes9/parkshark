@@ -74,3 +74,12 @@ select { font: inherit; font-size: 12.5px; padding: 5px 6px; border-radius: 7px;
 #compare .cost { font-weight: 700; white-space: nowrap; }
 .banner { background: #3b1d06; border-color: #b45309; color: #fde68a; font-size: 12.5px; }
 .banner b { color: #fff; }
+
+.modal { position: fixed; inset: 0; background: rgba(2, 6, 23, .7); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 16px; }
+.modal[hidden] { display: none; }
+.modal-box { position: relative; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 18px; width: 380px; max-width: 100%; }
+.modal-box .close { position: absolute; top: 10px; right: 10px; padding: 2px 8px; }
+.demo-flag { display: inline-block; background: #facc15; color: #111; font-weight: 800; font-size: 11px; letter-spacing: .04em; padding: 3px 8px; border-radius: 5px; margin-bottom: 8px; }
+#gpay-container { margin: 12px 0 6px; min-height: 44px; }
+#pay-result .ok { background: #14532d; color: #bbf7d0; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
+#pay-result .err { background: #7f1d1d; color: #fecaca; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
