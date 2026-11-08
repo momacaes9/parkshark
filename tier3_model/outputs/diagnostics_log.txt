@@ -1,0 +1,49 @@
+[leak check] diagnostics: held out lots ['birmingham:BHMBCCPST01', 'birmingham:BHMBCCSNH01', 'birmingham:BHMEURBRD02', 'birmingham:BHMNCPRAN01', 'birmingham:NIA North', 'birmingham:Others-CCCPS105a', 'hague:0c60172a', 'hague:2cc6b90a', 'hague:2e7daa83', 'hague:333f3516', 'hague:bf73b42f', 'hague:ecea9356']
+[leak check] diagnostics: PASSED
+
+(1) WEIGHTING ABLATION on Test 1 named holdouts (same holdouts, same seed)
+                              model                             group  model_MAE  baseline_MAE
+0        campus weighted (as built)     birmingham: least campus like     0.2719        0.1239
+1        campus weighted (as built)      birmingham: most campus like     0.1308        0.3275
+2        campus weighted (as built)  birmingham: random mid (seed 42)     0.1430        0.2281
+3        campus weighted (as built)          hague: least campus like     0.2871        0.2094
+4        campus weighted (as built)           hague: most campus like     0.1288        0.1995
+5        campus weighted (as built)       hague: random mid (seed 42)     0.2579        0.1981
+6        campus weighted (as built)                            ALL 12     0.2350        0.2035
+7   unweighted (every lot weight 1)     birmingham: least campus like     0.1390        0.1239
+8   unweighted (every lot weight 1)      birmingham: most campus like     0.3012        0.3275
+9   unweighted (every lot weight 1)  birmingham: random mid (seed 42)     0.2248        0.2281
+10  unweighted (every lot weight 1)          hague: least campus like     0.2252        0.2094
+11  unweighted (every lot weight 1)           hague: most campus like     0.1562        0.1995
+12  unweighted (every lot weight 1)       hague: random mid (seed 42)     0.2187        0.1981
+13  unweighted (every lot weight 1)                            ALL 12     0.2062        0.2035
+
+(2) BLEND WEIGHT SWEEP on the MOST CAMPUS LIKE holdouts only, weekday 8:00-16:30 (diagnostic)
+lots  birmingham    both   hague
+w                               
+0.0       0.1401  0.1621  0.1641
+0.1       0.1254  0.1718  0.1761
+0.2       0.1116  0.1834  0.1901
+0.3       0.0989  0.1968  0.2058
+0.4       0.0882  0.2118  0.2233
+0.5       0.0797  0.2283  0.2421
+0.6       0.0742  0.2457  0.2616
+0.7       0.0725  0.2640  0.2818
+0.8       0.0742  0.2831  0.3025
+0.9       0.0788  0.3029  0.3237
+1.0       0.0854  0.3232  0.3453
+
+(3) FULL LOLO, lots grouped by campus similarity
+                  lots  model_MAE  baseline_MAE  coverage  lots_worse  improvement_pct
+similarity_group                                                                      
+low (<0.3)          27     0.2722        0.2094    0.9025          23         -30.0121
+mid (0.3 to 0.8)    10     0.2482        0.2309    0.8986           5          -7.5056
+high (>=0.8)        18     0.1295        0.2307    0.9807           2          43.8566
+
+worst 5 LOLO lots:
+                     lot_key  similarity  model_MAE  baseline_MAE
+50    birmingham:BHMNCPPLS01      -0.113      0.357         0.207
+51            hague:ecea9356       0.435      0.371         0.297
+52      birmingham:NIA North      -0.233      0.390         0.312
+53  birmingham:NIA Car Parks       0.422      0.395         0.236
+54            hague:816c56b2       0.011      0.609         0.569

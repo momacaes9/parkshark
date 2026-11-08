@@ -1,0 +1,15 @@
+model,group,model_MAE,baseline_MAE
+campus weighted (as built),birmingham: least campus like,0.2718567681180032,0.12390848340038324
+campus weighted (as built),birmingham: most campus like,0.1308095155497366,0.32751076123600326
+campus weighted (as built),birmingham: random mid (seed 42),0.1429953103822528,0.22806542380194822
+campus weighted (as built),hague: least campus like,0.28705821074629423,0.20944911314521528
+campus weighted (as built),hague: most campus like,0.12880889918220773,0.19953725165609132
+campus weighted (as built),hague: random mid (seed 42),0.25793311022167975,0.19808111619274493
+campus weighted (as built),ALL 12,0.23502841970296065,0.2034569793748249
+unweighted (every lot weight 1),birmingham: least campus like,0.13903710964476892,0.12390848340038324
+unweighted (every lot weight 1),birmingham: most campus like,0.30120371792157025,0.32751076123600326
+unweighted (every lot weight 1),birmingham: random mid (seed 42),0.22476672126839473,0.22806542380194822
+unweighted (every lot weight 1),hague: least campus like,0.2251615088188172,0.20944911314521528
+unweighted (every lot weight 1),hague: most campus like,0.15623275533250022,0.19953725165609132
+unweighted (every lot weight 1),hague: random mid (seed 42),0.21871181652608218,0.19808111619274493
+unweighted (every lot weight 1),ALL 12,0.20616430491350946,0.2034569793748249
