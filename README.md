@@ -1,7 +1,7 @@
 # 🦈 ParkShark Duke
 
 **Find the parking spot that actually gets you to class fastest, including the curb spots Google and Apple don't show.**
-Triangle AI Hackathon · Robotics track · [Privacy](privacy.html)
+Triangle AI Hackathon · Robotics track · **Live: https://parkshark-blond.vercel.app** · [Privacy](privacy.html)
 
 ![ParkShark dashboard](docs/screenshot.png)
 
@@ -19,7 +19,8 @@ ParkShark Duke is a live map of **real** parking around the Wilkinson Building (
 - **Driver profiles.** Visitor / Duke affiliate / permit holder, stay length, vehicle size (garage clearance, tight stalls), ♿ wheelchair (ADA stalls), 👵 senior mode (slower walk + uphill penalty from a DEM), ⚡ EV.
 - **Spot score (0–100)** with reasons: big vehicle next door, middle stall, walk, slope, sun on hot days, rain, price, ADA/EV fit.
 - **Game days.** 25 Duke home games (football + men's basketball) from goduke.com. On game day a banner shows Duke's event rules (free general-public lots for football, $25 for basketball) and occupancy jumps for lots near Wallace Wade and Cameron.
-- **Reserve / Pay demo** with Google Pay in **TEST** mode (no real charge, no card data).
+- **💬 Parking Concierge (LLM agent).** Tell it "arriving 9:30 with a pickup truck for 3 hours, budget $10". Claude (`claude-opus-5-5`) calls our own functions as tools (time-to-park ranking with a forecast for your arrival time, Duke pricing, spot scoring, show-on-map) and answers with a lot **and** a specific stall, highlighted on the map.
+- **Reserve / Pay demo** with Google Pay in **TEST** mode, labelled "Demo, no real charge" (no card data, nothing stored).
 
 ## How we built it
 **Hardware (sensor network)**
@@ -38,6 +39,7 @@ ParkShark Duke is a live map of **real** parking around the Wilkinson Building (
 - `scripts/curbs.py`: candidate curbs. Campus roads offset 3 m, with 10 m cut-outs at intersections, crosswalks, driveways, bus stops and signals, split into 6.1 m spaces.
 - `scripts/fetch_events.py`, `scripts/add_elevation.py`, `data/pricing.json`, `data/duke_lots.json`.
 - `index.html` + `app.js`: Leaflet (canvas renderer), Leaflet.draw, Esri imagery, Supabase REST, Open-Meteo, Google Pay TEST.
+- `api/concierge.js`: Vercel serverless proxy to the Claude API. It holds `ANTHROPIC_API_KEY` server-side and sets the model, system prompt and 4 strict tools itself, with per-IP rate limiting, size checks and an output cap. The browser runs the tool loop against the live map state, so the key never reaches the browser.
 - `supabase.sql`: `occupancy` + `occupancy_latest` (public read) and `vehicle_events` (hashed plates, no public access, 30-day purge).
 
 ## Real numbers (1.5 km around Wilkinson, OSM snapshot 2026-11-08)
@@ -82,9 +84,12 @@ Real stalls on real aisles; real Duke prices and game-day rules; a CV pipeline o
 
 ## Run it
 ```bash
-cp config.example.js config.js      # optional: Supabase / Google keys
-npm start                           # or: python3 -m http.server 8000  → http://localhost:8000
+npm install
+cp .env.example .env                # add ANTHROPIC_API_KEY for the concierge (gitignored, server-side only)
+cp config.example.js config.js      # optional, local only: Supabase / Google Maps browser keys
+npm start                           # node scripts/dev-server.mjs -> http://localhost:8000 (static + /api)
 ```
+Deploy: `npx vercel --prod`. Set the key once with `npx vercel env add ANTHROPIC_API_KEY production`. `vercel.json` pins the plain static + `api/` functions setup (otherwise Vercel mistakes the browser `app.js` for a Node server).
 Demo switches: `?date=2026-11-20&hour=18` (football game day), `?date=2026-11-17&hour=18` (basketball), `?weather=hot`, `?weather=rain`.
 
 Rebuild the data:

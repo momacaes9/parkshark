@@ -4,7 +4,7 @@
   "private": true,
   "description": "ParkShark Duke - real-time parking dashboard (Triangle AI Hackathon, Robotics track)",
   "scripts": {
-    "start": "node server.mjs",
+    "start": "node scripts/dev-server.mjs",
     "start:static": "python3 -m http.server 8000",
     "data": "python3 scripts/fetch_osm.py",
     "deploy": "npx vercel --prod"

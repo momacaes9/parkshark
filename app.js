@@ -871,7 +871,10 @@
 
   // ------------------------------------------------------------------ boot
   async function boot() {
-    try { await loadScript("config.js"); } catch (e) { console.info("No config.js found, using defaults (copy config.example.js)."); }
+    // config.js is local-only (gitignored, never deployed); deployed sites use the defaults.
+    if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
+      try { await loadScript("config.js"); } catch (e) { console.info("No config.js found, using defaults (copy config.example.js)."); }
+    }
     CFG = Object.assign({}, DEFAULTS, window.PARKSHARK_CONFIG || {});
     initMap();
     const getJSON = (u) => fetch(u).then((r) => (r.ok ? r.json() : null)).catch(() => null);

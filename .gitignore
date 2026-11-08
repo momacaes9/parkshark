@@ -157,3 +157,4 @@ __pycache__/
 .venv/
 *.pt
 data/cv_tiles/raw/
+.vercel

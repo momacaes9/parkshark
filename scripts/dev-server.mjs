@@ -1,12 +1,12 @@
 // Local dev server: serves the static site and runs api/concierge.js like Vercel does.
-// Usage: npm start  ->  http://localhost:8000   (put ANTHROPIC_API_KEY in .env, which is gitignored)
+// Usage: npm start  ->  http://localhost:8000  (kept in scripts/ so Vercel does not treat it as the app entrypoint)   (put ANTHROPIC_API_KEY in .env, which is gitignored)
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");   // repo root
 const PORT = Number(process.env.PORT || 8000);
 
 // minimal .env loader (KEY=value lines)
@@ -17,7 +17,7 @@ if (existsSync(envFile)) {
     if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
   }
 }
-const api = await import("./api/concierge.js");
+const api = await import(path.join(ROOT, "api", "concierge.js"));
 
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css",
   ".json": "application/json", ".geojson": "application/geo+json", ".png": "image/png", ".jpg": "image/jpeg",
