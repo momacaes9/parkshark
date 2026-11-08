@@ -154,3 +154,6 @@ config.js
 .DS_Store
 node_modules
 __pycache__/
+.venv/
+*.pt
+data/cv_tiles/raw/

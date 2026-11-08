@@ -108,7 +108,7 @@
       `${p.length_m} m · ~${p.est_spaces} parallel spaces (6.1 m)<br>Confidence: <b>${esc(p.confidence)}</b>` +
       (p.observed_cars != null ? `<br>Cars detected in NC OneMap ortho${p.cv_date ? " (" + esc(p.cv_date) + ")" : ""}: <b>${p.observed_cars}</b>` : "") +
       (p.cv_image ? `<br><img src="${esc(p.cv_image)}" style="width:220px;margin-top:4px;border-radius:4px" alt="detections">` : "") +
-      `<br><small>Generated from OSM road geometry; no parking signage data. Verify before parking.</small>`;
+      `<br><small>Generated from OSM road geometry; no signage data. A car seen in one aerial photo may be a drop-off, not legal parking. Check the signs.</small>`;
   }
   function lotName(p) {
     if (p.duke_name) return (p.duke_match === "osm_name" ? "" : "≈ ") + p.duke_name;
