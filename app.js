@@ -287,8 +287,7 @@
     }
     return { active, next };
   }
-  function eventBoost(p, occ) {
-    const a = state.activeEvent;
+  function eventBoost(p, occ, a = state.activeEvent) {
     if (!a || !a.live) return occ;
     const [vlat, vlon] = a.e.venue_ll;
     const dist = distM(p.center[1], p.center[0], vlat, vlon);
@@ -416,11 +415,11 @@
   }
   function isVisitorFacility(p) { return !!matchRule(state.pricing && state.pricing.visitor_hourly, p); }
   // Price for parking in a lot (or curb segment) for this profile. cost=null means unknown.
-  function priceFor(p, prof) {
-    const P = state.pricing, d = nowDate();
+  function priceFor(p, prof, ctx) {
+    const P = state.pricing, d = (ctx && ctx.d) || nowDate();
     if (!P) return { ok: true, cost: null, label: "price unknown" };
     if (p.kind === "curb") return { ok: true, cost: null, label: "unknown, check signs", note: P.default_rules.curb_candidate };
-    const ev = state.activeEvent && state.activeEvent.live ? state.activeEvent.e : null;
+    const ev = ctx ? ctx.ev : (state.activeEvent && state.activeEvent.live ? state.activeEvent.e : null);
     const dn = (p.duke_name || p.name || "").replace(/^Parking Garage IV.*/, "PG4");
     if (ev && ev.sport === "football") {
       const free = P.events.football.general_public_free.some((n) => dn.startsWith(n.replace(" Lot", "")) || dn === n);
@@ -451,8 +450,16 @@
   }
 
   // ------------------------------------------------------------------ agent
-  function rankOptions() {
-    const o = state.origin, D = CFG.DESTINATION, prof = profile();
+  // Forecast context for an arrival time (null = now, use the live occupancy already computed).
+  function arrivalContext(when) {
+    if (!when || Math.abs(when - nowDate()) < 20 * 60e3) return null;
+    const fa = findActiveEvent(when).active;
+    const live = fa && fa.live ? fa : null;
+    return { d: when, ev: live ? live.e : null, active: live };
+  }
+  function rankOptions(prof = profile(), opts = {}) {
+    const o = state.origin, D = CFG.DESTINATION;
+    const ctx = arrivalContext(opts.when);
     const out = [];
     const hasEV = [...state.lots.values()].some((l) => l.props.ev > 0);
     const consider = (kind, item, p, free, occ) => {
@@ -460,7 +467,7 @@
       if (prof.wheelchair && kind === "lot" && !(p.ada > 0) && !p.garage) return;   // garages: ADA spaces required by law
       if (prof.wheelchair && kind === "curb") return;
       if (prof.ev && hasEV && !(p.ev > 0)) return;
-      const price = priceFor(p, prof);
+      const price = priceFor(p, prof, ctx);
       if (!price.ok) return;
       const [lat, lon] = [p.center[1], p.center[0]];
       const drive = distM(o.lat, o.lon, lat, lon) * 1.4 / 400 + (p.garage ? 1.5 : 0.5);
@@ -470,13 +477,20 @@
       const walk = distM(lat, lon, D.lat, D.lon) * 1.3 / speed + (prof.senior || prof.wheelchair ? climb * 0.15 : 0);
       const total = drive + search + walk;
       const cost = price.cost == null ? 5 : price.cost;       // unknown legality: ~10% x $50 ticket risk
-      out.push({ kind, item, p, drive, search, walk, total, price, climb, value: cost + total * prof.vot / 60 });
+      out.push({ kind, item, p, drive, search, walk, total, price, climb, occ, free, value: cost + total * prof.vot / 60 });
     };
-    for (const lot of state.lots.values()) if (lot.props.capacity) consider("lot", lot, lot.props, lot.free, lot.occ);
-    for (const c of state.curbs.values())
-      if (c.props.confidence === "observed parking") consider("curb", c, c.props, Math.round(c.props.est_spaces * (1 - c.occ)), c.occ);
-    const key = { value: (r) => r.value, time: (r) => r.total, cost: (r) => (r.price.cost == null ? 999 : r.price.cost) + r.total / 1000 }[state.sortBy];
-    return { list: out.sort((a, b) => key(a) - key(b)), hasEV, prof };
+    for (const lot of state.lots.values()) {
+      if (!lot.props.capacity) continue;
+      const occ = ctx ? clamp(eventBoost(lot.props, priorOcc(lot.props, ctx.d), ctx.active), 0.02, 0.995) : lot.occ;
+      consider("lot", lot, lot.props, ctx ? Math.round(lot.props.capacity * (1 - occ)) : lot.free, occ);
+    }
+    for (const c of state.curbs.values()) {
+      if (c.props.confidence !== "observed parking") continue;
+      const occ = ctx ? eventBoost(c.props, clamp(priorOcc({ id: c.props.id, dist_to_wilkinson_m: c.props.dist_to_wilkinson_m }, ctx.d) * 1.05, 0.02, 0.99), ctx.active) : c.occ;
+      consider("curb", c, c.props, Math.round(c.props.est_spaces * (1 - occ)), occ);
+    }
+    const key = { value: (r) => r.value, time: (r) => r.total, cost: (r) => (r.price.cost == null ? 999 : r.price.cost) + r.total / 1000 }[opts.sortBy || state.sortBy];
+    return { list: out.sort((a, b) => key(a) - key(b)), hasEV, prof, ctx };
   }
   function optionName(r) { return r.kind === "curb" ? `Curb: ${r.p.name || "street"} (${r.p.side})` : lotName(r.p); }
   function renderAgent() {
@@ -557,8 +571,8 @@
   }
 
   // ------------------------------------------------------------------ spot score
-  function scoreSpot(s) {
-    const p = s.props, w = state.weather, D = CFG.DESTINATION, reasons = [], prof = profile();
+  function scoreSpot(s, prof = profile()) {
+    const p = s.props, w = state.weather, D = CFG.DESTINATION, reasons = [];
     let score = 100;
     const add = (delta, text) => { score += delta; reasons.push({ delta: Math.round(delta), text }); };
     const size = { compact: 0.6, standard: 1, large: 1.5 }[prof.vehicle];
@@ -697,6 +711,164 @@
     $("gpay-container").innerHTML = ""; $("pay-sim").hidden = true;
   }
 
+  // ------------------------------------------------------------------ Parking Concierge (Claude via /api/concierge)
+  // The serverless function holds the API key and fixed model/tools; the browser runs the tools
+  // against the live map state and keeps the conversation (echoing assistant content unchanged).
+  const chat = { messages: [], busy: false };
+  function parseArrival(str) {
+    const base = nowDate();
+    if (!str || /^now$/i.test(str.trim())) return null;
+    let m = str.trim().match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})$/);
+    if (m) return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+    m = str.trim().match(/^(\d{1,2}):(\d{2})$/);
+    if (m) { const d = new Date(base); d.setHours(+m[1], +m[2], 0, 0); return d; }
+    throw new Error(`Unrecognized arrival "${str}". Use now, HH:MM or YYYY-MM-DD HH:MM.`);
+  }
+  function profFromInput(i) {
+    const roles = ["visitor", "affiliate", "permit"], vehicles = ["compact", "standard", "large"];
+    if (!roles.includes(i.role) || !vehicles.includes(i.vehicle) || typeof i.hours !== "number" || !(i.hours > 0))
+      throw new Error("Invalid profile: role, vehicle and a positive hours value are required.");
+    return { role: i.role, hours: Math.min(24, i.hours), vehicle: i.vehicle, vot: +$("vot").value,
+             wheelchair: !!i.wheelchair, senior: !!i.senior, ev: !!i.ev };
+  }
+  function syncProfileUI(prof) {       // mirror the concierge's understanding in the sidebar
+    $("role").value = prof.role; $("vehicle").value = prof.vehicle;
+    const h = [1, 2, 3, 4, 6, 8].reduce((a, b) => (Math.abs(b - prof.hours) < Math.abs(a - prof.hours) ? b : a));
+    $("hours").value = String(h);
+    $("wheelchair").checked = prof.wheelchair; $("senior").checked = prof.senior; $("evneed").checked = prof.ev;
+    renderAgent(); renderLots();
+  }
+  function findOption(id) {
+    if (state.lots.has(id)) { const l = state.lots.get(id); return { kind: "lot", item: l, p: l.props }; }
+    if (state.curbs.has(id)) { const c = state.curbs.get(id); return { kind: "curb", item: c, p: c.props }; }
+    throw new Error(`Unknown option_id "${id}". Use an id returned by rank_parking_options.`);
+  }
+  const money = (c) => (c == null ? null : Math.round(c * 100) / 100);
+  const TOOLS = {
+    rank_parking_options(i) {
+      const prof = profFromInput(i), when = parseArrival(i.arrival);
+      syncProfileUI(prof);
+      const { list, ctx, hasEV } = rankOptions(prof, { when, sortBy: ["value", "time", "cost"].includes(i.sort) ? i.sort : "value" });
+      const budget = typeof i.max_budget_usd === "number" && i.max_budget_usd > 0 ? i.max_budget_usd : null;
+      const fits = budget == null ? list : list.filter((r) => r.price.cost == null || r.price.cost <= budget);
+      const n = Math.max(1, Math.min(8, i.limit | 0 || 5));
+      const ev = ctx ? ctx.ev : (state.activeEvent && state.activeEvent.live ? state.activeEvent.e : null);
+      return {
+        arrival: (when || nowDate()).toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }),
+        occupancy_basis: when ? "forecast (time-of-day prior + events)" : state.occSource,
+        game_day_event: ev ? { sport: ev.sport, opponent: ev.opponent, time: ev.time_text, venue: ev.venue,
+                               rules: (state.pricing.events[ev.sport] || {}).notes } : null,
+        options_considered: list.length, options_within_budget: fits.length,
+        cheapest_if_none_fit: budget != null && !fits.length && list.length
+          ? { option_id: [...list].sort((a, b) => (a.price.cost ?? 99) - (b.price.cost ?? 99))[0].p.id } : undefined,
+        options: fits.slice(0, n).map((r) => ({
+          option_id: r.p.id, name: r.kind === "curb" ? optionName(r) : lotName(r.p), kind: r.kind,
+          garage: !!r.p.garage, total_min: +r.total.toFixed(1),
+          breakdown_min: { drive: +r.drive.toFixed(1), search: +r.search.toFixed(1), walk: +r.walk.toFixed(1) },
+          price_usd: money(r.price.cost), price_label: r.price.label, price_note: r.price.note || null,
+          free_spaces: r.free, occupancy_pct: Math.round(r.occ * 100), ada_stalls: r.p.ada || 0,
+          confidence: r.kind === "curb" ? r.p.confidence : r.p.tier, walk_climb_m: Math.round(r.climb),
+        })),
+        caveats: [!hasEV && prof.ev ? "No EV chargers are mapped in OpenStreetMap near Wilkinson." : null,
+                  prof.role === "visitor" ? "Visitors can only use Duke visitor facilities except on football game days." : null].filter(Boolean),
+      };
+    },
+    get_price(i) {
+      const prof = profFromInput(i), o = findOption(i.option_id);
+      const pr = priceFor(o.p, prof, arrivalContext(parseArrival(i.arrival)));
+      return { option_id: o.p.id, name: o.kind === "curb" ? (o.p.name || "curb") : lotName(o.p), available_to_driver: pr.ok,
+               price_usd: money(pr.cost), label: pr.label, note: pr.note || null,
+               duke: o.p.duke_name ? { name: o.p.duke_name, capacity: o.p.duke_capacity, rate_tier: o.p.duke_rate_tier, name_match: o.p.duke_match } : null };
+    },
+    score_spots(i) {
+      const prof = profFromInput(i), o = findOption(i.option_id);
+      const spots = o.item.spots.filter((s) => !s.taken && !(state.reserved && state.reserved[s.props.id]));
+      if (!o.item.spots.length) return { option_id: o.p.id, note: `${o.p.garage ? "Garage" : "Lot"}: individual stalls are not mapped. About ${o.kind === "lot" ? o.item.free : "?"} spaces free now; any open space works.`, spots: [] };
+      const n = Math.max(1, Math.min(5, i.limit | 0 || 3));
+      const scored = spots.map((s) => ({ s, r: scoreSpot(s, prof) })).sort((a, b) => b.r.score - a.r.score).slice(0, n);
+      return { option_id: o.p.id, open_now: spots.length, total_stalls: o.item.spots.length, availability: "as of now",
+               spots: scored.map(({ s, r }) => ({ spot_id: s.props.id, score: r.score, ada: !!s.props.ada, ev: !!s.props.ev,
+                                                   reasons: r.reasons.slice(0, 5).map((x) => (x.delta ? `${x.delta > 0 ? "+" : ""}${x.delta} ` : "") + x.text) })) };
+    },
+    show_on_map(i) {
+      const o = findOption(i.option_id);
+      if (i.spot_id && state.spots.has(i.spot_id)) {
+        const s = state.spots.get(i.spot_id);
+        map.setView([s.center[1], s.center[0]], 19);
+        selectSpot(i.spot_id, true);
+        if (o.kind === "lot") selectLot(o.p.id, false);
+      } else if (o.kind === "lot") selectLot(o.p.id, true);
+      else { map.fitBounds(o.item.layer.getBounds(), { maxZoom: 19 }); o.item.layer.openPopup(); }
+      return { ok: true };
+    },
+  };
+  const TOOL_LABEL = { rank_parking_options: "🔎 Ranked parking options", get_price: "💲 Checked price",
+                       score_spots: "⭐ Scored stalls", show_on_map: "🗺 Showed on map" };
+  function chatAdd(cls, html) {
+    const el = document.createElement("div");
+    el.className = "msg " + cls;
+    el.innerHTML = html;
+    $("chat-log").appendChild(el);
+    $("chat-log").scrollTop = $("chat-log").scrollHeight;
+    return el;
+  }
+  function fmtAnswer(t) {
+    return esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/^\s*[-•]\s+/gm, "• ").replace(/\n/g, "<br>");
+  }
+  async function askConcierge(text) {
+    if (chat.busy || !text.trim()) return;
+    chat.busy = true; $("chat-send").disabled = true;
+    chatAdd("user", esc(text));
+    const d = nowDate(), saved = chat.messages.length;
+    const ev = state.activeEvent && state.activeEvent.e;
+    const ctxLine = `<context>Current local time: ${d.toLocaleString([], { weekday: "long", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}. ` +
+      (ev ? `Duke home game today: ${ev.sport} vs ${ev.opponent} at ${ev.time_text}. ` : "") +
+      `Weather: ${state.weather.label}. Sidebar profile: ${JSON.stringify(profile())}.</context>`;
+    chat.messages.push({ role: "user", content: [{ type: "text", text: `${text}\n\n${ctxLine}` }] });
+    const thinking = chatAdd("status", "Thinking…");
+    try {
+      for (let step = 0; step < 8; step++) {
+        const r = await fetch("api/concierge", { method: "POST", headers: { "content-type": "application/json" },
+                                                 body: JSON.stringify({ messages: chat.messages }) });
+        const data = await r.json().catch(() => ({ error: `HTTP ${r.status}` }));
+        if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+        chat.messages.push({ role: "assistant", content: data.content });      // echo back unchanged
+        const said = data.content.filter((b) => b.type === "text").map((b) => b.text).join("\n").trim();
+        if (data.stop_reason === "tool_use") {
+          if (said) chatAdd("bot", fmtAnswer(said));
+          const results = [];
+          for (const b of data.content.filter((x) => x.type === "tool_use")) {
+            let content, isError = false;
+            try {
+              if (!TOOLS[b.name] || typeof b.input !== "object" || b.input === null) throw new Error(`Unknown tool ${b.name}`);
+              content = JSON.stringify(TOOLS[b.name](b.input));
+            } catch (e) { content = "Error: " + e.message; isError = true; }
+            chatAdd("tool", `${TOOL_LABEL[b.name] || b.name}${isError ? " (error)" : ""}`);
+            results.push({ type: "tool_result", tool_use_id: b.id, content, ...(isError ? { is_error: true } : {}) });
+          }
+          chat.messages.push({ role: "user", content: results });              // all results in one message
+          continue;
+        }
+        if (data.stop_reason === "refusal") chatAdd("bot", "Sorry, I can't help with that request.");
+        else chatAdd("bot", fmtAnswer(said || "(no answer)") + (data.stop_reason === "max_tokens" ? "<br><i>(answer cut short)</i>" : ""));
+        break;
+      }
+    } catch (e) {
+      chat.messages.length = saved;                                         // drop the failed turn
+      chatAdd("err", "⚠️ " + esc(e.message));
+    } finally {
+      thinking.remove();
+      chat.busy = false; $("chat-send").disabled = false; $("chat-input").focus();
+    }
+  }
+  function initConcierge() {
+    $("chat-open").onclick = () => { $("chat").hidden = false; $("chat-open").hidden = true; $("chat-input").focus(); };
+    $("chat-close").onclick = () => { $("chat").hidden = true; $("chat-open").hidden = false; };
+    $("chat-form").onsubmit = (e) => { e.preventDefault(); const t = $("chat-input").value; $("chat-input").value = ""; askConcierge(t); };
+    $("chat-reset").onclick = () => { chat.messages = []; $("chat-log").innerHTML = ""; };
+    document.querySelectorAll("#chat .sugg button").forEach((b) => b.onclick = () => askConcierge(b.textContent));
+  }
+
   // ------------------------------------------------------------------ boot
   async function boot() {
     try { await loadScript("config.js"); } catch (e) { console.info("No config.js found, using defaults (copy config.example.js)."); }
@@ -712,6 +884,7 @@
     state.destElev = fc.metadata.dest_elev_m;
     buildLayers(fc);
     initDraw();
+    initConcierge();
     $("filter").oninput = renderLots;
     $("reserve-btn").onclick = openPay;
     $("pay-close").onclick = () => { $("pay-modal").hidden = true; };
